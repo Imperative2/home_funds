@@ -3,7 +3,6 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Button,
   Typography,
   Avatar,
 } from "@material-ui/core";
@@ -29,6 +28,9 @@ const style = {
   },
   typography: {
     marginLeft: "2rem",
+  },
+  typographyNotLogged: {
+    margin: "1rem 2rem",
   },
   menuItem: {
     paddingLeft: "2rem",
@@ -104,36 +106,40 @@ class UserIconMenu extends React.Component {
       </React.Fragment>
     );
 
-    let menuNotLogged = () => {
-      return (
-        <React.Fragment>
-          <IconButton
-            aria-label="account of current user"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
-            color="inherit"
-            onClick={(event) => this.menuOpen(event)}
-          >
-            <AccountCircle />
-          </IconButton>
-          <Menu
-            id="simple-menu"
-            anchorEl={this.state.anchorEl}
-            open={this.state.menuOpen}
-            onClose={this.menuClose}
-          >
-            <Typography variant="h6">You are not logged in</Typography>
-            <hr></hr>
-            <MenuItem component={NavLink} to="/login">
-              Log in
-              <ExitToAppIcon />
-            </MenuItem>
-          </Menu>
-        </React.Fragment>
-      );
-    };
+    const menuNotLogged = (
+      <React.Fragment>
+        <IconButton
+          aria-label="account of current user"
+          aria-controls="menu-appbar"
+          aria-haspopup="true"
+          color="inherit"
+          onClick={(event) => this.menuOpen(event)}
+        >
+          <AccountCircle />
+        </IconButton>
+        <Menu
+          id="simple-menu"
+          anchorEl={this.state.anchorEl}
+          open={this.state.menuOpen}
+          onClose={this.menuClose}
+        >
+          <Typography className={classes.typographyNotLogged} variant="h6">
+            You are not logged in
+          </Typography>
+          <hr></hr>
+          <MenuItem component={NavLink} to="/login">
+            Log in
+            <ExitToAppIcon />
+          </MenuItem>
+        </Menu>
+      </React.Fragment>
+    );
 
-    return <React.Fragment>{menuLogged}</React.Fragment>;
+    return (
+      <React.Fragment>
+        {this.state.userLogged === true ? menuLogged : menuNotLogged}
+      </React.Fragment>
+    );
   }
 }
 

@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import AccountCircle from "@material-ui/icons/AccountCircle";
 
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
@@ -17,18 +15,27 @@ import logo from "../../static/logo.png";
 
 const styles = {
   root: {
-    backgroundColor: "DarkOrange",
+    backgroundColor: "DeepSkyBlue",
     marginBottom: "1%",
   },
   menuButton: {},
   title: {},
   img: {
     width: "20rem",
-    height: "5rem",
+    height: "2rem",
   },
 };
 
 class TopBar extends Component {
+  state = {
+    user: {
+      name: "Karol",
+      surname: "Masluch",
+      nickname: "Imperative2",
+      logged: true,
+    },
+  };
+
   onLogoClick = () => {
     console.log(this.props);
     this.props.history.push("/");
@@ -58,10 +65,10 @@ class TopBar extends Component {
             </Grid>
             <Grid item xs={3} sm={1}>
               <UserIconMenu
-                logged={false}
-                userName="Karol"
-                userSurname="Masluch"
-                userNickname="imperative"
+                logged={this.state.user.logged}
+                userName={this.state.user.name}
+                userSurname={this.state.user.surname}
+                userNickname={this.state.user.nickname}
               />
             </Grid>
           </Grid>
