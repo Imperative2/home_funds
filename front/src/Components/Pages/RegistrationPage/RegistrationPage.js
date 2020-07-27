@@ -4,22 +4,30 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
+import { withStyles } from "@material-ui/core/styles";
 
 import { NavLink } from "react-router-dom";
 
 import { CirclePicker } from "react-color";
 
-import logo from "../../../static/logo512.png";
+const style = {
+  img: {
+    width: "100%",
+    maxWidth: 400,
+    maxHeight: 400,
+  },
+};
 
 class RegistrationPage extends React.Component {
   render() {
+    // const { classes } = this.props;
+
     return (
       <Container maxWidth="xs">
         <div>
+          <br></br>
+          <br></br>
           <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <img alt="logo" src={logo}></img>
-            </Grid>
             <Grid item xs={12}>
               <Typography align="center" variant="h4">
                 Sign up
@@ -168,4 +176,4 @@ class RegistrationPage extends React.Component {
   }
 }
 
-export default RegistrationPage;
+export default withStyles(style)(RegistrationPage);

@@ -11,23 +11,6 @@ class TitlePage extends Component {
             <ProduceTabel></ProduceTabel>
           </Grid>
         </Grid>
-
-        <button>asdfasf</button>
-        <button>asdfasf</button>
-        <button>asdfasf</button>
-        <button>asdfasf</button>
-        <button>asdfasf</button>
-        <button>asdfasf</button>
-        <button>asdfasf</button>
-        <button>asdfasf</button>
-        <button>asdfasf</button>
-        <button>asdfasf</button>
-        <button>asdfasf</button>
-        <button>asdfasf</button>
-        <button>asdfasf</button>
-        <button>asdfasf</button>
-        <button>asdfasf</button>
-        <button>asdfasf</button>
       </div>
     );
   }

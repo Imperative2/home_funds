@@ -6,8 +6,15 @@ import { Typography, Button } from "@material-ui/core";
 
 import AddIcon from "@material-ui/icons/Add";
 import HomeIcon from "@material-ui/icons/Home";
+import { withStyles } from "@material-ui/core/styles";
 
 import HouseholdCard from "../../Cards/HouseholdCard/HouseholdCard";
+
+const style = {
+  block: {
+    padding: "10px",
+  },
+};
 
 class HouseholdPage extends React.Component {
   state = {
@@ -18,6 +25,8 @@ class HouseholdPage extends React.Component {
   };
 
   render() {
+    // const {classes} = this.props;
+
     const households = this.state.households.map((household) => {
       return (
         <Grid item key={household.name}>
@@ -45,7 +54,6 @@ class HouseholdPage extends React.Component {
                 <Button
                   color="primary"
                   variant="contained"
-                
                   startIcon={
                     <React.Fragment>
                       <AddIcon />
@@ -63,4 +71,4 @@ class HouseholdPage extends React.Component {
     );
   }
 }
-export default HouseholdPage;
+export default withStyles(style)(HouseholdPage);

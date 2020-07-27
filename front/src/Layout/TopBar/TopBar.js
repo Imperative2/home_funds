@@ -21,8 +21,12 @@ const styles = {
   menuButton: {},
   title: {},
   img: {
-    width: "20rem",
-    height: "2rem",
+    width: "60%",
+    height: "3rem",
+    maxWidth: "19.8rem",
+    minWidth: "11rem",
+    maxHeight: "3rem",
+    marginBottom: "-10px",
   },
 };
 

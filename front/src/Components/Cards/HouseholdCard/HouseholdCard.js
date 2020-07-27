@@ -31,7 +31,7 @@ class HouseholdCard extends React.Component {
 
     return (
       <div>
-        <Card>
+        <Card elevation={5}>
           <Grid container spacing={2} direction="row">
             <Grid item>
               <ButtonBase className={classes.ButtonBase}>

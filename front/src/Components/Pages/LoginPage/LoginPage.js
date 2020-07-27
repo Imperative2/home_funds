@@ -6,8 +6,21 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { Typography, Avatar } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
 
 import LockOpenIcon from "@material-ui/icons/LockOpenOutlined";
+
+const style = {
+  iconStyle: {
+    fontSize: 80,
+    color: "GhostWhite",
+  },
+  avatarStyle: {
+    padding: "50px 50px 50px 50px",
+    backgroundColor: "Crimson",
+    marginLeft: -50,
+  },
+};
 
 class LoginPage extends Component {
   onSubmitClick = () => {
@@ -15,6 +28,8 @@ class LoginPage extends Component {
   };
 
   render() {
+    const { classes } = this.props;
+
     return (
       <Container maxWidth="xs">
         <div>
@@ -26,8 +41,11 @@ class LoginPage extends Component {
                 <br></br>
               </Grid>
               <Grid item xs={1}>
-                <Avatar>
-                  <LockOpenIcon fontSize="large"></LockOpenIcon>
+                <Avatar className={classes.avatarStyle}>
+                  <LockOpenIcon
+                    className={classes.iconStyle}
+                    fontSize="inherit"
+                  ></LockOpenIcon>
                 </Avatar>
               </Grid>
             </Grid>
@@ -55,6 +73,28 @@ class LoginPage extends Component {
                 type="Password"
                 fullWidth
               ></TextField>
+              <Grid
+                item
+                container
+                xs={12}
+                sm={12}
+                direction="row"
+                alignItems="flex-end"
+                justify="flex-start"
+              >
+                <Grid item>
+                  <Typography variant="body2">Forgot password?</Typography>
+                </Grid>
+                <Grid item>
+                  <Typography
+                    variant="body2"
+                    component={NavLink}
+                    to="/user/forgotPassword"
+                  >
+                    Click me
+                  </Typography>
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item xs={12}>
               <hr></hr>
@@ -83,4 +123,4 @@ class LoginPage extends Component {
   }
 }
 
-export default LoginPage;
+export default withStyles(style)(LoginPage);
