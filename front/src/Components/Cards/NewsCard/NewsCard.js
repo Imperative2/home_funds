@@ -34,7 +34,7 @@ const style = {
   },
 };
 
-class HouseholdCard extends React.Component {
+class NewsCard extends React.Component {
   render() {
     const { classes } = this.props;
 
@@ -91,4 +91,4 @@ class HouseholdCard extends React.Component {
   }
 }
 
-export default withStyles(style)(HouseholdCard);
+export default withStyles(style)(NewsCard);

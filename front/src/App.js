@@ -8,6 +8,8 @@ import LoginPage from "../src/Components/Pages/LoginPage/LoginPage";
 import RegistrationPage from "../src/Components/Pages/RegistrationPage/RegistrationPage";
 import HouseholdPage from "./Components/Pages/HouseholdPage/HouseholdPage";
 import UserSettingsPage from "./Components/Pages/UserSettingsPage/UserSettingsPage";
+import NewsPage from "./Components/Pages/NewsPage/NewsPage";
+import UsersPage from "./Components/Pages/UsersPage/UsersPage";
 
 class App extends Component {
   render() {
@@ -19,6 +21,8 @@ class App extends Component {
             <Route exact path="/register" component={RegistrationPage} />
             <Route exact path="/households" component={HouseholdPage} />
             <Route exact path="/user/settings" component={UserSettingsPage} />
+            <Route exact path="/news" component={NewsPage} />
+            <Route exact path="/users" component={UsersPage} />
             <Route path="/" component={TitlePage} />
           </Switch>
         </Layout>

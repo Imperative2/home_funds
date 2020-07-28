@@ -7,21 +7,21 @@ import { Typography } from "@material-ui/core";
 
 const style = {
   background1: {
-    marginTop: 100,
+    marginTop: "6rem",
     backgroundColor: "DeepSkyBlue",
-    paddingLeft: 20,
-    paddingTop: 20,
-    paddingBottom: 10,
+    paddingLeft: "1.2rem",
+    paddingTop: "1.2rem",
+    paddingBottom: "0.6rem",
   },
   background2: {
     backgroundColor: "DodgerBlue",
-    padding: 10,
+    padding: "0.6rem",
   },
   textColor: {
     color: "WhiteSmoke",
   },
   linksOffset: {
-    marginLeft: 50,
+    marginLeft: "3rem",
   },
 };
 

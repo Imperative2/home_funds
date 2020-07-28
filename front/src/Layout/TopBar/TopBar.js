@@ -26,7 +26,7 @@ const styles = {
     maxWidth: "19.8rem",
     minWidth: "11rem",
     maxHeight: "3rem",
-    marginBottom: "-10px",
+    marginBottom: "-0.5rem",
   },
 };
 

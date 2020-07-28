@@ -1,5 +1,4 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -15,7 +14,7 @@ const style = {
     width: "100%",
   },
   container: {
-    maxHeight: 640,
+    maxHeight: "85vh",
   },
   headCell: {
     backgroundColor: "OrangeRed",
@@ -113,7 +112,11 @@ class ProduceTable extends React.Component {
             <TableHead>
               <TableRow>
                 {this.state.products.map((product) => (
-                  <TableCell className={classes.headCell} key={product.id}>
+                  <TableCell
+                    className={classes.headCell}
+                    key={product.id}
+                    align="center"
+                  >
                     {product.name}
                   </TableCell>
                 ))}

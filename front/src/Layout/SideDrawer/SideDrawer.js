@@ -22,8 +22,8 @@ import { withStyles } from "@material-ui/core/styles";
 
 const style = {
   img: {
-    width: 240,
-    height: 60,
+    width: "15rem",
+    height: "2,5rem",
   },
 };
 
@@ -73,13 +73,13 @@ class SideDrawer extends Component {
                 </ListItemIcon>
                 Households
               </ListItem>
-              <ListItem button>
+              <ListItem button component={NavLink} to="/news">
                 <ListItemIcon>
                   <LibraryBooksIcon />
                 </ListItemIcon>
                 News
               </ListItem>
-              <ListItem button>
+              <ListItem button component={NavLink} to="/users">
                 <ListItemIcon>
                   <PersonIcon />
                 </ListItemIcon>
