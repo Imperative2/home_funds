@@ -1,25 +1,12 @@
 import React from "react";
-
 import { Typography, Card, ButtonBase, Button } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
-
-import noimage from "../../../static/NoImage.png";
-
-import house1 from "../../../static/house_1.jpg";
-
 import { withStyles } from "@material-ui/core/styles";
-
 import SettingsRoundedIcon from "@material-ui/icons/SettingsRounded";
 
+import Ribbon from "../../Misc/Ribbon/Ribbon";
+
 const style = {
-  img: {
-    margin: "auto",
-    display: "block",
-    width: "13rem",
-    height: "13rem",
-    maxHeight: "100%",
-    maxWidth: "100%",
-  },
   buttonOffset: {
     marginTop: "1.5rem",
     marginRight: "2rem",
@@ -30,7 +17,7 @@ const style = {
     marginLeft: "-0.6rem",
   },
   card: {
-    background: "LavenderBlush",
+    background: "Ivory",
   },
 };
 
@@ -43,15 +30,13 @@ class NewsCard extends React.Component {
         <Card elevation={5} className={classes.card}>
           <Grid container spacing={2} direction="row">
             <Grid item>
-              <ButtonBase>
-                <img className={classes.img} src={house1} alt="household"></img>
-              </ButtonBase>
+              <Ribbon type={this.props.type}></Ribbon>
             </Grid>
             <Grid item xs={12} sm container>
               <Grid item xs={6} container direction="column" justify="center">
                 <Grid item>
-                  <Typography variant="h5">
-                    Name: <b>{this.props.name}</b>
+                  <Typography variant="h3">
+                    <b>{this.props.name}</b>
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -60,12 +45,12 @@ class NewsCard extends React.Component {
                   </Typography>
                 </Grid>
                 <Grid item>
-                  <Typography variant="subtitle1" color="textSecondary">
-                    Owner:{" "}
-                  </Typography>
+                  <Typography>Household:</Typography>
                 </Grid>
                 <Grid item>
-                  <Typography> sdfgsdfg</Typography>
+                  <Typography variant="subtitle1" color="textSecondary">
+                    Author:{" "}
+                  </Typography>
                 </Grid>
               </Grid>
               <Grid
@@ -76,11 +61,7 @@ class NewsCard extends React.Component {
                 alignItems="flex-end"
               >
                 <Grid item>
-                  <Button
-                    className={classes.buttonOffset}
-                    variant="outlined"
-                    endIcon={<SettingsRoundedIcon className={classes.icon} />}
-                  ></Button>
+                  <Typography variant="body2">{"19.06.2020 20:30"}</Typography>
                 </Grid>
               </Grid>
             </Grid>

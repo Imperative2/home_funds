@@ -11,8 +11,14 @@ const style = {};
 class NewsPage extends React.Component {
   state = {
     news: [
-      { name: "bling", description: "blingsHouse" },
-      { name: "rupert's", description: "ruperts house" },
+      { name: "bling", description: "blingsHouse", type: "warning" },
+      { name: "rupert's", description: "ruperts house", type: "error" },
+      {
+        name: "expolosion",
+        description: "our bathtub just exploded",
+        type: "information",
+      },
+      { name: "Happy", description: "I am very happpy", type: "success" },
     ],
   };
 
@@ -22,21 +28,25 @@ class NewsPage extends React.Component {
     const news = this.state.news.map((news) => {
       return (
         <Grid item key={news.name}>
-          <NewsCard name={news.name} description={news.description}></NewsCard>
+          <NewsCard
+            name={news.name}
+            description={news.description}
+            type={news.type}
+          ></NewsCard>
         </Grid>
       );
     });
 
     return (
       <Container maxWidth="md">
-        <Grid container direction="column" spacing={2}>
+        <Grid container direction="column" spacing={1}>
           <Grid item>News</Grid>
           <Grid item>
             <InputBase defaultValue="Search"></InputBase>
           </Grid>
           <Grid item>tekst</Grid>
+          {news}
         </Grid>
-        {news}
       </Container>
     );
   }
