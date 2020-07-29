@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
 
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
@@ -12,6 +13,9 @@ import SideDrawer from "../SideDrawer/SideDrawer";
 import UserIconMenu from "../Menus/UserIconMenu";
 
 import logo from "../../static/logo.png";
+
+import * as actions from "../../redux/actions/index";
+import { connect } from "react-redux";
 
 const styles = {
   root: {
@@ -33,10 +37,10 @@ const styles = {
 class TopBar extends Component {
   state = {
     user: {
-      name: "Karol",
-      surname: "Masluch",
-      nickname: "Imperative2",
-      logged: true,
+      name: this.props.userReducer.user.name,
+      surname: this.props.userReducer.user.surname,
+      nickname: this.props.userReducer.user.nickname,
+      logged: this.props.userReducer.isLogged,
     },
   };
 
@@ -45,7 +49,14 @@ class TopBar extends Component {
     this.props.history.push("/");
   };
 
+  onButtonLogClick = () => {
+    this.props.onUserLogin();
+  };
+
   render() {
+    console.log(this.state);
+    console.log(this.props.userReducer.isLogged);
+
     const { classes } = this.props;
     return (
       <AppBar position="static" classes={{ root: classes.root }}>
@@ -75,6 +86,9 @@ class TopBar extends Component {
                 userNickname={this.state.user.nickname}
               />
             </Grid>
+            <Grid item>
+              <Button onClick={this.onButtonLogClick}> LOG</Button>
+            </Grid>
           </Grid>
         </Toolbar>
       </AppBar>
@@ -82,4 +96,19 @@ class TopBar extends Component {
   }
 }
 
-export default withStyles(styles)(TopBar);
+const mapStateToProps = (state) => {
+  return {
+    userReducer: state.user,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onUserLogin: () => dispatch(actions.loginUser()),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(TopBar));
