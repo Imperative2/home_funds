@@ -1,3 +1,7 @@
+
+#spring boot properties file
+application.properties
+
 # Compiled class file
 *.class
 
