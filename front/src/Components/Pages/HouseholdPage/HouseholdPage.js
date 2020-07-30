@@ -9,6 +9,7 @@ import HomeIcon from "@material-ui/icons/Home";
 import { withStyles } from "@material-ui/core/styles";
 
 import HouseholdCard from "../../Cards/HouseholdCard/HouseholdCard";
+import AddHouseholdDialog from "../../Dialog/AddHouseholdDialog/AddHouseholdDialog";
 
 const style = {
   block: {
@@ -63,6 +64,9 @@ class HouseholdPage extends React.Component {
                 >
                   Add household
                 </Button>
+              </Grid>
+              <Grid item>
+                <AddHouseholdDialog></AddHouseholdDialog>
               </Grid>
             </Grid>
           </Grid>

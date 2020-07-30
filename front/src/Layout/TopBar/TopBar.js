@@ -86,9 +86,9 @@ class TopBar extends Component {
                 userNickname={this.state.user.nickname}
               />
             </Grid>
-            <Grid item>
+            {/* <Grid item>
               <Button onClick={this.onButtonLogClick}> LOG</Button>
-            </Grid>
+            </Grid> */}
           </Grid>
         </Toolbar>
       </AppBar>
