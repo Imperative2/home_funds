@@ -3,7 +3,7 @@ import { withStyles } from "@material-ui/core/styles";
 
 const style = {
   squareRed: {
-    width: "3rem",
+    width: "6rem",
     height: "100%",
     backgroundColor: "rgb(244, 67, 54)",
     marginLeft: "1.2rem",
@@ -11,7 +11,7 @@ const style = {
     zIndex: 0,
   },
   squareOrange: {
-    width: "3rem",
+    width: "6rem",
     height: "100%",
     backgroundColor: "Orange",
     marginLeft: "1.2rem",
@@ -19,7 +19,7 @@ const style = {
     zIndex: 0,
   },
   squareBlue: {
-    width: "3rem",
+    width: "6rem",
     height: "100%",
     backgroundColor: "RoyalBlue",
     marginLeft: "1.2rem",
@@ -27,7 +27,7 @@ const style = {
     zIndex: 0,
   },
   squareGreen: {
-    width: "3rem",
+    width: "6rem",
     height: "100%",
     backgroundColor: "Green",
     marginLeft: "1.2rem",
@@ -37,23 +37,23 @@ const style = {
   triangle: {
     width: "0",
     heigth: "0",
-    paddingTop: "190%",
-    borderLeft: "1.5rem solid transparent",
-    borderRight: "1.5rem solid transparent",
-    borderBottom: "50px solid white",
+    paddingTop: "50%",
+    borderLeft: "3rem solid transparent",
+    borderRight: "3rem solid transparent",
+    borderBottom: "5rem solid white",
     zIndex: 50,
   },
   lineOrange: {
-    borderLeft: "6px solid Orange",
+    borderLeft: "8px solid Orange",
     height: "6rem",
     zindex: 100,
-    marginLeft: "1.4rem",
+    marginLeft: "2.7rem",
   },
   lineWhite: {
-    borderLeft: "6px solid White",
+    borderLeft: "8px solid White",
     height: "6rem",
     zindex: 100,
-    marginLeft: "1.4rem",
+    marginLeft: "2.7rem",
   },
 };
 

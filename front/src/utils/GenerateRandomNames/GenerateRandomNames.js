@@ -1,0 +1,61 @@
+export default function generateRandomNames(quantity) {
+  const names = [
+    "Nan",
+    "Isaiah",
+    "Alexis",
+    "Mckinley",
+    "Merrilee",
+    "Man",
+    "Riley",
+    "Quentin",
+    "Holly",
+    "Merle",
+    "Sherita",
+    "Andrew",
+    "Emmanuel",
+    "Margurite",
+    "Kendal",
+    "Venus",
+    "Denisse",
+    "Damian",
+    "Kristopher",
+    "Adrienne",
+    "Jacinto",
+    "Lajuana",
+    "Particia",
+    "Valeri",
+    "Barbar",
+    "Orpha",
+    "Clarice",
+    "Henriette",
+    "Alpha",
+    "Hildegarde",
+    "Sanjuanita",
+    "Dominique",
+    "Natisha",
+    "Cinderella",
+    "Brynn",
+    "Aaron",
+    "Dessie",
+    "Shiela",
+    "Sharilyn",
+    "Bernice",
+    "Buddy",
+    "Ernesto",
+    "Harlan",
+    "Isidra",
+    "Esmeralda",
+    "Carisa",
+    "Vinita",
+    "Amber",
+    "Carlena",
+    "Cuc",
+  ];
+
+  let result = [];
+
+  for (var i = 0; i < quantity; i++)
+    result.push(names[Math.round(Math.random() * (names.length - 1))]);
+
+  return result;
+}

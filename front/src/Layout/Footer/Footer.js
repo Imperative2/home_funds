@@ -82,7 +82,7 @@ class Footer extends React.Component {
         <Grid className={classes.background2} container justify="center">
           <Grid className={classes.textColor} item>
             &copy; {new Date().getFullYear()} Copyright:
-            <a href="/"> Karol Masluch </a>
+            <a href="https://github.com/Imperative2"> Karol Masluch </a>
           </Grid>
         </Grid>
       </React.Fragment>

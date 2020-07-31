@@ -15,6 +15,7 @@ import Container from "@material-ui/core/Container";
 
 import GenericStepper from "../../Stepper/GenericStepper/GenericStepper";
 import GenericTable from "../../Tables/GenericTable/GenericTable";
+import generateRandomNames from "../../../utils/GenerateRandomNames/GenerateRandomNames";
 
 const style = {
   dialog: {
@@ -40,10 +41,10 @@ class AddHouseholdDialog extends React.Component {
     open: false,
     activeStep: 0,
     products: [
-      { name: "chleb", id: 0, data: ["123", "123", "123"] },
-      { name: "mleko", id: 1, data: ["123", "123", "123"] },
-      { name: "woda", id: 2, data: ["123", "123", "123"] },
-      { name: "sól", id: 3, data: ["123", "123", "123"] },
+      { name: "chleb", id: 0, data: generateRandomNames(3) },
+      { name: "mleko", id: 1, data: generateRandomNames(3) },
+      { name: "woda", id: 2, data: generateRandomNames(3) },
+      { name: "sól", id: 3, data: generateRandomNames(3) },
     ],
 
     addChipOpen: false,
@@ -71,7 +72,7 @@ class AddHouseholdDialog extends React.Component {
     let product = {
       name: this.state.addChipValue,
       id: this.state.products.length,
-      data: ["123", "123", "123"],
+      data: generateRandomNames(3),
     };
 
     this.setState({

@@ -54,9 +54,6 @@ class TopBar extends Component {
   };
 
   render() {
-    console.log(this.state);
-    console.log(this.props.userReducer.isLogged);
-
     const { classes } = this.props;
     return (
       <AppBar position="static" classes={{ root: classes.root }}>
