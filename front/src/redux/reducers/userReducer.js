@@ -12,7 +12,7 @@ const initialState = {
     color: "",
     avatar: "",
   },
-  isLogged: false,
+  isLogged: true,
 };
 
 const userReducer = (state = initialState, action) => {

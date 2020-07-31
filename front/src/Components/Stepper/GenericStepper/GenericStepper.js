@@ -33,7 +33,11 @@ class GenericStepper extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <Stepper activeStep={this.state.activeStep}>
+        <Stepper
+          orientation={this.props.orientation}
+          activeStep={this.props.activeStep}
+          alternativeLabel={this.props.alternativeLabel}
+        >
           {this.state.steps.map((label, index) => {
             const stepProps = {};
             const labelProps = {};
