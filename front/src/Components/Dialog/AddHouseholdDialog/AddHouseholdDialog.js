@@ -73,6 +73,9 @@ const style = {
   textField: {
     color: "white",
   },
+  input: {
+    display: "none",
+  },
 };
 
 class AddHouseholdDialog extends React.Component {
@@ -91,10 +94,12 @@ class AddHouseholdDialog extends React.Component {
       description:
         "asdfasdf as da sdfasdf asdf asdf asdf asd fasdfasdf asdfasdf fasdf",
       photo: noImage,
+      addedUsers: [],
     },
 
     addChipOpen: false,
     addChipValue: "",
+
     users: [
       {
         id: 0,
@@ -144,6 +149,14 @@ class AddHouseholdDialog extends React.Component {
     this.setState({ ...this.state, addChipOpen: false, addChipValue: "" });
   };
 
+  handlePhotoUpload = (event) => {
+    let image = event.target.files[0];
+    this.setState({
+      ...this.state,
+      household: { ...this.state.household, photo: URL.createObjectURL(image) },
+    });
+  };
+
   handleChange = (event) => {
     const value = event.target.value;
     this.setState({ ...this.state, addChipValue: value });
@@ -163,6 +176,24 @@ class AddHouseholdDialog extends React.Component {
       ...this.state,
       household: { ...this.state.household, description: value },
     });
+  };
+
+  handleAddUserButton = (userId) => {
+    for (let i = 0; i < this.state.users.length; i++) {
+      if (this.state.users[i].id === userId) {
+        let addedUsers = this.state.household.addedUsers;
+        addedUsers.push(this.state.users[i]);
+
+        this.setState({
+          ...this.state,
+          household: {
+            ...this.state.household,
+            addedUsers: addedUsers,
+          },
+        });
+        return;
+      }
+    }
   };
 
   handleAdd = () => {
@@ -210,6 +241,8 @@ class AddHouseholdDialog extends React.Component {
     const labelSize = { style: { fontSize: "1.2rem" } };
     const textColor = { style: { color: "white" } };
 
+    console.log(this.state);
+
     let page_0 = (
       <Container maxWidth="md">
         <Grid
@@ -250,18 +283,28 @@ class AddHouseholdDialog extends React.Component {
               <Grid item>
                 <img
                   className={classes.img}
-                  src={noImage}
+                  src={this.state.household.photo}
                   alt="household"
                 ></img>
               </Grid>
               <Grid item>
-                <Button
-                  color="primary"
-                  variant="contained"
-                  startIcon={<AddAPhotoIcon />}
-                >
-                  Upload Photo
-                </Button>
+                <input
+                  accept="image/*"
+                  className={classes.input}
+                  id="upload-avatar-button"
+                  type="file"
+                  onChange={(event) => this.handlePhotoUpload(event)}
+                ></input>
+                <label htmlFor="upload-avatar-button">
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    startIcon={<AddAPhotoIcon />}
+                    component="span"
+                  >
+                    Upload Photo
+                  </Button>
+                </label>
               </Grid>
             </Grid>
           </Grid>
@@ -367,7 +410,11 @@ class AddHouseholdDialog extends React.Component {
               secondary={"@" + user.nickname}
             />
             <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="delete">
+              <IconButton
+                edge="end"
+                aria-label="delete"
+                onClick={() => this.handleAddUserButton(user.id)}
+              >
                 <PersonAddIcon />
               </IconButton>
             </ListItemSecondaryAction>
@@ -438,7 +485,24 @@ class AddHouseholdDialog extends React.Component {
             </Grid>
           </Grid>
           <Grid item container>
-            <Grid item>Users</Grid>
+            <Grid item xs={12}>
+              <Typography variant="h6">Users:</Typography>
+            </Grid>
+            {this.state.household.addedUsers.map((user) => {
+              return (
+                <Grid item key={user.id}>
+                  <ListItem>
+                    <ListAvatar>
+                      <Avatar src={user.avatar}></Avatar>
+                    </ListAvatar>
+                    <ListText
+                      primary={user.name + " " + user.surname}
+                      secondary={"@" + user.nickname}
+                    />
+                  </ListItem>
+                </Grid>
+              );
+            })}
           </Grid>
         </Grid>
       </Container>
