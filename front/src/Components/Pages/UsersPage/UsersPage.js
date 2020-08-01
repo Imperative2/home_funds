@@ -15,6 +15,8 @@ import IconButton from "@material-ui/core/IconButton";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 
 import userAvatar from "../../../static/user_avatar.jpg";
+import userAvatar2 from "../../../static/user_avatar2.jpg";
+import userAvatar3 from "../../../static/user_avatar3.jpg";
 
 const style = {};
 
@@ -35,7 +37,7 @@ class UsersPage extends React.Component {
         name: "Paweł",
         surname: "Gaweł",
         nickname: "doggerstad",
-        avatar: userAvatar,
+        avatar: userAvatar2,
         description: "somethign something",
         email: "mail@hotmail.com",
       },
@@ -44,7 +46,7 @@ class UsersPage extends React.Component {
         name: "Michał",
         surname: "Pychał",
         nickname: "pussyDestroyerXXX",
-        avatar: userAvatar,
+        avatar: userAvatar3,
         description: "somethign something",
         email: "mail@facebook.com",
       },

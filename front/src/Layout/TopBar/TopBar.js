@@ -20,7 +20,7 @@ import { connect } from "react-redux";
 const styles = {
   root: {
     backgroundColor: "DeepSkyBlue",
-    marginBottom: "1%",
+    marginBottom: 0,
   },
   menuButton: {},
   title: {},

@@ -16,9 +16,9 @@ class Layout extends Component {
 
     return (
       <div>
-        <TopBar></TopBar>
+        <TopBar />
         <div className={classes.dimensions}> {this.props.children}</div>
-        <Footer></Footer>
+        <Footer />
       </div>
     );
   }

@@ -21,7 +21,7 @@ const style = {
     color: "WhiteSmoke",
   },
   linksOffset: {
-    marginLeft: "3rem",
+    paddingLeft: "3rem",
   },
 };
 

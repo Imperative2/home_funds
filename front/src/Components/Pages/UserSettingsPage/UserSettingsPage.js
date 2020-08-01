@@ -7,6 +7,8 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 import userAvatar from "../../../static/user_avatar.jpg";
 
@@ -19,6 +21,10 @@ const style = {
   },
   block: {
     padding: 20,
+  },
+  dialog: {
+    margin: 10,
+    width: 270,
   },
   buttonMargin: {
     margin: 20,
@@ -34,9 +40,72 @@ const style = {
     backgroundColor: "YellowGreen",
     margin: 20,
   },
+  input: {
+    display: "none",
+  },
 };
 
 class UserSettingsPage extends React.Component {
+  state = {
+    user: {
+      userId: 0,
+      name: "Karol",
+      surname: "Maśluch",
+      nickname: "Imperative2",
+      email: "mail@mail.com",
+      description: "",
+      color: "#666666",
+      avatar: userAvatar,
+    },
+    newEmail: null,
+    newPassword: null,
+    newAvatar: null,
+    newDescription: "",
+    saveButtonEnabled: false,
+    dialogChangeEmailOpen: false,
+    dialogChangePasswordOpen: false,
+  };
+
+  handleAvatarUpload = (event) => {
+    let image = event.target.files[0];
+    this.setState({
+      ...this.state,
+      user: { ...this.state.user, avatar: URL.createObjectURL(image) },
+    });
+  };
+
+  handleDescriptionChange = (event) => {
+    if (event.target.value !== this.state.user.description) {
+      this.setState({ ...this.state, saveButtonEnabled: true });
+    } else {
+      this.setState({ ...this.state, saveButtonEnabled: false });
+    }
+  };
+
+  handleSaveDescriptionButton = () => {
+    this.setState({
+      ...this.state,
+      user: { ...this.state.user, description: this.state.newDescription },
+      saveButtonEnabled: false,
+    });
+  };
+
+  handleEmailDialogOpen = () => {
+    this.setState({ ...this.state, dialogChangeEmailOpen: true });
+  };
+
+  handleEmailDialogClose = () => {
+    this.setState({ ...this.state, dialogChangeEmailOpen: false });
+  };
+
+  handlePasswordDialogOpen = () => {
+    this.setState({ ...this.state, dialogChangePasswordOpen: true });
+  };
+
+  handlePasswordDialogClose = () => {
+    this.setState({ ...this.state, dialogChangePasswordOpen: false });
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -70,14 +139,27 @@ class UserSettingsPage extends React.Component {
                   <Grid item>
                     <img
                       className={classes.img}
-                      src={userAvatar}
+                      src={this.state.user.avatar}
                       alt="userAvatar"
                     ></img>
                   </Grid>
                   <Grid item>
-                    <Button color="primary" variant="contained">
-                      Change Avatar
-                    </Button>
+                    <input
+                      accept="image/*"
+                      className={classes.input}
+                      id="upload-avatar-button-userSettings"
+                      type="file"
+                      onChange={(event) => this.handleAvatarUpload(event)}
+                    ></input>
+                    <label htmlFor="upload-avatar-button-userSettings">
+                      <Button
+                        color="primary"
+                        variant="contained"
+                        component="span"
+                      >
+                        Change Avatar
+                      </Button>
+                    </label>
                   </Grid>
                 </Grid>
 
@@ -92,7 +174,7 @@ class UserSettingsPage extends React.Component {
                       inputProps={textSize}
                       label="Name"
                       size="small"
-                      value="Karol"
+                      value={this.state.user.name}
                       multiline
                     ></TextField>
                   </Grid>
@@ -102,7 +184,7 @@ class UserSettingsPage extends React.Component {
                       inputProps={textSize}
                       label="Surname"
                       size="small"
-                      value="Masluch"
+                      value={this.state.user.surname}
                       multiline
                     ></TextField>
                   </Grid>
@@ -112,7 +194,7 @@ class UserSettingsPage extends React.Component {
                       inputProps={textSize}
                       label="Nickname"
                       size="small"
-                      value="Imperative2"
+                      value={this.state.user.nickname}
                       multiline
                     ></TextField>
                   </Grid>
@@ -122,7 +204,7 @@ class UserSettingsPage extends React.Component {
                       inputProps={textSize}
                       label="Email"
                       size="small"
-                      value="longemail@gmail.com"
+                      value={this.state.user.email}
                       multiline
                     ></TextField>
                   </Grid>
@@ -146,6 +228,7 @@ class UserSettingsPage extends React.Component {
                     multiline
                     rows={4}
                     fullWidth
+                    onChange={(event) => this.handleDescriptionChange(event)}
                   ></TextField>
                 </Grid>
                 <Grid item>
@@ -153,7 +236,8 @@ class UserSettingsPage extends React.Component {
                     className={classes.buttonMargin}
                     color="primary"
                     variant="contained"
-                    disabled
+                    disabled={!this.state.saveButtonEnabled}
+                    onClick={this.handleSaveDescriptionButton}
                   >
                     Save changes
                   </Button>
@@ -163,14 +247,104 @@ class UserSettingsPage extends React.Component {
             <br></br>
             <Grid item container justify="space-evenly">
               <Grid item>
-                <Button className={classes.buttonOrange} variant="contained">
+                <Button
+                  className={classes.buttonOrange}
+                  variant="contained"
+                  onClick={this.handleEmailDialogOpen}
+                >
                   Change email
                 </Button>
+                <Dialog
+                  open={this.state.dialogChangeEmailOpen}
+                  onClose={this.handleEmailDialogClose}
+                  scroll="body"
+                >
+                  <DialogTitle>Change Email</DialogTitle>
+                  <Grid
+                    className={classes.dialog}
+                    container
+                    spacing={1}
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
+                  >
+                    <Grid item xs={11}>
+                      <TextField
+                        id="email_form"
+                        label="Email"
+                        variant="outlined"
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item xs={11}>
+                      <TextField
+                        id="email_form2"
+                        label="Repeat Email"
+                        variant="outlined"
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item container justify="flex-end">
+                      <Button variant="contained" color="primary">
+                        Save
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Dialog>
               </Grid>
               <Grid item>
-                <Button className={classes.buttonYellow} variant="contained">
+                <Button
+                  className={classes.buttonYellow}
+                  variant="contained"
+                  onClick={this.handlePasswordDialogOpen}
+                >
                   Change password
                 </Button>
+                <Dialog
+                  open={this.state.dialogChangePasswordOpen}
+                  onClose={this.handlePasswordDialogClose}
+                  scroll="body"
+                >
+                  <DialogTitle>Change Password</DialogTitle>
+                  <Grid
+                    className={classes.dialog}
+                    container
+                    spacing={1}
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
+                  >
+                    <Grid item xs={11}>
+                      <TextField
+                        id="current_password"
+                        label="Current Password:"
+                        variant="outlined"
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item xs={11}>
+                      <TextField
+                        id="new_password"
+                        label="New Password:"
+                        variant="outlined"
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item xs={11}>
+                      <TextField
+                        id="new_password2"
+                        label="Repeat New Password:"
+                        variant="outlined"
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item container justify="flex-end">
+                      <Button variant="contained" color="primary">
+                        Save
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Dialog>
               </Grid>
             </Grid>
           </Grid>

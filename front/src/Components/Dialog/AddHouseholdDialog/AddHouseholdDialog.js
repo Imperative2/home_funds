@@ -29,6 +29,8 @@ import GenericStepper from "../../Stepper/GenericStepper/GenericStepper";
 import GenericTable from "../../Tables/GenericTable/GenericTable";
 import generateRandomNames from "../../../utils/GenerateRandomNames/GenerateRandomNames";
 import userAvatar from "../../../static/user_avatar.jpg";
+import userAvatar2 from "../../../static/user_avatar2.jpg";
+import userAvatar3 from "../../../static/user_avatar3.jpg";
 import noImage from "../../../static/NoImage.png";
 
 const style = {
@@ -115,7 +117,7 @@ class AddHouseholdDialog extends React.Component {
         name: "Paweł",
         surname: "Gaweł",
         nickname: "doggerstad",
-        avatar: userAvatar,
+        avatar: userAvatar2,
         description: "somethign something",
         email: "mail@hotmail.com",
       },
@@ -124,7 +126,7 @@ class AddHouseholdDialog extends React.Component {
         name: "Michał",
         surname: "Pychał",
         nickname: "pussyDestroyerXXX",
-        avatar: userAvatar,
+        avatar: userAvatar3,
         description: "somethign something",
         email: "mail@facebook.com",
       },
@@ -240,8 +242,6 @@ class AddHouseholdDialog extends React.Component {
     const textSize = { style: { fontSize: "1.1rem" } };
     const labelSize = { style: { fontSize: "1.2rem" } };
     const textColor = { style: { color: "white" } };
-
-    console.log(this.state);
 
     let page_0 = (
       <Container maxWidth="md">
