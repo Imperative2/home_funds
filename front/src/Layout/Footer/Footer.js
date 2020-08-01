@@ -33,7 +33,7 @@ class Footer extends React.Component {
       <React.Fragment>
         <Grid className={classes.background1} container direction="column">
           <Grid item container direction="row">
-            <Grid xs={12} md={6} container item direction="column">
+            <Grid xs={11} md={6} container item direction="column">
               <Grid item>
                 <Typography className={classes.textColor} variant="h6">
                   Information
@@ -45,7 +45,7 @@ class Footer extends React.Component {
                 </Typography>
               </Grid>
             </Grid>
-            <Grid item container xs={12} md={6} direction="column">
+            <Grid item container xs={11} md={6} direction="column">
               <Grid item>
                 <Typography className={classes.textColor} variant="h6">
                   Links

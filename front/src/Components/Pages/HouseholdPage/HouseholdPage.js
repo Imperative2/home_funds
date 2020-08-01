@@ -23,6 +23,11 @@ class HouseholdPage extends React.Component {
       { name: "bling", description: "blingsHouse" },
       { name: "rupert's", description: "ruperts house" },
     ],
+    clickedAddHousehold: false,
+  };
+
+  handleAddHouseholdClick = () => {
+    this.setState({ ...this.state, clickedAddHousehold: true });
   };
 
   render() {
@@ -55,6 +60,7 @@ class HouseholdPage extends React.Component {
                 <Button
                   color="primary"
                   variant="contained"
+                  onClick={this.handleAddHouseholdClick}
                   startIcon={
                     <React.Fragment>
                       <AddIcon />
@@ -66,7 +72,9 @@ class HouseholdPage extends React.Component {
                 </Button>
               </Grid>
               <Grid item>
-                <AddHouseholdDialog></AddHouseholdDialog>
+                <AddHouseholdDialog
+                  open={this.state.clickedAddHousehold}
+                ></AddHouseholdDialog>
               </Grid>
             </Grid>
           </Grid>

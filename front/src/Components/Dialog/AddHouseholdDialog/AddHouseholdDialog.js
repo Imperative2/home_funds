@@ -13,9 +13,23 @@ import AddIcon from "@material-ui/icons/Add";
 import Chip from "@material-ui/core/Chip";
 import Container from "@material-ui/core/Container";
 
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListAvatar from "@material-ui/core/ListItemAvatar";
+import ListText from "@material-ui/core/ListItemText";
+import Avatar from "@material-ui/core/Avatar";
+import Divider from "@material-ui/core/Divider";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import IconButton from "@material-ui/core/IconButton";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
+
+import { FixedSizeList } from "react-window";
+
 import GenericStepper from "../../Stepper/GenericStepper/GenericStepper";
 import GenericTable from "../../Tables/GenericTable/GenericTable";
 import generateRandomNames from "../../../utils/GenerateRandomNames/GenerateRandomNames";
+import userAvatar from "../../../static/user_avatar.jpg";
+import noImage from "../../../static/NoImage.png";
 
 const style = {
   dialog: {
@@ -34,11 +48,36 @@ const style = {
     margin: 10,
     width: 200,
   },
+
+  usersList: {
+    maxHeight: "50vh",
+    overflow: "auto",
+  },
+
+  NavigationButtons: {
+    marginBottom: "2rem",
+    marginLeft: "1.5rem",
+    marginRight: "1.5rem",
+    marginTop: "1rem",
+  },
+  img: {
+    maxWidth: "10rem",
+    maxHeight: "10rem",
+    border: "3px solid Gray",
+    borderRadius: 5,
+  },
+  searchBar: {
+    background: "DodgerBlue",
+    borderRadius: 5,
+  },
+  textField: {
+    color: "white",
+  },
 };
 
 class AddHouseholdDialog extends React.Component {
   state = {
-    open: false,
+    mainDialogOpen: this.props.open,
     activeStep: 0,
     products: [
       { name: "chleb", id: 0, data: generateRandomNames(3) },
@@ -47,16 +86,58 @@ class AddHouseholdDialog extends React.Component {
       { name: "sól", id: 3, data: generateRandomNames(3) },
     ],
 
+    household: {
+      name: "fallas",
+      description:
+        "asdfasdf as da sdfasdf asdf asdf asdf asd fasdfasdf asdfasdf fasdf",
+      photo: noImage,
+    },
+
     addChipOpen: false,
     addChipValue: "",
+    users: [
+      {
+        id: 0,
+        name: "Karol",
+        surname: "Masluch",
+        nickname: "Imperative",
+        avatar: userAvatar,
+        description: "somethign something",
+        email: "mail@mail.com",
+      },
+      {
+        id: 1,
+        name: "Paweł",
+        surname: "Gaweł",
+        nickname: "doggerstad",
+        avatar: userAvatar,
+        description: "somethign something",
+        email: "mail@hotmail.com",
+      },
+      {
+        id: 2,
+        name: "Michał",
+        surname: "Pychał",
+        nickname: "pussyDestroyerXXX",
+        avatar: userAvatar,
+        description: "somethign something",
+        email: "mail@facebook.com",
+      },
+    ],
   };
 
-  handleClickOpen = () => {
-    this.setState({ ...this.state, open: true });
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.open !== this.state.mainDialogOpen) {
+      this.setState({ ...this.state, mainDialogOpen: nextProps.open });
+    }
+  }
+
+  handleOpenMainDialog = () => {
+    this.setState({ ...this.state, mainDialogOpen: true });
   };
 
-  handleClose = (value) => {
-    this.setState({ ...this.state, open: false });
+  handleCloseMainDialog = (value) => {
+    this.setState({ ...this.state, mainDialogOpen: false, activeStep: 0 });
   };
 
   handleCloseChipDialog = () => {
@@ -66,6 +147,22 @@ class AddHouseholdDialog extends React.Component {
   handleChange = (event) => {
     const value = event.target.value;
     this.setState({ ...this.state, addChipValue: value });
+  };
+
+  handleChangeHouseholdName = (event) => {
+    const value = event.target.value;
+    this.setState({
+      ...this.state,
+      household: { ...this.state.household, name: value },
+    });
+  };
+
+  handleChangeHouseholdDescription = (event) => {
+    const value = event.target.value;
+    this.setState({
+      ...this.state,
+      household: { ...this.state.household, description: value },
+    });
   };
 
   handleAdd = () => {
@@ -111,29 +208,53 @@ class AddHouseholdDialog extends React.Component {
     const { classes } = this.props;
     const textSize = { style: { fontSize: "1.1rem" } };
     const labelSize = { style: { fontSize: "1.2rem" } };
+    const textColor = { style: { color: "white" } };
 
     let page_0 = (
       <Container maxWidth="md">
-        <Paper elevation={5}>
+        <Grid
+          container
+          spacing={2}
+          justify="center"
+          alignItems="center"
+          direction="column"
+        >
           <Grid
-            className={classes.container}
+            xs={12}
+            item
             container
+            direction="row"
             spacing={2}
-            justify="center"
             alignItems="center"
-            direction="column"
           >
-            <Grid xs={12} item container direction="row">
-              <Grid item xs={6}>
-                <Typography variant="h6"> Household name:</Typography>
-                <TextField
-                  variant="outlined"
-                  InputLabelProps={labelSize}
-                  inputProps={textSize}
-                ></TextField>
-              </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="h6">Household name:</Typography>
+              <TextField
+                variant="outlined"
+                InputLabelProps={labelSize}
+                inputProps={textSize}
+                fullWidth
+                onChange={(event) => this.handleChangeHouseholdName(event)}
+              ></TextField>
+            </Grid>
 
-              <Grid item xs={6}>
+            <Grid
+              item
+              container
+              xs={12}
+              sm={6}
+              direction="column"
+              justify="center"
+              alignItems="center"
+            >
+              <Grid item>
+                <img
+                  className={classes.img}
+                  src={noImage}
+                  alt="household"
+                ></img>
+              </Grid>
+              <Grid item>
                 <Button
                   color="primary"
                   variant="contained"
@@ -143,23 +264,26 @@ class AddHouseholdDialog extends React.Component {
                 </Button>
               </Grid>
             </Grid>
-            <Grid container item xs={10} direction="column">
-              <Grid item>
-                <Typography variant="h6">Household description:</Typography>
-              </Grid>
-              <Grid item>
-                <TextField
-                  variant="outlined"
-                  fullWidth
-                  multiline
-                  InputLabelProps={labelSize}
-                  inputProps={textSize}
-                  rows={5}
-                ></TextField>
-              </Grid>
+          </Grid>
+          <Grid container item xs={12} direction="column">
+            <Grid item>
+              <Typography variant="h6">Household description:</Typography>
+            </Grid>
+            <Grid item>
+              <TextField
+                variant="outlined"
+                fullWidth
+                multiline
+                InputLabelProps={labelSize}
+                inputProps={textSize}
+                rows={5}
+                onChange={(event) =>
+                  this.handleChangeHouseholdDescription(event)
+                }
+              ></TextField>
             </Grid>
           </Grid>
-        </Paper>
+        </Grid>
       </Container>
     );
     let page_1 = (
@@ -230,8 +354,95 @@ class AddHouseholdDialog extends React.Component {
         </Grid>
       </Container>
     );
-    let page_2;
-    let page_3;
+
+    let users = this.state.users.map((user) => {
+      return (
+        <React.Fragment key={user.id}>
+          <ListItem>
+            <ListAvatar>
+              <Avatar src={user.avatar}></Avatar>
+            </ListAvatar>
+            <ListText
+              primary={user.name + " " + user.surname}
+              secondary={"@" + user.nickname}
+            />
+            <ListItemSecondaryAction>
+              <IconButton edge="end" aria-label="delete">
+                <PersonAddIcon />
+              </IconButton>
+            </ListItemSecondaryAction>
+          </ListItem>
+          <Divider />
+        </React.Fragment>
+      );
+    });
+    let page_2 = (
+      <Container maxWidth="sm">
+        <Grid container spacing={2} direction="column">
+          <Grid className={classes.searchBar} item xs={12}>
+            <TextField
+              InputProps={textColor}
+              fullWidth
+              variant="outlined"
+              placeholder="Search"
+            ></TextField>
+          </Grid>
+          <Grid item xs={12} sm={12}>
+            <List className={classes.usersList}>
+              {users}
+              {users}
+              {users}
+              {users}
+              {users}
+            </List>
+          </Grid>
+        </Grid>
+      </Container>
+    );
+    let page_3 = (
+      <Container maxWidth="md">
+        <Grid container spacing={2} direction="column">
+          <Grid item container direction="row">
+            <Grid xs={12} sm={6} container item direction="column" spacing={3}>
+              <Grid item>
+                <Typography variant="h6">
+                  Household name:{" "}
+                  <i>
+                    <b>{this.state.household.name}</b>
+                  </i>
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="h6">
+                  Household description:{" "}
+                  <i>{this.state.household.description}</i>
+                </Typography>
+              </Grid>
+            </Grid>
+
+            <Grid container item xs={12} sm={6} justify="center">
+              <img
+                className={classes.img}
+                src={this.state.household.photo}
+                alt="household"
+              ></img>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Divider></Divider>
+          </Grid>
+          <Grid item container justify="center" alignItems="center">
+            <Grid item>
+              <Typography variant="h6">Products:</Typography>
+              <GenericTable data={this.state.products}></GenericTable>
+            </Grid>
+          </Grid>
+          <Grid item container>
+            <Grid item>Users</Grid>
+          </Grid>
+        </Grid>
+      </Container>
+    );
 
     let currentPage;
     switch (this.state.activeStep) {
@@ -258,25 +469,13 @@ class AddHouseholdDialog extends React.Component {
 
     return (
       <div>
-        <Typography variant="subtitle1">
-          Selected: {this.state.selectedValue}
-        </Typography>
-        <br />
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={this.handleClickOpen}
-        >
-          Open simple dialog
-        </Button>
-
         <Dialog
           className={classes.dialog}
           fullWidth
           maxWidth="md"
-          onClose={this.handleClose}
+          onClose={this.handleCloseMainDialog}
           aria-labelledby="simple-dialog-title"
-          open={this.state.open}
+          open={this.state.mainDialogOpen}
         >
           <DialogTitle id="simple-dialog-title">
             Create new Household
@@ -296,6 +495,7 @@ class AddHouseholdDialog extends React.Component {
           <Grid container justify="space-between" alignItems="center">
             <Grid item>
               <Button
+                className={classes.NavigationButtons}
                 variant="contained"
                 color="primary"
                 onClick={this.handlePreviousButton}
@@ -305,6 +505,7 @@ class AddHouseholdDialog extends React.Component {
             </Grid>
             <Grid item>
               <Button
+                className={classes.NavigationButtons}
                 variant="contained"
                 color="primary"
                 onClick={this.handleNextButton}
