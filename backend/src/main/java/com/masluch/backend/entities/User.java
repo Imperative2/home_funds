@@ -22,8 +22,8 @@ public class User {
 	@Column(name = "surname")
 	private String surname;
 	
-	@Column(name="nick")
-	private String nick;
+	@Column(name="nickname")
+	private String nickname;
 	
 	@Column(name= "email")
 	private String email;
@@ -64,12 +64,12 @@ public class User {
 		this.surname = surname;
 	}
 
-	public String getNick() {
-		return nick;
+	public String getNickname() {
+		return nickname;
 	}
 
-	public void setNick(String nick) {
-		this.nick = nick;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
 	public String getEmail() {
@@ -114,7 +114,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [userId=" + userId + ", name=" + name + ", surname=" + surname + ", nick=" + nick + ", email="
+		return "User [userId=" + userId + ", name=" + name + ", surname=" + surname + ", nickname=" + nickname + ", email="
 				+ email + ", password=" + password + ", description=" + description + ", color=" + color + ", avatar="
 				+ avatar + "]";
 	}
