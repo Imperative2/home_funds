@@ -139,6 +139,14 @@ class AddHouseholdDialog extends React.Component {
     }
   }
 
+  // componentDidUpdate(prevProps) {
+  //   console.log(prevProps.open);
+  //   console.log(this.props.open);
+  //   if (this.state.mainDialogOpen !== this.props.open) {
+  //     this.setState({ ...this.state, mainDialogOpen: this.props.open });
+  //   }
+  // }
+
   handleOpenMainDialog = () => {
     this.setState({ ...this.state, mainDialogOpen: true });
   };

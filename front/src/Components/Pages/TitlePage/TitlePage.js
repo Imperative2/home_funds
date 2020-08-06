@@ -3,6 +3,8 @@ import ProduceTabel from "../../Tables/ProduceTable/ProduceTabel";
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
 import userAvatar2 from "../../../static/user_avatar2.jpg";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
 
 import ScrollAnimation from "react-animate-on-scroll";
 
@@ -13,6 +15,8 @@ import home3 from "../../../static/home3.jpg";
 import home4 from "../../../static/home4.jpg";
 import home5 from "../../../static/home5.jpg";
 
+import AddProductDialog from "../../Dialog/AddProductDialog/AddProductDialog";
+
 const style = {
   img: { width: "100vw", height: "100vh", objectFit: "cover" },
   root: {
@@ -21,6 +25,8 @@ const style = {
 };
 
 class TitlePage extends Component {
+  state = { fabClicked: false };
+
   render() {
     const { classes } = this.props;
 
@@ -57,6 +63,8 @@ class TitlePage extends Component {
         >
           <img className={classes.img} src={home2} alt=""></img>
         </ScrollAnimation>
+
+        <AddProductDialog></AddProductDialog>
 
         <Grid container justify="center">
           <Grid item xs={12} md={11}>
