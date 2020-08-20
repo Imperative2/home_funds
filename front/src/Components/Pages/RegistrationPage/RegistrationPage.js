@@ -245,6 +245,7 @@ class RegistrationPage extends React.Component {
                 id="name"
                 label="Name"
                 variant="outlined"
+                autoComplete="given-name"
                 fullWidth
                 error={
                   this.state.form.formFields.name.touched === true &&
@@ -267,6 +268,7 @@ class RegistrationPage extends React.Component {
                 name="surname"
                 label="Surname"
                 variant="outlined"
+                autoComplete="family-name"
                 required
                 fullWidth
                 error={
@@ -290,6 +292,7 @@ class RegistrationPage extends React.Component {
                 name="nickname"
                 label="Nickname"
                 variant="outlined"
+                autoComplete="nickname"
                 required
                 fullWidth
                 error={
@@ -315,6 +318,8 @@ class RegistrationPage extends React.Component {
                 name="email1"
                 label="Email"
                 variant="outlined"
+                type="email"
+                autoComplete="email"
                 required
                 fullWidth
                 error={
@@ -339,6 +344,8 @@ class RegistrationPage extends React.Component {
                 name="email2"
                 label="Retype email"
                 variant="outlined"
+                type="email"
+                autoComplete="email"
                 required
                 fullWidth
                 error={
@@ -363,6 +370,7 @@ class RegistrationPage extends React.Component {
                 name="password1"
                 label="Password"
                 variant="outlined"
+                type="password"
                 fullWidth
                 required
                 error={
@@ -386,6 +394,7 @@ class RegistrationPage extends React.Component {
                 name="password2"
                 label="Retype password"
                 variant="outlined"
+                type="password"
                 fullWidth
                 required
                 error={
