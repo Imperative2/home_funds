@@ -23,7 +23,7 @@ class NewsPage extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
+    // const { classes } = this.props;
 
     const news = this.state.news.map((news) => {
       return (
