@@ -105,10 +105,13 @@ class RegistrationPage extends React.Component {
       formValid: false,
       enableSubmitButton: false,
     },
+    color: {
+      defaultColor: "#f44336",
+      selectedColor: "#f44336",
+    },
   };
 
   onFormChangeHandle = (event) => {
-    let field = this.state.form.formFields[event.target.name];
     let newState = this.state;
 
     newState = this.validateField(
@@ -213,24 +216,15 @@ class RegistrationPage extends React.Component {
     return state;
   };
 
-  // enableSubmitButton = () => {
-  //   this.setState({
-  //     ...this.state,
-  //     form: { ...this.state.form, enableSubmitButton: true },
-  //   });
-  // };
-
-  // disableSubmitButton = () => {
-  //   this.setState({
-  //     ...this.state,
-  //     form: { ...this.state.form, enableSubmitButton: false },
-  //   });
-  // };
+  handleColorChange = (color) => {
+    this.setState({
+      ...this.state,
+      color: { ...this.state.color, selectedColor: color.hex },
+    });
+  };
 
   render() {
     // const { classes } = this.props;
-
-    console.log(emailRegex.emailRegex);
 
     return (
       <Container maxWidth="xs">
@@ -273,6 +267,7 @@ class RegistrationPage extends React.Component {
                 name="surname"
                 label="Surname"
                 variant="outlined"
+                required
                 fullWidth
                 error={
                   this.state.form.formFields.surname.touched === true &&
@@ -295,6 +290,7 @@ class RegistrationPage extends React.Component {
                 name="nickname"
                 label="Nickname"
                 variant="outlined"
+                required
                 fullWidth
                 error={
                   this.state.form.formFields.nickname.touched === true &&
@@ -319,6 +315,7 @@ class RegistrationPage extends React.Component {
                 name="email1"
                 label="Email"
                 variant="outlined"
+                required
                 fullWidth
                 error={
                   this.state.form.formFields.email1.touched === true &&
@@ -342,6 +339,7 @@ class RegistrationPage extends React.Component {
                 name="email2"
                 label="Retype email"
                 variant="outlined"
+                required
                 fullWidth
                 error={
                   this.state.form.formFields.email2.touched === true &&
@@ -366,6 +364,7 @@ class RegistrationPage extends React.Component {
                 label="Password"
                 variant="outlined"
                 fullWidth
+                required
                 error={
                   this.state.form.formFields.password1.touched === true &&
                   this.state.form.formFields.password1.valid === false
@@ -388,6 +387,7 @@ class RegistrationPage extends React.Component {
                 label="Retype password"
                 variant="outlined"
                 fullWidth
+                required
                 error={
                   this.state.form.formFields.password2.touched === true &&
                   this.state.form.formFields.password2.valid === false
@@ -413,7 +413,10 @@ class RegistrationPage extends React.Component {
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={6}>
-                <CirclePicker></CirclePicker>
+                <CirclePicker
+                  color={this.state.color.selectedColor}
+                  onChange={(color) => this.handleColorChange(color)}
+                ></CirclePicker>
               </Grid>
             </Grid>
             <Grid xs={12} item container justify="center" alignItems="center">
