@@ -8,6 +8,8 @@ import { withStyles } from "@material-ui/core/styles";
 
 import { NavLink } from "react-router-dom";
 
+import emailRegex from "../../../utils/regex/emailRegex";
+
 import { CirclePicker } from "react-color";
 
 const style = {
@@ -61,7 +63,7 @@ class RegistrationPage extends React.Component {
           valid: false,
           minLength: 3,
           maxLength: 50,
-          regex: null,
+          regex: emailRegex.emailRegex,
           required: true,
           match: null,
           errorMessage: null,
@@ -135,7 +137,7 @@ class RegistrationPage extends React.Component {
       valid = valid & false;
       errorMessage = "Too long";
     }
-    if ((field.regex !== null) & (fieldValue.match(field.regex) === false)) {
+    if ((field.regex !== null) & (fieldValue.match(field.regex) === null)) {
       valid = valid & false;
       errorMessage = "Wrong characters";
     }
@@ -227,6 +229,8 @@ class RegistrationPage extends React.Component {
 
   render() {
     // const { classes } = this.props;
+
+    console.log(emailRegex.emailRegex);
 
     return (
       <Container maxWidth="xs">
