@@ -12,6 +12,8 @@ public interface UserDAO {
 	
 	public List<User> findByEmail(String email);
 	
+	public List<User> findByNickname(String nickname);
+	
 	public User save(User user);
 	
 	public void update(User user);

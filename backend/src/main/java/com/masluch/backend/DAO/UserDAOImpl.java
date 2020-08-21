@@ -45,6 +45,16 @@ public class UserDAOImpl implements UserDAO {
 		List<User> userList = query.getResultList();
 		return userList;
 	}
+	
+	@Override
+	public List<User> findByNickname(String nickname)
+	{
+		Session session = entityManager.unwrap(Session.class);
+		Query<User> query = session.createQuery("FROM User u WHERE u.nickname=:nickname",User.class);
+		query.setParameter("nickname", nickname);
+		List<User> userList = query.getResultList();
+		return userList;
+	}
 
 	@Override
 	public User save(User user)
