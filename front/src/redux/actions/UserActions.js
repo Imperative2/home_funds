@@ -11,6 +11,22 @@ export const loginUser = () => {
   };
 };
 
+export const registerUser = (registerForm, history) => {
+  console.log(history);
+  return (dispatch) => {
+    const path = "/user/register";
+    axios
+      .post(path, registerForm)
+      .then((res) => {
+        console.log(res);
+        history.push("/login");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+};
+
 export const setUser = (user) => {
   return {
     type: actionTypes.SET_USER,

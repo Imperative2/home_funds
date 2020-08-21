@@ -12,6 +12,9 @@ import emailRegex from "../../../utils/regex/emailRegex";
 
 import { CirclePicker } from "react-color";
 
+import { connect } from "react-redux";
+import * as actions from "../../../redux/actions/index";
+
 const style = {
   img: {
     width: "100%",
@@ -221,6 +224,21 @@ class RegistrationPage extends React.Component {
       ...this.state,
       color: { ...this.state.color, selectedColor: color.hex },
     });
+  };
+
+  handleSubmitForm = () => {
+    let registrationForm = {
+      name: this.state.form.formFields.name.value,
+      surname: this.state.form.formFields.surname.value,
+      nickname: this.state.form.formFields.nickname.value,
+      email: this.state.form.formFields.email1.value,
+      password: this.state.form.formFields.password1.value,
+      color: this.state.color.selectedColor,
+    };
+
+    console.log(registrationForm);
+
+    this.props.onFormSubmit(registrationForm, this.props.history);
   };
 
   render() {
@@ -437,6 +455,7 @@ class RegistrationPage extends React.Component {
                   disabled={!this.state.form.enableSubmitButton}
                   variant="contained"
                   color="primary"
+                  onClick={this.handleSubmitForm}
                 >
                   Sign up
                 </Button>
@@ -502,4 +521,14 @@ class RegistrationPage extends React.Component {
   }
 }
 
-export default withStyles(style)(RegistrationPage);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onFormSubmit: (registrationForm, history) =>
+      dispatch(actions.registerUser(registrationForm, history)),
+  };
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(withStyles(style)(RegistrationPage));

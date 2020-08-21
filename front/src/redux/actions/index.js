@@ -1,1 +1,1 @@
-export { loginUser } from "./UserActions";
+export { loginUser, registerUser } from "./UserActions";
