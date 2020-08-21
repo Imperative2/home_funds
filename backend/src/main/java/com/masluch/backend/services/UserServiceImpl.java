@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public ResponseEntity<String> registerUser(User newUser) {
 		
-		if(UserValidation.chekcIfRegisterDataValid(newUser) == false) {
+		if(UserValidation.checkIfRegisterDataValid(newUser) == false) {
 			return new ResponseEntity<String>("Bad data", HttpStatus.BAD_REQUEST);
 		}
 		if(checkIfUserExistsByEmail(newUser.getEmail()) == true) {
@@ -44,20 +44,18 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		newUser.setDescription("");
+		newUser.setAvatar(null);
 		
 		User savedUser = userDAO.save(newUser);
 		
-		System.out.println(savedUser);
 		
 		return new ResponseEntity<String>("OK", HttpStatus.OK);
 	}
 	
 	public boolean checkIfUserExistsByEmail(String email) {
-		System.out.println("we are checking email "+email);
 		List<User> foundUsers = userDAO.findByEmail(email);
 		if(foundUsers.size() != 0)
 		{
-			System.out.println(foundUsers);
 			return true;
 		}
 		else
