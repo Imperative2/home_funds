@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -37,8 +39,9 @@ public class User {
 	@Column(name="color")
 	private String color;
 	
-	@Column(name="avatar")
-	private String avatar;
+	@OneToOne
+	@JoinColumn(name = "photo_id")
+	private Photo avatar;
 
 	public Integer getUserId() {
 		return userId;
@@ -104,11 +107,11 @@ public class User {
 		this.color = color;
 	}
 
-	public String getAvatar() {
+	public Photo getAvatar() {
 		return avatar;
 	}
 
-	public void setAvatar(String avatar) {
+	public void setAvatar(Photo avatar) {
 		this.avatar = avatar;
 	}
 
