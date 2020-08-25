@@ -21,13 +21,20 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         user: action.user,
-        isLogged: true,
       };
     }
     case actionTypes.LOGIN_USER: {
       return {
         ...state,
-        user: { isLogged: true },
+        user: action.user,
+        isLogged: true,
+      };
+    }
+    case actionTypes.LOG_OUT: {
+      return {
+        ...state,
+        user: action.user,
+        isLogged: false,
       };
     }
   }

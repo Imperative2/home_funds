@@ -52,6 +52,10 @@ class TopBar extends Component {
     this.props.onUserLogin();
   };
 
+  logoutUserHandler = () => {
+    this.props.onUserLogout();
+  };
+
   render() {
     const { classes } = this.props;
     return (
@@ -80,6 +84,7 @@ class TopBar extends Component {
                 userName={this.props.userReducer.user.name}
                 userSurname={this.props.userReducer.user.surname}
                 userNickname={this.props.userReducer.user.nickname}
+                logoutAction={() => this.logoutUserHandler()}
               />
             </Grid>
             {/* <Grid item>
@@ -101,6 +106,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onUserLogin: () => dispatch(actions.loginUser()),
+    onUserLogout: () => dispatch(actions.logoutUser()),
   };
 };
 

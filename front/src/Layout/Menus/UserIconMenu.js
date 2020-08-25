@@ -55,6 +55,11 @@ class UserIconMenu extends React.Component {
     this.setState({ ...this.state, menuOpen: false, anchorEl: null });
   };
 
+  loggoutHandler = () => {
+    this.menuClose();
+    this.props.logoutAction();
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -89,6 +94,7 @@ class UserIconMenu extends React.Component {
             className={classes.menuItem}
             component={NavLink}
             to="/user/settings"
+            onClick={this.menuClose}
           >
             Settings
             <SettingsIcon />
@@ -96,7 +102,8 @@ class UserIconMenu extends React.Component {
           <MenuItem
             className={classes.menuItem}
             component={NavLink}
-            to="/login"
+            to="/"
+            onClick={this.loggoutHandler}
           >
             Log out
             <ExitToAppIcon />
@@ -126,7 +133,7 @@ class UserIconMenu extends React.Component {
             You are not logged in
           </Typography>
           <hr></hr>
-          <MenuItem component={NavLink} to="/login">
+          <MenuItem component={NavLink} to="/login" onClick={this.menuClose}>
             Log in
             <ExitToAppIcon />
           </MenuItem>

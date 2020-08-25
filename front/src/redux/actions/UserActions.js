@@ -18,7 +18,7 @@ export const loginUser = (loginForm, history) => {
       .then((res) => {
         console.log(res);
         history.push("/");
-        dispatch(setUser(res.data));
+        dispatch(login(res.data));
       })
       .catch((err) => {
         console.log(err);
@@ -42,9 +42,29 @@ export const registerUser = (registerForm, history) => {
   };
 };
 
-export const setUser = (user) => {
+export const logoutUser = () => {
+  return logout();
+};
+
+export const login = (user) => {
   return {
-    type: actionTypes.SET_USER,
+    type: actionTypes.LOGIN_USER,
     user: user,
+  };
+};
+
+export const logout = () => {
+  return {
+    type: actionTypes.LOG_OUT,
+    user: {
+      userId: "",
+      name: "",
+      surname: "",
+      nickname: "",
+      email: "",
+      description: "",
+      color: "",
+      avatar: "",
+    },
   };
 };
