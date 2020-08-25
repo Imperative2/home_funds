@@ -39,7 +39,6 @@ const style = {
 
 class UserIconMenu extends React.Component {
   state = {
-    userLogged: this.props.logged,
     menuOpen: false,
     anchorEl: null,
   };
@@ -137,7 +136,7 @@ class UserIconMenu extends React.Component {
 
     return (
       <React.Fragment>
-        {this.state.userLogged === true ? menuLogged : menuNotLogged}
+        {this.props.logged === true ? menuLogged : menuNotLogged}
       </React.Fragment>
     );
   }

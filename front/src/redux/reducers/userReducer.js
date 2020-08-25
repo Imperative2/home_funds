@@ -6,13 +6,13 @@ const initialState = {
     userId: "",
     name: "",
     surname: "",
-    nick: "",
+    nickname: "",
     email: "",
     description: "",
     color: "",
     avatar: "",
   },
-  isLogged: true,
+  isLogged: false,
 };
 
 const userReducer = (state = initialState, action) => {

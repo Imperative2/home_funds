@@ -37,7 +37,6 @@ class AddProductDialog extends React.Component {
   };
 
   render() {
-    console.log(this.props);
     return (
       <div>
         <Fab color="primary" onClick={this.handleFabClick}>

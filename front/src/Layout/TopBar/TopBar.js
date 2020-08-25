@@ -45,7 +45,6 @@ class TopBar extends Component {
   };
 
   onLogoClick = () => {
-    console.log(this.props);
     this.props.history.push("/");
   };
 
@@ -77,10 +76,10 @@ class TopBar extends Component {
             </Grid>
             <Grid item xs={3} sm={1}>
               <UserIconMenu
-                logged={this.state.user.logged}
-                userName={this.state.user.name}
-                userSurname={this.state.user.surname}
-                userNickname={this.state.user.nickname}
+                logged={this.props.userReducer.isLogged}
+                userName={this.props.userReducer.user.name}
+                userSurname={this.props.userReducer.user.surname}
+                userNickname={this.props.userReducer.user.nickname}
               />
             </Grid>
             {/* <Grid item>

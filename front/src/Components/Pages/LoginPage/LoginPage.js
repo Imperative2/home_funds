@@ -10,6 +10,9 @@ import { withStyles } from "@material-ui/core/styles";
 
 import LockOpenIcon from "@material-ui/icons/LockOpenOutlined";
 
+import { connect } from "react-redux";
+import * as actions from "../../../redux/actions/index";
+
 const style = {
   iconStyle: {
     fontSize: 80,
@@ -23,8 +26,45 @@ const style = {
 };
 
 class LoginPage extends Component {
+  state = {
+    form: {
+      formFields: {
+        login: {
+          value: "",
+        },
+        password: {
+          value: "",
+        },
+      },
+      valid: true,
+    },
+  };
+
+  onFormChangeHandler = (event) => {
+    this.setState({
+      ...this.state,
+      form: {
+        formFields: {
+          ...this.state.form.formFields,
+          [event.target.name]: {
+            ...this.state.form.formFields[event.target.name],
+            value: event.target.value,
+          },
+        },
+      },
+    });
+  };
+
   onSubmitClick = () => {
-    this.props.history.replace("/households");
+    const loginForm = {
+      login: this.state.form.formFields.login.value,
+      password: this.state.form.formFields.password.value,
+      token: null,
+    };
+
+    this.props.onFormSubmit(loginForm, this.props.history);
+
+    // this.props.history.replace("/households");
   };
 
   render() {
@@ -58,20 +98,26 @@ class LoginPage extends Component {
             <Grid item xs={12}>
               <TextField
                 id="outlined-basic"
+                name="login"
                 label="Login"
                 variant="outlined"
                 fullWidth
                 type="login"
+                autoComplete="email"
+                onChange={(event) => this.onFormChangeHandler(event)}
               ></TextField>
             </Grid>
 
             <Grid item xs={12}>
               <TextField
                 id="login_password"
+                name="password"
                 label="Password"
                 variant="outlined"
                 type="Password"
+                autoComplete="password"
                 fullWidth
+                onChange={(event) => this.onFormChangeHandler(event)}
               ></TextField>
               <Grid
                 item
@@ -123,4 +169,11 @@ class LoginPage extends Component {
   }
 }
 
-export default withStyles(style)(LoginPage);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onFormSubmit: (loginForm, history) =>
+      dispatch(actions.loginUser(loginForm, history)),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(withStyles(style)(LoginPage));
