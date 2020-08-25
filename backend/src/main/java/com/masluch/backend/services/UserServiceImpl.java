@@ -12,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.masluch.backend.DAO.UserDAO;
+import com.masluch.backend.DAO.UserDAOImpl;
+import com.masluch.backend.Requests.UserLoginData;
 import com.masluch.backend.entities.User;
 
 import utils.validation.UserValidation;
@@ -73,6 +75,45 @@ public class UserServiceImpl implements UserService {
 			return true;
 		else
 			return false;
+	}
+
+	@Override
+	public ResponseEntity<User> loginUser(UserLoginData userLoginData) {
+		if(userLoginData.getLogin() == null || UserValidation.checkIfEmailValid(userLoginData.getLogin()) != true) {
+			System.out.println("bad 1");
+			return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
+		}
+		if(userLoginData.getPassword() != null) {
+			if(UserValidation.checkIfPasswordValid(userLoginData.getPassword()) == false) {
+				System.out.println("bad 2");
+				return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
+			}
+			else {
+				List<User> foundUsers = userDAO.findByEmail(userLoginData.getLogin());
+				if(foundUsers.size() > 0 && foundUsers.size()< 2) {
+					User foundUser = foundUsers.get(0);
+
+					if(passwordEncoder.matches(userLoginData.getPassword(), foundUser.getPassword()) == true) {
+						return new ResponseEntity<User>(foundUser, HttpStatus.OK);
+					}
+					else {
+						System.out.println("bad 3");
+						return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
+					}
+
+				}
+			}
+			
+		}
+		else if(userLoginData.getToken() != null) {
+			System.out.println("bad 4");
+			return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
+		}
+
+		System.out.println("bad 5");
+		return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
+		
+
 	}
 
 }
