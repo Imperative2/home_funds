@@ -11,6 +11,11 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 import userAvatar from "../../../static/user_avatar.jpg";
+import noImg from "../../../static/NoImage.png";
+import getServerURL from "../../../utils/GetEnvVar/getServerURL";
+
+import { connect } from "react-redux";
+import * as actions from "../../../redux/actions/index";
 
 const style = {
   img: {
@@ -48,69 +53,164 @@ const style = {
 class UserSettingsPage extends React.Component {
   state = {
     user: {
-      userId: 0,
-      name: "Karol",
-      surname: "Maśluch",
-      nickname: "Imperative2",
-      email: "mail@mail.com",
-      description: "",
-      color: "#666666",
-      avatar: userAvatar,
+      userId: this.props.userReducer.user.userId,
+      name: this.props.userReducer.user.name,
+      surname: this.props.userReducer.user.surname,
+      nickname: this.props.userReducer.user.nickname,
+      email: this.props.userReducer.user.email,
+      description: this.props.userReducer.user.description,
+      color: this.props.userReducer.user.color,
+      photo: this.props.userReducer.user.avatar,
+      avatar1: userAvatar,
     },
-    newEmail: null,
-    newPassword: null,
-    newAvatar: null,
-    newDescription: "",
-    saveButtonEnabled: false,
-    dialogChangeEmailOpen: false,
-    dialogChangePasswordOpen: false,
+    formEmail: {
+      newEmail: null,
+      newEmail2: null,
+      dialogChangeEmailOpen: false,
+      saveButtonEnabled: false,
+    },
+    formPassword: {
+      formFields: {
+        currentPassword: {
+          value: "",
+          touched: false,
+          valid: false,
+          minLength: 3,
+          maxLength: 50,
+          regex: null,
+          required: true,
+          match: null,
+          errorMessage: null,
+        },
+        newPassword: {
+          value: "",
+          touched: false,
+          valid: false,
+          minLength: 3,
+          maxLength: 50,
+          regex: null,
+          required: true,
+          match: null,
+          errorMessage: null,
+        },
+        newPassword2: {
+          value: "",
+          touched: false,
+          valid: false,
+          minLength: 3,
+          maxLength: 50,
+          regex: null,
+          required: true,
+          match: null,
+          errorMessage: null,
+        },
+      },
+      currentPassword: null,
+      newPassword: null,
+      newPassword2: null,
+      dialogChangePasswordOpen: false,
+      saveButtonEnabled: false,
+    },
+    formAvatar: {
+      newAvatar: null,
+    },
+    formDescription: {
+      newDescription: this.props.userReducer.user.description,
+      saveButtonEnabled: false,
+    },
   };
 
   handleAvatarUpload = (event) => {
     let image = event.target.files[0];
     this.setState({
       ...this.state,
-      user: { ...this.state.user, avatar: URL.createObjectURL(image) },
+      user: { ...this.state.user, avatar1: URL.createObjectURL(image) },
     });
   };
 
   handleDescriptionChange = (event) => {
     if (event.target.value !== this.state.user.description) {
-      this.setState({ ...this.state, saveButtonEnabled: true });
+      this.setState({
+        ...this.state,
+        formDescription: {
+          ...this.state.formDescription,
+          saveButtonEnabled: true,
+          newDescription: event.target.value,
+        },
+      });
     } else {
-      this.setState({ ...this.state, saveButtonEnabled: false });
+      this.setState({
+        ...this.state,
+        formDescription: {
+          ...this.state.formDescription,
+          saveButtonEnabled: false,
+          newDescription: event.target.value,
+        },
+      });
     }
   };
 
   handleSaveDescriptionButton = () => {
     this.setState({
       ...this.state,
-      user: { ...this.state.user, description: this.state.newDescription },
-      saveButtonEnabled: false,
+      formDescription: {
+        ...this.state.formDescription,
+        saveButtonEnabled: false,
+      },
     });
   };
 
   handleEmailDialogOpen = () => {
-    this.setState({ ...this.state, dialogChangeEmailOpen: true });
+    this.setState({
+      ...this.state,
+      formEmail: {
+        ...this.state.formEmail,
+        dialogChangeEmailOpen: true,
+      },
+    });
   };
 
   handleEmailDialogClose = () => {
-    this.setState({ ...this.state, dialogChangeEmailOpen: false });
+    this.setState({
+      ...this.state,
+      formEmail: {
+        ...this.state.formEmail,
+        dialogChangeEmailOpen: false,
+      },
+    });
   };
 
   handlePasswordDialogOpen = () => {
-    this.setState({ ...this.state, dialogChangePasswordOpen: true });
+    this.setState({
+      ...this.state,
+      formPassword: {
+        ...this.state.formPassword,
+        dialogChangePasswordOpen: true,
+      },
+    });
   };
 
   handlePasswordDialogClose = () => {
-    this.setState({ ...this.state, dialogChangePasswordOpen: false });
+    this.setState({
+      ...this.state,
+      formPassword: {
+        ...this.state.formPassword,
+        dialogChangePasswordOpen: false,
+      },
+    });
   };
+
+  handleEmailChange = (target) => {};
+
+  handlePasswordChange = (target) => {};
 
   render() {
     const { classes } = this.props;
 
     const textSize = { style: { fontSize: "1.1rem" } };
     const labelSize = { style: { fontSize: "1.2rem" } };
+
+    console.log(this.state);
 
     return (
       <div>
@@ -139,7 +239,11 @@ class UserSettingsPage extends React.Component {
                   <Grid item>
                     <img
                       className={classes.img}
-                      src={this.state.user.avatar}
+                      src={
+                        this.state.user.photo !== ""
+                          ? getServerURL() + this.state.user.photo.path
+                          : noImg
+                      }
                       alt="userAvatar"
                     ></img>
                   </Grid>
@@ -228,6 +332,7 @@ class UserSettingsPage extends React.Component {
                     multiline
                     rows={4}
                     fullWidth
+                    value={this.state.formDescription.newDescription}
                     onChange={(event) => this.handleDescriptionChange(event)}
                   ></TextField>
                 </Grid>
@@ -236,7 +341,7 @@ class UserSettingsPage extends React.Component {
                     className={classes.buttonMargin}
                     color="primary"
                     variant="contained"
-                    disabled={!this.state.saveButtonEnabled}
+                    disabled={!this.state.formDescription.saveButtonEnabled}
                     onClick={this.handleSaveDescriptionButton}
                   >
                     Save changes
@@ -255,7 +360,7 @@ class UserSettingsPage extends React.Component {
                   Change email
                 </Button>
                 <Dialog
-                  open={this.state.dialogChangeEmailOpen}
+                  open={this.state.formEmail.dialogChangeEmailOpen}
                   onClose={this.handleEmailDialogClose}
                   scroll="body"
                 >
@@ -271,6 +376,7 @@ class UserSettingsPage extends React.Component {
                     <Grid item xs={11}>
                       <TextField
                         id="email_form"
+                        name="newEmail"
                         label="Email"
                         variant="outlined"
                         fullWidth
@@ -279,13 +385,18 @@ class UserSettingsPage extends React.Component {
                     <Grid item xs={11}>
                       <TextField
                         id="email_form2"
+                        name="newEmail2"
                         label="Repeat Email"
                         variant="outlined"
                         fullWidth
                       />
                     </Grid>
                     <Grid item container justify="flex-end">
-                      <Button variant="contained" color="primary">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        disabled={!this.state.formEmail.saveButtonEnabled}
+                      >
                         Save
                       </Button>
                     </Grid>
@@ -301,7 +412,7 @@ class UserSettingsPage extends React.Component {
                   Change password
                 </Button>
                 <Dialog
-                  open={this.state.dialogChangePasswordOpen}
+                  open={this.state.formPassword.dialogChangePasswordOpen}
                   onClose={this.handlePasswordDialogClose}
                   scroll="body"
                 >
@@ -317,6 +428,7 @@ class UserSettingsPage extends React.Component {
                     <Grid item xs={11}>
                       <TextField
                         id="current_password"
+                        name="currentPassword"
                         label="Current Password:"
                         variant="outlined"
                         fullWidth
@@ -325,6 +437,7 @@ class UserSettingsPage extends React.Component {
                     <Grid item xs={11}>
                       <TextField
                         id="new_password"
+                        name="newPassword"
                         label="New Password:"
                         variant="outlined"
                         fullWidth
@@ -333,13 +446,18 @@ class UserSettingsPage extends React.Component {
                     <Grid item xs={11}>
                       <TextField
                         id="new_password2"
+                        name="newPassword2"
                         label="Repeat New Password:"
                         variant="outlined"
                         fullWidth
                       />
                     </Grid>
                     <Grid item container justify="flex-end">
-                      <Button variant="contained" color="primary">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        disabled={!this.state.formPassword.saveButtonEnabled}
+                      >
                         Save
                       </Button>
                     </Grid>
@@ -354,4 +472,22 @@ class UserSettingsPage extends React.Component {
   }
 }
 
-export default withStyles(style)(UserSettingsPage);
+const mapStateToProps = (state) => {
+  return {
+    userReducer: state.user,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onAvatarUpload: () => dispatch(),
+    onDescriptionUpdate: () => dispatch(),
+    onEmailChange: () => dispatch(),
+    onPasswordChange: () => dispatch(),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(style)(UserSettingsPage));

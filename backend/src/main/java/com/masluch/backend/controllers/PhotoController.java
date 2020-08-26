@@ -82,7 +82,7 @@ public class PhotoController {
 	public ResponseEntity downloadFileFromLocal(@PathVariable String fileName)
 	{
 		System.out.println(fileName);
-		Path path = Paths.get("..//Photos//" + fileName + ".png");
+		Path path = Paths.get("..//Photos//" + fileName );
 		Resource resource = null;
 		try
 			{

@@ -15,6 +15,8 @@ import { CirclePicker } from "react-color";
 import { connect } from "react-redux";
 import * as actions from "../../../redux/actions/index";
 
+import FormValidator from "../../../utils/Validation/FormValidator";
+
 const style = {
   img: {
     width: "100%",
@@ -115,17 +117,18 @@ class RegistrationPage extends React.Component {
   };
 
   onFormChangeHandle = (event) => {
-    let newState = this.state;
+    let validatedFormFields = null;
+    let validatedForm = null;
 
-    newState = this.validateField(
+    validatedFormFields = FormValidator.getValidatedFormFields(
       event.target.name,
       event.target.value,
-      newState
+      this.state.form
     );
 
-    newState = this.validateForm(newState);
+    validatedForm = FormValidator.getValidatedForm(validatedFormFields);
 
-    this.setState(newState);
+    this.setState({ ...this.state, form: validatedForm });
   };
 
   validateField = (fieldName, fieldValue, state) => {
@@ -362,8 +365,6 @@ class RegistrationPage extends React.Component {
                 name="email2"
                 label="Retype email"
                 variant="outlined"
-                type="email"
-                autoComplete="email"
                 required
                 fullWidth
                 error={
