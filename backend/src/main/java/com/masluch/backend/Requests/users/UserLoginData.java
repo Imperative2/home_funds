@@ -1,4 +1,4 @@
-package com.masluch.backend.Requests;
+package com.masluch.backend.Requests.users;
 
 public class UserLoginData {
 
