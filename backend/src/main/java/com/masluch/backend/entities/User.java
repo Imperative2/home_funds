@@ -39,8 +39,8 @@ public class User {
 	@Column(name="color")
 	private String color;
 	
-	@OneToOne
-	@JoinColumn(name = "photo_id")
+	@OneToOne(optional = true)
+	@JoinColumn(name = "avatar" )
 	private Photo avatar;
 
 	public Integer getUserId() {

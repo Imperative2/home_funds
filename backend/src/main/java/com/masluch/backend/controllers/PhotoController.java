@@ -78,10 +78,11 @@ public class PhotoController {
 
 	}
 
-	@GetMapping("/download/{fileName:.+}")
+	@GetMapping("/download/{fileName}")
 	public ResponseEntity downloadFileFromLocal(@PathVariable String fileName)
 	{
-		Path path = Paths.get("..//Photos//" + fileName);
+		System.out.println(fileName);
+		Path path = Paths.get("..//Photos//" + fileName + ".png");
 		Resource resource = null;
 		try
 			{
