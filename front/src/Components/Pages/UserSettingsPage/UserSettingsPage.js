@@ -13,6 +13,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import userAvatar from "../../../static/user_avatar.jpg";
 import noImg from "../../../static/NoImage.png";
 import getServerURL from "../../../utils/GetEnvVar/getServerURL";
+import emailRegex from "../../../utils/regex/emailRegex";
+import FormValidator from "../../../utils/Validation/FormValidator";
 
 import { connect } from "react-redux";
 import * as actions from "../../../redux/actions/index";
@@ -64,10 +66,33 @@ class UserSettingsPage extends React.Component {
       avatar1: userAvatar,
     },
     formEmail: {
-      newEmail: null,
-      newEmail2: null,
+      formFields: {
+        newEmail: {
+          value: "",
+          touched: false,
+          valid: false,
+          minLength: 3,
+          maxLength: 50,
+          regex: emailRegex.emailRegex,
+          required: true,
+          match: null,
+          errorMessage: null,
+        },
+        newEmail2: {
+          value: "",
+          touched: false,
+          valid: false,
+          minLength: 3,
+          maxLength: 50,
+          regex: null,
+          required: true,
+          match: "newEmail",
+          errorMessage: null,
+        },
+      },
+      formValid: false,
+      enableSubmitButton: false,
       dialogChangeEmailOpen: false,
-      saveButtonEnabled: false,
     },
     formPassword: {
       formFields: {
@@ -101,15 +126,13 @@ class UserSettingsPage extends React.Component {
           maxLength: 50,
           regex: null,
           required: true,
-          match: null,
+          match: "newPassword",
           errorMessage: null,
         },
       },
-      currentPassword: null,
-      newPassword: null,
-      newPassword2: null,
+      formValid: false,
+      enableSubmitButton: false,
       dialogChangePasswordOpen: false,
-      saveButtonEnabled: false,
     },
     formAvatar: {
       newAvatar: null,
@@ -175,6 +198,23 @@ class UserSettingsPage extends React.Component {
       ...this.state,
       formEmail: {
         ...this.state.formEmail,
+        formFields: {
+          ...this.state.formEmail.formFields,
+          newEmail: {
+            ...this.state.formEmail.formFields.newEmail,
+            value: "",
+            valid: false,
+            touched: false,
+          },
+          newEmail2: {
+            ...this.state.formEmail.formFields.newEmail2,
+            value: "",
+            valid: false,
+            touched: false,
+          },
+        },
+        formValid: false,
+        enableSubmitButton: false,
         dialogChangeEmailOpen: false,
       },
     });
@@ -195,14 +235,68 @@ class UserSettingsPage extends React.Component {
       ...this.state,
       formPassword: {
         ...this.state.formPassword,
+        formFields: {
+          currentPassword: {
+            ...this.state.formPassword.formFields.currentPassword,
+            value: "",
+            valid: false,
+            touched: false,
+          },
+          newPassword: {
+            ...this.state.formPassword.formFields.newPassword,
+            value: "",
+            valid: false,
+            touched: false,
+          },
+          newPassword2: {
+            ...this.state.formPassword.formFields.newPassword2,
+            value: "",
+            valid: false,
+            touched: false,
+          },
+        },
+        formValid: false,
+        enableSubmitButton: false,
         dialogChangePasswordOpen: false,
       },
     });
   };
 
-  handleEmailChange = (target) => {};
+  handleEmailChange = (event) => {
+    let validatedFormFields = null;
+    let validatedForm = null;
 
-  handlePasswordChange = (target) => {};
+    validatedFormFields = FormValidator.getValidatedFormFields(
+      event.target.name,
+      event.target.value,
+      this.state.formEmail
+    );
+    validatedForm = FormValidator.getValidatedForm(validatedFormFields);
+
+    this.setState({ ...this.state, formEmail: validatedForm });
+  };
+
+  handlePasswordChange = (event) => {
+    let validatedFormFields = null;
+    let validatedForm = null;
+
+    validatedFormFields = FormValidator.getValidatedFormFields(
+      event.target.name,
+      event.target.value,
+      this.state.formPassword
+    );
+    validatedForm = FormValidator.getValidatedForm(validatedFormFields);
+
+    this.setState({ ...this.state, formPassword: validatedForm });
+  };
+
+  handleEmailChangeSubmit = () => {
+    this.handleEmailDialogClose();
+  };
+
+  handlePasswordChangeSubmit = () => {
+    this.handlePasswordDialogClose();
+  };
 
   render() {
     const { classes } = this.props;
@@ -380,6 +474,26 @@ class UserSettingsPage extends React.Component {
                         label="Email"
                         variant="outlined"
                         fullWidth
+                        required
+                        value={this.state.formEmail.formFields.newEmail.value}
+                        error={
+                          this.state.formEmail.formFields.newEmail.touched ===
+                            true &&
+                          this.state.formEmail.formFields.newEmail.valid ===
+                            false
+                            ? true
+                            : false
+                        }
+                        helperText={
+                          this.state.formEmail.formFields.newEmail.touched ===
+                            true &&
+                          this.state.formEmail.formFields.newEmail.valid ===
+                            false
+                            ? this.state.formEmail.formFields.newEmail
+                                .errorMessage
+                            : null
+                        }
+                        onChange={(event) => this.handleEmailChange(event)}
                       />
                     </Grid>
                     <Grid item xs={11}>
@@ -389,13 +503,34 @@ class UserSettingsPage extends React.Component {
                         label="Repeat Email"
                         variant="outlined"
                         fullWidth
+                        required
+                        value={this.state.formEmail.formFields.newEmail2.value}
+                        error={
+                          this.state.formEmail.formFields.newEmail2.touched ===
+                            true &&
+                          this.state.formEmail.formFields.newEmail2.valid ===
+                            false
+                            ? true
+                            : false
+                        }
+                        helperText={
+                          this.state.formEmail.formFields.newEmail2.touched ===
+                            true &&
+                          this.state.formEmail.formFields.newEmail2.valid ===
+                            false
+                            ? this.state.formEmail.formFields.newEmail2
+                                .errorMessage
+                            : null
+                        }
+                        onChange={(event) => this.handleEmailChange(event)}
                       />
                     </Grid>
                     <Grid item container justify="flex-end">
                       <Button
                         variant="contained"
                         color="primary"
-                        disabled={!this.state.formEmail.saveButtonEnabled}
+                        disabled={!this.state.formEmail.enableSubmitButton}
+                        onClick={this.handleEmailChangeSubmit}
                       >
                         Save
                       </Button>
@@ -431,7 +566,31 @@ class UserSettingsPage extends React.Component {
                         name="currentPassword"
                         label="Current Password:"
                         variant="outlined"
+                        type="password"
                         fullWidth
+                        required
+                        value={
+                          this.state.formPassword.formFields.currentPassword
+                            .value
+                        }
+                        error={
+                          this.state.formPassword.formFields.currentPassword
+                            .touched === true &&
+                          this.state.formPassword.formFields.currentPassword
+                            .valid === false
+                            ? true
+                            : false
+                        }
+                        helperText={
+                          this.state.formPassword.formFields.currentPassword
+                            .touched === true &&
+                          this.state.formPassword.formFields.currentPassword
+                            .valid === false
+                            ? this.state.formPassword.formFields.currentPassword
+                                .errorMessage
+                            : null
+                        }
+                        onChange={(event) => this.handlePasswordChange(event)}
                       />
                     </Grid>
                     <Grid item xs={11}>
@@ -440,7 +599,30 @@ class UserSettingsPage extends React.Component {
                         name="newPassword"
                         label="New Password:"
                         variant="outlined"
+                        type="password"
                         fullWidth
+                        required
+                        value={
+                          this.state.formPassword.formFields.newPassword.value
+                        }
+                        error={
+                          this.state.formPassword.formFields.newPassword
+                            .touched === true &&
+                          this.state.formPassword.formFields.newPassword
+                            .valid === false
+                            ? true
+                            : false
+                        }
+                        helperText={
+                          this.state.formPassword.formFields.newPassword
+                            .touched === true &&
+                          this.state.formPassword.formFields.newPassword
+                            .valid === false
+                            ? this.state.formPassword.formFields.newPassword
+                                .errorMessage
+                            : null
+                        }
+                        onChange={(event) => this.handlePasswordChange(event)}
                       />
                     </Grid>
                     <Grid item xs={11}>
@@ -449,14 +631,38 @@ class UserSettingsPage extends React.Component {
                         name="newPassword2"
                         label="Repeat New Password:"
                         variant="outlined"
+                        type="password"
                         fullWidth
+                        required
+                        value={
+                          this.state.formPassword.formFields.newPassword2.value
+                        }
+                        error={
+                          this.state.formPassword.formFields.newPassword2
+                            .touched === true &&
+                          this.state.formPassword.formFields.newPassword2
+                            .valid === false
+                            ? true
+                            : false
+                        }
+                        helperText={
+                          this.state.formPassword.formFields.newPassword2
+                            .touched === true &&
+                          this.state.formPassword.formFields.newPassword2
+                            .valid === false
+                            ? this.state.formPassword.formFields.newPassword2
+                                .errorMessage
+                            : null
+                        }
+                        onChange={(event) => this.handlePasswordChange(event)}
                       />
                     </Grid>
                     <Grid item container justify="flex-end">
                       <Button
                         variant="contained"
                         color="primary"
-                        disabled={!this.state.formPassword.saveButtonEnabled}
+                        disabled={!this.state.formPassword.enableSubmitButton}
+                        onClick={this.handlePasswordChangeSubmit}
                       >
                         Save
                       </Button>
