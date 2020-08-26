@@ -25,10 +25,14 @@ public class UserValidation {
 	};
 	
 	public static boolean checkIfEmailValid(String email) {
-		if(email.matches(SAFE_EMAIL) == true)
+		if(email.toLowerCase().matches(SAFE_EMAIL) == true)
 			return true;
 		else 
+		{
+			System.out.println("bad email");
 			return false;
+		}
+			
 	}
 	
 	public static boolean checkIfNameValid(String name) {
@@ -37,9 +41,15 @@ public class UserValidation {
 		System.out.println(name+" ______ checking regex_______  "+name.matches(UNSAFE_CHARACTERS));
 		
 		if(name != null && name.length() <3 && name.length() <=50 )
+		{
+			System.out.println("bad name length");
 			return false;
+		}
 		if(name.matches(UNSAFE_CHARACTERS)) {
-			return false;
+			{
+				System.out.println("name unsafe characters");
+				return false;
+			}
 		}
 		
 		return true;
@@ -47,18 +57,30 @@ public class UserValidation {
 	
 	public static boolean checkIfSurnameValid(String surname) {
 		if(surname != null && surname.length() <3 && surname.length() <=50 )
+		{
+			System.out.println("bad surname length");
 			return false;
+		}
 		if(surname.matches(UNSAFE_CHARACTERS)) {
-			return false;
+			{
+				System.out.println("surname unsafe characters");
+				return false;
+			}
 		}
 		return true;
 	}
 	
 	public static boolean checkIfNicknameValid(String nickname) {
 		if(nickname != null && nickname.length() <3 && nickname.length() <=50 )
+		{
+			System.out.println("nickname bad length");
 			return false;
+		}
 		if(nickname.matches(UNSAFE_CHARACTERS)) {
-			return false;
+			{
+				System.out.println("nick unsafe characters");
+				return false;
+			}
 		}
 		return true;
 	}
@@ -72,7 +94,10 @@ public class UserValidation {
 		if(color.matches(SAFE_COLORS) == true)
 			return true;
 		else 
+		{
+			System.out.println("bad color");
 			return false;
+		}
 	}
 
 }
