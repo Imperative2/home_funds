@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.masluch.backend.Requests.users.UserLoginData;
 import com.masluch.backend.Requests.users.UserNewPassword;
+import com.masluch.backend.entities.Photo;
 import com.masluch.backend.entities.User;
 
 public interface UserService
@@ -21,6 +22,8 @@ public interface UserService
 	public ResponseEntity<User> updateEmail(User userData);
 	
 	public ResponseEntity<User> updateDescription(User userData);
+	
+	public ResponseEntity<User> updateAvatar(Integer userId, Photo photo);
 	
 
 }

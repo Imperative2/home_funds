@@ -13,6 +13,8 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import { withStyles } from "@material-ui/core/styles";
 
 import userAvatar from "../../static/user_avatar.jpg";
+import noImg from "../../static/NoImage.png";
+import getServerURL from "../../utils/GetEnvVar/getServerURL";
 
 const style = {
   root: {},
@@ -67,7 +69,11 @@ class UserIconMenu extends React.Component {
       <React.Fragment>
         <Avatar
           alt="avatar"
-          src={userAvatar}
+          src={
+            this.props.user.avatar != null
+              ? getServerURL() + this.props.user.avatar.path
+              : null
+          }
           onClick={(event) => this.menuOpen(event)}
         ></Avatar>
         <Menu
@@ -76,7 +82,15 @@ class UserIconMenu extends React.Component {
           open={this.state.menuOpen}
           onClose={this.menuClose}
         >
-          <img className={classes.img} src={userAvatar} alt="avatar"></img>
+          <img
+            className={classes.img}
+            src={
+              this.props.user.avatar != null
+                ? getServerURL() + this.props.user.avatar.path
+                : noImg
+            }
+            alt="avatar"
+          ></img>
           <Typography className={classes.typography} variant="h6">
             <b>
               {this.props.userName} {this.props.userSurname}

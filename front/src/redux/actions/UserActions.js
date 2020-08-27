@@ -46,6 +46,75 @@ export const logoutUser = () => {
   return logout();
 };
 
+export const updateUserPassword = (form) => {
+  return (dispatch) => {
+    const path = "/user/updatePassword";
+    axios
+      .post(path, form)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+};
+
+export const updateUserEmail = (form) => {
+  return (dispatch) => {
+    const path = "/user/updateEmail";
+    axios
+      .post(path, form)
+      .then((res) => {
+        dispatch(setUser(res.data));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+};
+
+export const updateUserDescription = (form) => {
+  return (dispatch) => {
+    const path = "/user/updateDescription";
+    axios
+      .post(path, form)
+      .then((res) => {
+        dispatch(setUser(res.data));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+};
+
+export const updateUserAvatar = (avatarForm) => {
+  console.log(avatarForm);
+  return (dispatch) => {
+    const path = "/user/updateAvatar";
+    axios
+      .post(path, avatarForm.data, {
+        params: {
+          userId: avatarForm.userId,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        dispatch(setUser(res.data));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+};
+
+export const setUser = (user) => {
+  return {
+    type: actionTypes.SET_USER,
+    user: user,
+  };
+};
+
 export const login = (user) => {
   return {
     type: actionTypes.LOGIN_USER,

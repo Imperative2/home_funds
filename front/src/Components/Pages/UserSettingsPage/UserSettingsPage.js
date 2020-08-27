@@ -147,8 +147,23 @@ class UserSettingsPage extends React.Component {
     let image = event.target.files[0];
     this.setState({
       ...this.state,
-      user: { ...this.state.user, avatar1: URL.createObjectURL(image) },
+      user: {
+        ...this.state.user,
+        avatar: { ...this.state.user.avatar, path: URL.createObjectURL(image) },
+      },
     });
+
+    console.log("uploading avatar file");
+
+    const formData = new FormData();
+    formData.append("file", event.target.files[0]);
+
+    let avatarForm = {
+      userId: this.state.user.userId,
+      data: formData,
+    };
+
+    this.props.onAvatarUpload(avatarForm);
   };
 
   handleDescriptionChange = (event) => {
@@ -181,6 +196,13 @@ class UserSettingsPage extends React.Component {
         saveButtonEnabled: false,
       },
     });
+
+    let form = {
+      userId: this.state.user.userId,
+      description: this.state.formDescription.newDescription,
+    };
+
+    this.props.onDescriptionUpdate(form);
   };
 
   handleEmailDialogOpen = () => {
@@ -291,10 +313,25 @@ class UserSettingsPage extends React.Component {
   };
 
   handleEmailChangeSubmit = () => {
+    let form = {
+      userId: this.state.user.userId,
+      email: this.state.formEmail.formFields.newEmail.value,
+    };
+
+    this.props.onEmailUpdate(form);
+
     this.handleEmailDialogClose();
   };
 
   handlePasswordChangeSubmit = () => {
+    let form = {
+      userId: this.state.user.userId,
+      currentPassword: this.state.formPassword.formFields.currentPassword.value,
+      newPassword: this.state.formPassword.formFields.newPassword.value,
+    };
+
+    this.props.onPasswordUpdate(form);
+
     this.handlePasswordDialogClose();
   };
 
@@ -686,10 +723,12 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onAvatarUpload: () => dispatch(),
-    onDescriptionUpdate: () => dispatch(),
-    onEmailChange: () => dispatch(),
-    onPasswordChange: () => dispatch(),
+    onAvatarUpload: (avatarForm) =>
+      dispatch(actions.updateUserAvatar(avatarForm)),
+    onDescriptionUpdate: (form) =>
+      dispatch(actions.updateUserDescription(form)),
+    onEmailUpdate: (form) => dispatch(actions.updateUserEmail(form)),
+    onPasswordUpdate: (form) => dispatch(actions.updateUserPassword(form)),
   };
 };
 

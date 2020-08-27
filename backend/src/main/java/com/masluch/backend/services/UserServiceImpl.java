@@ -16,6 +16,7 @@ import com.masluch.backend.DAO.UserDAO;
 import com.masluch.backend.DAO.UserDAOImpl;
 import com.masluch.backend.Requests.users.UserLoginData;
 import com.masluch.backend.Requests.users.UserNewPassword;
+import com.masluch.backend.entities.Photo;
 import com.masluch.backend.entities.User;
 
 import utils.validation.UserValidation;
@@ -144,7 +145,7 @@ public class UserServiceImpl implements UserService {
 		
 		foundUser.setPassword(passwordEncoder.encode(userNewPassword.getNewPassword()));
 		
-		userDAO.save(foundUser);
+		userDAO.update(foundUser);
 		
 		return new ResponseEntity<String>("PasswordChanged", HttpStatus.OK);
 	}
@@ -166,7 +167,7 @@ public class UserServiceImpl implements UserService {
 		
 		foundUser.setEmail(userData.getEmail());
 		
-		userDAO.save(foundUser);
+		userDAO.update(foundUser);
 		
 		return new ResponseEntity<User>(foundUser, HttpStatus.OK);
 	}
@@ -183,9 +184,27 @@ public class UserServiceImpl implements UserService {
 		
 		foundUser.setDescription(userData.getDescription());
 		
-		userDAO.save(foundUser);
+		userDAO.update(foundUser);
 		
 		return new ResponseEntity<User>(foundUser, HttpStatus.OK);
+	}
+
+	@Override
+	@Transactional
+	public ResponseEntity<User> updateAvatar(Integer userId, Photo photo) {
+		
+		User foundUser = userDAO.findById(userId);
+		if(foundUser == null)
+		{
+			return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
+		}
+		
+		foundUser.setAvatar(photo);
+		
+		userDAO.update(foundUser);
+		
+		return new ResponseEntity<User>(foundUser, HttpStatus.OK);
+		
 	}
 
 }

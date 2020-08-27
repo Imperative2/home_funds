@@ -58,6 +58,9 @@ class TopBar extends Component {
 
   render() {
     const { classes } = this.props;
+
+    console.log(this.props.userReducer.user.avatar);
+
     return (
       <AppBar position="static" classes={{ root: classes.root }}>
         <Toolbar>
@@ -85,6 +88,7 @@ class TopBar extends Component {
                 userSurname={this.props.userReducer.user.surname}
                 userNickname={this.props.userReducer.user.nickname}
                 logoutAction={() => this.logoutUserHandler()}
+                user={this.props.userReducer.user}
               />
             </Grid>
             {/* <Grid item>
