@@ -18,7 +18,7 @@ import home5 from "../../../static/home5.jpg";
 import AddProductDialog from "../../Dialog/AddProductDialog/AddProductDialog";
 
 const style = {
-  img: { width: "100vw", height: "100vh", objectFit: "cover" },
+  img: { width: "98.8vw", height: "100vh", objectFit: "cover" },
   root: {
     marginTop: 0,
   },

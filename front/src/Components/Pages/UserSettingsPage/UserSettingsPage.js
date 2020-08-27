@@ -62,7 +62,7 @@ class UserSettingsPage extends React.Component {
       email: this.props.userReducer.user.email,
       description: this.props.userReducer.user.description,
       color: this.props.userReducer.user.color,
-      photo: this.props.userReducer.user.avatar,
+      avatar: this.props.userReducer.user.avatar,
       avatar1: userAvatar,
     },
     formEmail: {
@@ -371,8 +371,9 @@ class UserSettingsPage extends React.Component {
                     <img
                       className={classes.img}
                       src={
-                        this.state.user.photo !== ""
-                          ? getServerURL() + this.state.user.photo.path
+                        this.state.user.avatar != null &&
+                        this.state.user.avatar.path != null
+                          ? getServerURL() + this.state.user.avatar.path
                           : noImg
                       }
                       alt="userAvatar"

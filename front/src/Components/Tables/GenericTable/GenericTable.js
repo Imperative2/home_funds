@@ -17,7 +17,7 @@ const style = {
     maxHeight: "85vh",
   },
   headCell: {
-    backgroundColor: "OrangeRed",
+    backgroundColor: "Orange",
     color: "white",
   },
 };
