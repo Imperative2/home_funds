@@ -49,7 +49,7 @@ public class PhotoController {
 			@RequestParam String type)
 	{
 
-		System.out.println(file);
+		//System.out.println(file);
 		Photo newPhoto = new Photo();
 
 		newPhoto.setPath("");
@@ -61,7 +61,7 @@ public class PhotoController {
 		Path path = Paths.get("..//Photos//" + fileName);
 		try
 			{
-				System.out.println(path.toString());
+				//System.out.println(path.toString());
 				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 			}
 		catch (IOException e)
@@ -81,7 +81,7 @@ public class PhotoController {
 	@GetMapping("/download/{fileName}")
 	public ResponseEntity downloadFileFromLocal(@PathVariable String fileName)
 	{
-		System.out.println(fileName);
+		//System.out.println(fileName);
 		Path path = Paths.get("..//Photos//" + fileName );
 		Resource resource = null;
 		try

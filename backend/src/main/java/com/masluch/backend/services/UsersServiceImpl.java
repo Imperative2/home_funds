@@ -42,26 +42,33 @@ public class UsersServiceImpl implements UsersService {
 		for(User user: foundUsers)
 		{
 			
-			if(user.getName().matches(regex) == true)
+			String combinedFields = user.getName()+" "+user.getSurname()+" "+user.getEmail()+" "+user.getNickname();
+			
+			if(combinedFields.matches(regex) == true)
 			{
 				matchingUsersList.add(user);
 				continue;
 			}
-			if(user.getSurname().matches(regex) == true)
-			{
-				matchingUsersList.add(user);
-				continue;
-			}
-			if(user.getEmail().matches(regex) == true)
-			{
-				matchingUsersList.add(user);
-				continue;
-			}
-			if(user.getNickname().matches(regex) == true)
-			{
-				matchingUsersList.add(user);
-				continue;
-			}
+//			if(user.getName().matches(regex) == true)
+//			{
+//				matchingUsersList.add(user);
+//				continue;
+//			}
+//			if(user.getSurname().matches(regex) == true)
+//			{
+//				matchingUsersList.add(user);
+//				continue;
+//			}
+//			if(user.getEmail().matches(regex) == true)
+//			{
+//				matchingUsersList.add(user);
+//				continue;
+//			}
+//			if(user.getNickname().matches(regex) == true)
+//			{
+//				matchingUsersList.add(user);
+//				continue;
+//			}
 		}
 		
 		System.out.println(matchingUsersList.toString());

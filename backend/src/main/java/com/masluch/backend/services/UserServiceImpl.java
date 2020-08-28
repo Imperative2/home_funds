@@ -43,16 +43,16 @@ public class UserServiceImpl implements UserService {
 	public ResponseEntity<String> registerUser(User newUser) {
 		
 		if(UserValidation.checkIfRegisterDataValid(newUser) == false) {
-			System.out.println("register 1");
+			////System.out.println("register 1");
 			return new ResponseEntity<String>("Bad data", HttpStatus.BAD_REQUEST);
 			
 		}
 		if(checkIfUserExistsByEmail(newUser.getEmail()) == true) {
-			System.out.println("register 2");
+			////System.out.println("register 2");
 			return new ResponseEntity<String>("Email already registered", HttpStatus.BAD_REQUEST);
 		}
 		if(checkIfUserExistsByNickname(newUser.getNickname()) == true) {
-			System.out.println("register 3");
+			////System.out.println("register 3");
 			return new ResponseEntity<String>("Nickname already registered", HttpStatus.BAD_REQUEST);
 		}
 		
@@ -87,12 +87,12 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public ResponseEntity<User> loginUser(UserLoginData userLoginData) {
 		if(userLoginData.getLogin() == null || UserValidation.checkIfEmailValid(userLoginData.getLogin()) != true) {
-			System.out.println("bad 1");
+			////System.out.println("bad 1");
 			return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
 		}
 		if(userLoginData.getPassword() != null) {
 			if(UserValidation.checkIfPasswordValid(userLoginData.getPassword()) == false) {
-				System.out.println("bad 2");
+				//System.out.println("bad 2");
 				return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
 			}
 			else {
@@ -104,7 +104,7 @@ public class UserServiceImpl implements UserService {
 						return new ResponseEntity<User>(foundUser, HttpStatus.OK);
 					}
 					else {
-						System.out.println("bad 3");
+						//System.out.println("bad 3");
 						return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
 					}
 
@@ -113,11 +113,11 @@ public class UserServiceImpl implements UserService {
 			
 		}
 		else if(userLoginData.getToken() != null) {
-			System.out.println("bad 4");
+			//System.out.println("bad 4");
 			return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
 		}
 
-		System.out.println("bad 5");
+		//System.out.println("bad 5");
 		return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
 		
 
@@ -127,19 +127,19 @@ public class UserServiceImpl implements UserService {
 	public ResponseEntity<String> updatePassword(UserNewPassword userNewPassword) {
 		
 		if(UserValidation.checkIfPasswordValid(userNewPassword.getNewPassword()) == false) {
-			System.out.println("[update password] new password not valid");
+			//System.out.println("[update password] new password not valid");
 			return new ResponseEntity<String>("New password not valid", HttpStatus.BAD_REQUEST);
 		}
 		
 		User foundUser = userDAO.findById(userNewPassword.getUserId());
 		if(foundUser == null) {
-			System.out.println("[update password] user not found");
+			//System.out.println("[update password] user not found");
 			return new ResponseEntity<String>("Wrong data", HttpStatus.BAD_REQUEST);
 		}
 		
 		if(passwordEncoder.matches(userNewPassword.getCurrentPassword(), foundUser.getPassword()) == false)
 		{
-			System.out.println("[update password] wrong current password");
+			//System.out.println("[update password] wrong current password");
 			return new ResponseEntity<String>("Wrong current password", HttpStatus.BAD_REQUEST);
 		}
 		
@@ -154,14 +154,14 @@ public class UserServiceImpl implements UserService {
 	public ResponseEntity<User> updateEmail(User userData) {
 		
 		if(UserValidation.checkIfEmailValid(userData.getEmail()) == false) {
-			System.out.println("[user update email] wrong email");
+			//System.out.println("[user update email] wrong email");
 			return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
 		}
 		
 		User foundUser = userDAO.findById(userData.getUserId());
 		if(foundUser == null)
 		{
-			System.out.println("[user update email] user not found");
+			//System.out.println("[user update email] user not found");
 			return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
 		}
 		
@@ -178,7 +178,7 @@ public class UserServiceImpl implements UserService {
 		User foundUser = userDAO.findById(userData.getUserId());
 		if(foundUser == null)
 		{
-			System.out.println("[user update description] user not found");
+			//System.out.println("[user update description] user not found");
 			return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
 		}
 		
