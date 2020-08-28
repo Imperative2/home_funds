@@ -8,3 +8,10 @@ export {
   updateUserDescription,
   updateUserAvatar,
 } from "./UserActions";
+
+export {
+  fetchUser,
+  fetchUsers,
+  fetchUsersWithRegex,
+  fetchUsersWithRange,
+} from "./UsersActions";

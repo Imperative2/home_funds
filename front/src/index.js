@@ -10,9 +10,11 @@ import thunk from "redux-thunk";
 import { Provider } from "react-redux";
 
 import userReducer from "./redux/reducers/userReducer";
+import usersReducer from "./redux/reducers/usersReducer";
 
 const rootReducer = combineReducers({
   user: userReducer,
+  users: usersReducer,
 });
 
 const store = createStore(rootReducer, applyMiddleware(thunk));

@@ -22,6 +22,9 @@ import userAvatar from "../../../static/user_avatar.jpg";
 import userAvatar2 from "../../../static/user_avatar2.jpg";
 import userAvatar3 from "../../../static/user_avatar3.jpg";
 
+import * as actions from "../../../redux/actions/index";
+import { connect } from "react-redux";
+
 const style = {
   searchBar: {
     background: "DodgerBlue",
@@ -81,6 +84,8 @@ class UsersPage extends React.Component {
   };
 
   handleTabChange = (event, newValue) => {
+    this.props.onUsersFetch();
+
     this.setState({
       ...this.state,
       tabs: { ...this.state.tabs, value: newValue },
@@ -92,6 +97,8 @@ class UsersPage extends React.Component {
     const textSize = { style: { fontSize: "1.1rem" } };
     const labelSize = { style: { fontSize: "1.2rem" } };
     const textColor = { style: { color: "white" } };
+
+    console.log(this.props.usersReducer);
 
     let users = this.state.users.map((user) => {
       return (
@@ -162,4 +169,19 @@ class UsersPage extends React.Component {
   }
 }
 
-export default withStyles(style)(UsersPage);
+const mapStateToProps = (state) => {
+  return {
+    usersReducer: state.users,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onUsersFetch: () => dispatch(actions.fetchUsers()),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(style)(UsersPage));
