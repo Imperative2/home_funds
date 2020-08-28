@@ -28,10 +28,16 @@ import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import GenericStepper from "../../Stepper/GenericStepper/GenericStepper";
 import GenericTable from "../../Tables/GenericTable/GenericTable";
 import generateRandomNames from "../../../utils/GenerateRandomNames/GenerateRandomNames";
-import userAvatar from "../../../static/user_avatar.jpg";
-import userAvatar2 from "../../../static/user_avatar2.jpg";
-import userAvatar3 from "../../../static/user_avatar3.jpg";
+
 import noImage from "../../../static/NoImage.png";
+
+import FormValidation from "../../../utils/Validation/FormValidator";
+import FormValidator from "../../../utils/Validation/FormValidator";
+
+import * as actions from "../../../redux/actions/index";
+import { connect } from "react-redux";
+
+import getServerURL from "../../../utils/GetEnvVar/getServerURL";
 
 const style = {
   dialog: {
@@ -82,56 +88,73 @@ const style = {
 
 class AddHouseholdDialog extends React.Component {
   state = {
+    users: [],
     mainDialogOpen: this.props.open,
-    activeStep: 0,
-    products: [
-      { name: "chleb", id: 0, data: generateRandomNames(3) },
-      { name: "mleko", id: 1, data: generateRandomNames(3) },
-      { name: "woda", id: 2, data: generateRandomNames(3) },
-      { name: "sól", id: 3, data: generateRandomNames(3) },
-    ],
-
-    household: {
-      name: "fallas",
-      description:
-        "asdfasdf as da sdfasdf asdf asdf asdf asd fasdfasdf asdfasdf fasdf",
+    stepper: {
+      activeStep: 0,
+      maxStep: 3,
+      buttonPreviousEnabled: false,
+      buttonNextEnabled: false,
+      showFinishButton: false,
+    },
+    formHousehold: {
+      formFields: {
+        name: {
+          value: "",
+          touched: false,
+          valid: false,
+          minLength: 3,
+          maxLength: 50,
+          required: true,
+          errorMessage: null,
+        },
+        description: {
+          value: "",
+          touched: true,
+          valid: true,
+          minLength: 0,
+          maxLength: 500,
+          required: false,
+          errorMessage: null,
+        },
+      },
+      formValid: false,
+      enableSubmitButton: false,
       photo: noImage,
       addedUsers: [],
+      products: [
+        { name: "chleb", id: 0, data: generateRandomNames(3) },
+        { name: "mleko", id: 1, data: generateRandomNames(3) },
+        { name: "woda", id: 2, data: generateRandomNames(3) },
+        { name: "sól", id: 3, data: generateRandomNames(3) },
+      ],
     },
-
-    addChipOpen: false,
-    addChipValue: "",
-
-    users: [
-      {
-        id: 0,
-        name: "Karol",
-        surname: "Masluch",
-        nickname: "Imperative",
-        avatar: userAvatar,
-        description: "somethign something",
-        email: "mail@mail.com",
+    formAddProduct: {
+      formFields: {
+        productName: {
+          value: "",
+          touched: false,
+          valid: false,
+          minLength: 3,
+          maxLength: 20,
+          required: true,
+          regex: null,
+        },
       },
-      {
-        id: 1,
-        name: "Paweł",
-        surname: "Gaweł",
-        nickname: "doggerstad",
-        avatar: userAvatar2,
-        description: "somethign something",
-        email: "mail@hotmail.com",
-      },
-      {
-        id: 2,
-        name: "Michał",
-        surname: "Pychał",
-        nickname: "pussyDestroyerXXX",
-        avatar: userAvatar3,
-        description: "somethign something",
-        email: "mail@facebook.com",
-      },
-    ],
+      formValid: false,
+      enableSubmitButton: false,
+      addProductDialogOpen: false,
+    },
+    search: {
+      value: "",
+      canSearch: false,
+    },
   };
+
+  componentWillMount() {
+    this.props.onUsersFetch();
+    this.props.onClearSearchUsers();
+  }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.open !== this.state.mainDialogOpen) {
@@ -139,110 +162,216 @@ class AddHouseholdDialog extends React.Component {
     }
   }
 
-  // componentDidUpdate(prevProps) {
-  //   console.log(prevProps.open);
-  //   console.log(this.props.open);
-  //   if (this.state.mainDialogOpen !== this.props.open) {
-  //     this.setState({ ...this.state, mainDialogOpen: this.props.open });
-  //   }
-  // }
-
   handleOpenMainDialog = () => {
     this.setState({ ...this.state, mainDialogOpen: true });
   };
 
   handleCloseMainDialog = (value) => {
-    this.setState({ ...this.state, mainDialogOpen: false, activeStep: 0 });
+    this.setState({
+      ...this.state,
+      mainDialogOpen: false,
+      stepper: { ...this.state.stepper, activeStep: 0 },
+    });
   };
 
-  handleCloseChipDialog = () => {
-    this.setState({ ...this.state, addChipOpen: false, addChipValue: "" });
+  handleCloseAddProductDialog = () => {
+    this.setState({
+      ...this.state,
+      formAddProduct: {
+        formFields: {
+          ...this.state.formAddProduct.formFields,
+          productName: {
+            ...this.state.formAddProduct.formFields.productName,
+            value: "",
+            touched: false,
+            valid: false,
+          },
+        },
+        formValid: false,
+        enableSubmitButton: false,
+        addProductDialogOpen: false,
+      },
+    });
   };
 
   handlePhotoUpload = (event) => {
     let image = event.target.files[0];
     this.setState({
       ...this.state,
-      household: { ...this.state.household, photo: URL.createObjectURL(image) },
+      formHousehold: {
+        ...this.state.formHousehold,
+        photo: URL.createObjectURL(image),
+      },
     });
   };
 
-  handleChange = (event) => {
+  handleAddProductInputChange = (event) => {
+    const name = event.target.name;
     const value = event.target.value;
-    this.setState({ ...this.state, addChipValue: value });
+
+    const validatedFields = FormValidator.getValidatedFormFields(
+      name,
+      value,
+      this.state.formAddProduct
+    );
+    const validatedForm = FormValidator.getValidatedForm(validatedFields);
+
+    this.setState({ ...this.state, formAddProduct: validatedForm });
   };
 
-  handleChangeHouseholdName = (event) => {
+  handleHouseholdTextFieldInput = (event) => {
+    const name = event.target.name;
     const value = event.target.value;
+
+    const validatedFields = FormValidation.getValidatedFormFields(
+      name,
+      value,
+      this.state.formHousehold
+    );
+    const validatedForm = FormValidation.getValidatedForm(validatedFields);
+
     this.setState({
       ...this.state,
-      household: { ...this.state.household, name: value },
+      formHousehold: validatedForm,
+      stepper: {
+        ...this.state.stepper,
+        buttonNextEnabled: validatedForm.formValid,
+      },
     });
   };
 
-  handleChangeHouseholdDescription = (event) => {
-    const value = event.target.value;
-    this.setState({
-      ...this.state,
-      household: { ...this.state.household, description: value },
-    });
-  };
-
-  handleAddUserButton = (userId) => {
-    for (let i = 0; i < this.state.users.length; i++) {
-      if (this.state.users[i].id === userId) {
-        let addedUsers = this.state.household.addedUsers;
-        addedUsers.push(this.state.users[i]);
-
-        this.setState({
-          ...this.state,
-          household: {
-            ...this.state.household,
-            addedUsers: addedUsers,
-          },
-        });
+  handleAddUserButton = (user) => {
+    for (let i = 0; i < this.state.formHousehold.addedUsers.length; i++) {
+      if (user.userId === this.state.formHousehold.addedUsers[i].userId) {
         return;
       }
     }
+
+    let addedUsers = this.state.formHousehold.addedUsers;
+    addedUsers.push(user);
+
+    this.setState({
+      ...this.state,
+      formHousehold: {
+        ...this.state.formHousehold,
+        addedUsers: addedUsers,
+      },
+    });
   };
 
-  handleAdd = () => {
-    let product = {
-      name: this.state.addChipValue,
-      id: this.state.products.length,
+  handleProductAddButton = () => {
+    const product = {
+      name: this.state.formAddProduct.formFields.productName.value,
+      id: this.state.formHousehold.products.length,
       data: generateRandomNames(3),
     };
 
     this.setState({
       ...this.state,
-      addChipValue: "",
-      products: [...this.state.products, product],
-      addChipOpen: false,
+      formAddProduct: {
+        ...this.state.formAddProduct,
+        formFields: {
+          ...this.state.formFields,
+          productName: {
+            ...this.state.formAddProduct.formFields.productName,
+            value: "",
+            touched: false,
+            valid: false,
+          },
+        },
+        formValid: false,
+        enableSubmitButton: false,
+        addProductDialogOpen: false,
+      },
+      formHousehold: {
+        ...this.state.formHousehold,
+        products: [...this.state.formHousehold.products, product],
+      },
     });
   };
 
-  handleAddChipButton = () => {
-    this.setState({ ...this.state, addChipOpen: true });
+  handleButtonOpenAddProductDialog = () => {
+    this.setState({
+      ...this.state,
+      formAddProduct: {
+        ...this.state.formAddProduct,
+        addProductDialogOpen: true,
+      },
+    });
   };
 
   handleNextButton = () => {
-    this.setState({ ...this.state, activeStep: this.state.activeStep + 1 });
+    if (this.state.stepper.activeStep !== this.state.stepper.maxStep) {
+      let nextStep = this.state.stepper.activeStep + 1;
+      let showFinishButton = false;
+      if (nextStep === this.state.stepper.maxStep) showFinishButton = true;
+
+      this.setState({
+        ...this.state,
+        stepper: {
+          ...this.state.stepper,
+          activeStep: nextStep,
+          showFinishButton: showFinishButton,
+          buttonPreviousEnabled: true,
+        },
+      });
+    }
   };
 
   handlePreviousButton = () => {
-    this.setState({ ...this.state, activeStep: this.state.activeStep - 1 });
+    if (this.activeStep !== 0) {
+      let nextStep = this.state.stepper.activeStep - 1;
+      let enablePreviousButton = true;
+      if (nextStep === 0) enablePreviousButton = false;
+
+      this.setState({
+        ...this.state,
+        stepper: {
+          ...this.stepper,
+          activeStep: nextStep,
+          buttonNextEnabled: true,
+          buttonPreviousEnabled: enablePreviousButton,
+          showFinishButton: false,
+        },
+      });
+    }
   };
 
   handleProductRemove = (chipId) => {
-    let products = this.state.products;
+    let products = this.state.formHousehold.products;
 
-    if (this.state.products.length === 1) products.pop();
+    if (products.length === 1) products.pop();
     else products.splice(chipId, 1);
 
     this.setState({
       ...this.state,
-      products: products,
+      formHousehold: {
+        ...this.state.formHousehold,
+        products: products,
+      },
     });
+  };
+
+  handleSearchChange = (event) => {
+    if (event.target.value.length >= 3) {
+      const regex = ".*" + event.target.value + ".*";
+      this.props.onFetchUsersWithRegex(regex);
+      this.setState({
+        ...this.state,
+        search: { ...this.search, value: event.target.value, canSearch: true },
+      });
+    } else {
+      this.props.onClearSearchUsers();
+
+      this.setState({
+        ...this.state,
+        search: {
+          ...this.state.search,
+          value: event.target.value,
+          canSearch: false,
+        },
+      });
+    }
   };
 
   render() {
@@ -250,6 +379,8 @@ class AddHouseholdDialog extends React.Component {
     const textSize = { style: { fontSize: "1.1rem" } };
     const labelSize = { style: { fontSize: "1.2rem" } };
     const textColor = { style: { color: "white" } };
+
+    console.log(this.state);
 
     let page_0 = (
       <Container maxWidth="md">
@@ -272,10 +403,25 @@ class AddHouseholdDialog extends React.Component {
               <Typography variant="h6">Household name:</Typography>
               <TextField
                 variant="outlined"
+                name="name"
                 InputLabelProps={labelSize}
                 inputProps={textSize}
                 fullWidth
-                onChange={(event) => this.handleChangeHouseholdName(event)}
+                required
+                value={this.state.formHousehold.formFields.name.value}
+                onChange={(event) => this.handleHouseholdTextFieldInput(event)}
+                error={
+                  this.state.formHousehold.formFields.name.touched === true &&
+                  this.state.formHousehold.formFields.name.valid === false
+                    ? true
+                    : false
+                }
+                helperText={
+                  this.state.formHousehold.formFields.name.touched === true &&
+                  this.state.formHousehold.formFields.name.valid === false
+                    ? this.state.formHousehold.formFields.name.errorMessage
+                    : null
+                }
               ></TextField>
             </Grid>
 
@@ -291,7 +437,7 @@ class AddHouseholdDialog extends React.Component {
               <Grid item>
                 <img
                   className={classes.img}
-                  src={this.state.household.photo}
+                  src={this.state.formHousehold.photo}
                   alt="household"
                 ></img>
               </Grid>
@@ -323,14 +469,13 @@ class AddHouseholdDialog extends React.Component {
             <Grid item>
               <TextField
                 variant="outlined"
+                name="description"
                 fullWidth
                 multiline
                 InputLabelProps={labelSize}
                 inputProps={textSize}
                 rows={5}
-                onChange={(event) =>
-                  this.handleChangeHouseholdDescription(event)
-                }
+                onChange={(event) => this.handleHouseholdTextFieldInput(event)}
               ></TextField>
             </Grid>
           </Grid>
@@ -341,7 +486,7 @@ class AddHouseholdDialog extends React.Component {
       <Container maxWidth="md">
         <Grid container spacing={1}>
           <Grid item container xs={12} className={classes.border} spacing={1}>
-            {this.state.products.map((product) => {
+            {this.state.formHousehold.products.map((product) => {
               return (
                 <Grid item key={product.id}>
                   <Chip
@@ -356,12 +501,12 @@ class AddHouseholdDialog extends React.Component {
                 color="primary"
                 label="Add"
                 icon={<AddIcon />}
-                onClick={this.handleAddChipButton}
+                onClick={this.handleButtonOpenAddProductDialog}
               ></Chip>
               <Dialog
-                onClose={this.handleCloseChipDialog}
+                onClose={this.handleCloseAddProductDialog}
                 aria-labelledby="simple-dialog-title"
-                open={this.state.addChipOpen}
+                open={this.state.formAddProduct.addProductDialogOpen}
                 scroll="paper"
               >
                 <Grid container spacing={1} className={classes.chipDialog}>
@@ -370,8 +515,31 @@ class AddHouseholdDialog extends React.Component {
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
+                      name="productName"
                       inputProps={textSize}
-                      onChange={(event) => this.handleChange(event)}
+                      value={
+                        this.state.formAddProduct.formFields.productName.value
+                      }
+                      error={
+                        this.state.formAddProduct.formFields.productName
+                          .touched === true &&
+                        this.state.formAddProduct.formFields.productName
+                          .valid === false
+                          ? true
+                          : false
+                      }
+                      helperText={
+                        this.state.formAddProduct.formFields.productName
+                          .touched === true &&
+                        this.state.formAddProduct.formFields.productName
+                          .valid === false
+                          ? this.state.formAddProduct.formFields.productName
+                              .errorMessage
+                          : null
+                      }
+                      onChange={(event) =>
+                        this.handleAddProductInputChange(event)
+                      }
                     ></TextField>
                   </Grid>
                   <Grid item xs={12}>
@@ -379,7 +547,8 @@ class AddHouseholdDialog extends React.Component {
                       variant="contained"
                       color="primary"
                       fullWidth
-                      onClick={this.handleAdd}
+                      disabled={!this.state.formAddProduct.enableSubmitButton}
+                      onClick={this.handleProductAddButton}
                     >
                       Add
                     </Button>
@@ -399,19 +568,27 @@ class AddHouseholdDialog extends React.Component {
               <Typography variant="h6">Preview</Typography>
             </Grid>
             <Grid item>
-              <GenericTable data={this.state.products}></GenericTable>
+              <GenericTable
+                data={this.state.formHousehold.products}
+              ></GenericTable>
             </Grid>
           </Grid>
         </Grid>
       </Container>
     );
 
-    let users = this.state.users.map((user) => {
+    let users = this.props.usersReducer.users.map((user) => {
       return (
-        <React.Fragment key={user.id}>
+        <React.Fragment key={user.userId}>
           <ListItem>
             <ListAvatar>
-              <Avatar src={user.avatar}></Avatar>
+              <Avatar
+                src={
+                  user.avatar != null && user.avatar.path != null
+                    ? getServerURL() + user.avatar.path
+                    : null
+                }
+              ></Avatar>
             </ListAvatar>
             <ListText
               primary={user.name + " " + user.surname}
@@ -421,7 +598,7 @@ class AddHouseholdDialog extends React.Component {
               <IconButton
                 edge="end"
                 aria-label="delete"
-                onClick={() => this.handleAddUserButton(user.id)}
+                onClick={() => this.handleAddUserButton(user)}
               >
                 <PersonAddIcon />
               </IconButton>
@@ -431,6 +608,39 @@ class AddHouseholdDialog extends React.Component {
         </React.Fragment>
       );
     });
+
+    let searchUsers = this.props.usersReducer.searchUsers.map((user) => {
+      return (
+        <React.Fragment key={user.userId}>
+          <ListItem>
+            <ListAvatar>
+              <Avatar
+                src={
+                  user.avatar != null && user.avatar.path != null
+                    ? getServerURL() + user.avatar.path
+                    : null
+                }
+              ></Avatar>
+            </ListAvatar>
+            <ListText
+              primary={user.name + " " + user.surname}
+              secondary={"@" + user.nickname}
+            />
+            <ListItemSecondaryAction>
+              <IconButton
+                edge="end"
+                aria-label="delete"
+                onClick={() => this.handleAddUserButton(user)}
+              >
+                <PersonAddIcon />
+              </IconButton>
+            </ListItemSecondaryAction>
+          </ListItem>
+          <Divider />
+        </React.Fragment>
+      );
+    });
+
     let page_2 = (
       <Container maxWidth="sm">
         <Grid container spacing={2} direction="column">
@@ -440,15 +650,12 @@ class AddHouseholdDialog extends React.Component {
               fullWidth
               variant="outlined"
               placeholder="Search"
+              onChange={(event) => this.handleSearchChange(event)}
             ></TextField>
           </Grid>
           <Grid item xs={12} sm={12}>
             <List className={classes.usersList}>
-              {users}
-              {users}
-              {users}
-              {users}
-              {users}
+              {this.state.search.canSearch === true ? searchUsers : users}
             </List>
           </Grid>
         </Grid>
@@ -463,14 +670,14 @@ class AddHouseholdDialog extends React.Component {
                 <Typography variant="h6">
                   Household name:{" "}
                   <i>
-                    <b>{this.state.household.name}</b>
+                    <b>{this.state.formHousehold.formFields.name.value}</b>
                   </i>
                 </Typography>
               </Grid>
               <Grid item>
                 <Typography variant="h6">
                   Household description:{" "}
-                  <i>{this.state.household.description}</i>
+                  <i>{this.state.formHousehold.formFields.description.value}</i>
                 </Typography>
               </Grid>
             </Grid>
@@ -478,7 +685,7 @@ class AddHouseholdDialog extends React.Component {
             <Grid container item xs={12} sm={6} justify="center">
               <img
                 className={classes.img}
-                src={this.state.household.photo}
+                src={this.state.formHousehold.photo}
                 alt="household"
               ></img>
             </Grid>
@@ -489,14 +696,16 @@ class AddHouseholdDialog extends React.Component {
           <Grid item container justify="center" alignItems="center">
             <Grid item>
               <Typography variant="h6">Products:</Typography>
-              <GenericTable data={this.state.products}></GenericTable>
+              <GenericTable
+                data={this.state.formHousehold.products}
+              ></GenericTable>
             </Grid>
           </Grid>
           <Grid item container>
             <Grid item xs={12}>
               <Typography variant="h6">Users:</Typography>
             </Grid>
-            {this.state.household.addedUsers.map((user) => {
+            {this.state.formHousehold.addedUsers.map((user) => {
               return (
                 <Grid item key={user.id}>
                   <ListItem>
@@ -517,7 +726,7 @@ class AddHouseholdDialog extends React.Component {
     );
 
     let currentPage;
-    switch (this.state.activeStep) {
+    switch (this.state.stepper.activeStep) {
       case 0: {
         currentPage = page_0;
         break;
@@ -553,7 +762,7 @@ class AddHouseholdDialog extends React.Component {
             Create new Household
           </DialogTitle>
           <GenericStepper
-            orientation="horizontal"
+            orientation={window.innerWidth < 660 ? "vertical" : "horizontal"}
             alternativeLabel={false}
             steps={[
               "Setup Household",
@@ -561,7 +770,7 @@ class AddHouseholdDialog extends React.Component {
               "Add members",
               "Finish",
             ]}
-            activeStep={this.state.activeStep}
+            activeStep={this.state.stepper.activeStep}
           ></GenericStepper>
           {currentPage}
           <Grid container justify="space-between" alignItems="center">
@@ -571,6 +780,7 @@ class AddHouseholdDialog extends React.Component {
                 variant="contained"
                 color="primary"
                 onClick={this.handlePreviousButton}
+                disabled={!this.state.stepper.buttonPreviousEnabled}
               >
                 {"<<"}Previous
               </Button>
@@ -581,6 +791,7 @@ class AddHouseholdDialog extends React.Component {
                 variant="contained"
                 color="primary"
                 onClick={this.handleNextButton}
+                disabled={!this.state.stepper.buttonNextEnabled}
               >
                 Next{">>"}
               </Button>
@@ -592,4 +803,22 @@ class AddHouseholdDialog extends React.Component {
   }
 }
 
-export default withStyles(style)(AddHouseholdDialog);
+const mapStateToProps = (state) => {
+  return {
+    usersReducer: state.users,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onUsersFetch: () => dispatch(actions.fetchUsers()),
+    onFetchUsersWithRegex: (regex) =>
+      dispatch(actions.fetchUsersWithRegex(regex)),
+    onClearSearchUsers: () => dispatch(actions.clearSearchUsers()),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(style)(AddHouseholdDialog));

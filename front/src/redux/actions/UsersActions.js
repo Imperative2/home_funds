@@ -56,7 +56,7 @@ export const fetchUsersWithRegex = (regex) => {
         dispatch(addUsers(res.data));
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   };
 };

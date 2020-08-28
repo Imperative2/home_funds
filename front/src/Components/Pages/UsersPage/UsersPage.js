@@ -63,7 +63,6 @@ class UsersPage extends React.Component {
 
   componentWillMount() {
     this.props.onUsersFetch();
-    this.props.onFetchUsersWithRegex(".*arol.*");
   }
 
   handleTabChange = (event, newValue) => {
@@ -82,6 +81,8 @@ class UsersPage extends React.Component {
         search: { ...this.search, value: event.target.value, canSearch: true },
       });
     } else {
+      this.props.onClearSearchUsers();
+
       this.setState({
         ...this.state,
         search: {

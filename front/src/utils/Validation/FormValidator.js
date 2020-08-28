@@ -4,15 +4,15 @@ class FormValidator {
     let valid = true;
     let errorMessage = null;
 
-    if ((field.minLength !== null) & (fieldValue.length < field.minLength)) {
+    if ((field.minLength != null) & (fieldValue.length < field.minLength)) {
       valid = valid & false;
       errorMessage = "Too short";
     }
-    if ((field.maxLength !== null) & (fieldValue.length > field.maxLength)) {
+    if ((field.maxLength != null) & (fieldValue.length > field.maxLength)) {
       valid = valid & false;
       errorMessage = "Too long";
     }
-    if ((field.regex !== null) & (fieldValue.match(field.regex) === null)) {
+    if ((field.regex != null) & (fieldValue.match(field.regex) === null)) {
       valid = valid & false;
       errorMessage = "Wrong characters";
     }
@@ -20,7 +20,7 @@ class FormValidator {
       valid = valid & false;
       errorMessage = "Field required";
     }
-    if (field.match !== null) {
+    if (field.match != null) {
       const matchFieldValue = form.formFields[field.match].value;
       if (fieldValue !== matchFieldValue) {
         valid = valid & false;
