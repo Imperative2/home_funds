@@ -50,8 +50,9 @@ export const fetchUsersWithRegex = (regex) => {
         },
       })
       .then((res) => {
-        console.log(res.data);
+        console.log(res);
 
+        dispatch(setSearchUsers(res.data));
         dispatch(addUsers(res.data));
       })
       .catch((err) => {
@@ -103,8 +104,21 @@ const addUsers = (users) => {
   };
 };
 
-const clearUsers = () => {
+export const clearUsers = () => {
   return {
     type: actionTypes.CLEAR_USERS,
+  };
+};
+
+const setSearchUsers = (users) => {
+  return {
+    type: actionTypes.SET_SEARCH_USERS,
+    users: users,
+  };
+};
+
+export const clearSearchUsers = () => {
+  return {
+    type: actionTypes.CLEAR_SEARCH_USERS,
   };
 };

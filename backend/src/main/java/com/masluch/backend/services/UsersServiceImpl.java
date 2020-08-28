@@ -64,6 +64,8 @@ public class UsersServiceImpl implements UsersService {
 			}
 		}
 		
+		System.out.println(matchingUsersList.toString());
+		
 		return new ResponseEntity<List<User>>(matchingUsersList, HttpStatus.OK);
 	}
 

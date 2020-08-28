@@ -36,6 +36,7 @@ public class UsersController {
 	@GetMapping(path= "/fetchUsersWithRegex")
 	private ResponseEntity<List<User>> fetchUsersWithRegex(@RequestParam(name="regex", required = true) String regex)
 	{
+		System.out.println(regex);
 		return usersService.fetchUsersWithRegex(regex);
 	}
 	

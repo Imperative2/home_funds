@@ -14,4 +14,6 @@ export {
   fetchUsers,
   fetchUsersWithRegex,
   fetchUsersWithRange,
+  clearUsers,
+  clearSearchUsers,
 } from "./UsersActions";

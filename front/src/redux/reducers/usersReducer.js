@@ -4,6 +4,7 @@ import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
   users: [],
+  searchUsers: [],
 };
 
 const usersReducer = (state = initialState, action) => {
@@ -32,6 +33,20 @@ const usersReducer = (state = initialState, action) => {
       return {
         ...state,
         users: [],
+      };
+    }
+
+    case actionTypes.SET_SEARCH_USERS: {
+      return {
+        ...state,
+        searchUsers: action.users,
+      };
+    }
+
+    case actionTypes.CLEAR_SEARCH_USERS: {
+      return {
+        ...state,
+        searchUsers: [],
       };
     }
   }

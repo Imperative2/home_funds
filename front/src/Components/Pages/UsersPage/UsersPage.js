@@ -25,6 +25,8 @@ import userAvatar3 from "../../../static/user_avatar3.jpg";
 import * as actions from "../../../redux/actions/index";
 import { connect } from "react-redux";
 
+import getServerURL from "../../../utils/GetEnvVar/getServerURL";
+
 const style = {
   searchBar: {
     background: "DodgerBlue",
@@ -48,48 +50,47 @@ const style = {
 
 class UsersPage extends React.Component {
   state = {
-    users: [
-      {
-        id: 0,
-        name: "Karol",
-        surname: "Masluch",
-        nickname: "Imperative",
-        avatar: userAvatar,
-        description: "somethign something",
-        email: "mail@mail.com",
-      },
-      {
-        id: 1,
-        name: "Paweł",
-        surname: "Gaweł",
-        nickname: "doggerstad",
-        avatar: userAvatar2,
-        description: "somethign something",
-        email: "mail@hotmail.com",
-      },
-      {
-        id: 2,
-        name: "Michał",
-        surname: "Pychał",
-        nickname: "pussyDestroyerXXX",
-        avatar: userAvatar3,
-        description: "somethign something",
-        email: "mail@facebook.com",
-      },
-    ],
+    users: [],
 
     tabs: {
-      value: 1,
+      value: 0,
+    },
+    search: {
+      value: "",
+      canSearch: false,
     },
   };
 
-  handleTabChange = (event, newValue) => {
+  componentWillMount() {
     this.props.onUsersFetch();
+    this.props.onFetchUsersWithRegex(".*arol.*");
+  }
 
+  handleTabChange = (event, newValue) => {
     this.setState({
       ...this.state,
       tabs: { ...this.state.tabs, value: newValue },
     });
+  };
+
+  handleSearchChange = (event) => {
+    if (event.target.value.length >= 3) {
+      const regex = ".*" + event.target.value + ".*";
+      this.props.onFetchUsersWithRegex(regex);
+      this.setState({
+        ...this.state,
+        search: { ...this.search, value: event.target.value, canSearch: true },
+      });
+    } else {
+      this.setState({
+        ...this.state,
+        search: {
+          ...this.state.search,
+          value: event.target.value,
+          canSearch: false,
+        },
+      });
+    }
   };
 
   render() {
@@ -100,12 +101,46 @@ class UsersPage extends React.Component {
 
     console.log(this.props.usersReducer);
 
-    let users = this.state.users.map((user) => {
+    let users = this.props.usersReducer.users.map((user) => {
       return (
-        <React.Fragment key={user.id}>
+        <React.Fragment key={user.userId}>
           <ListItem>
             <ListAvatar>
-              <Avatar src={user.avatar}></Avatar>
+              <Avatar
+                src={
+                  user.avatar != null && user.avatar.path != null
+                    ? getServerURL() + user.avatar.path
+                    : null
+                }
+              ></Avatar>
+            </ListAvatar>
+            <ListText
+              primary={user.name + " " + user.surname}
+              secondary={"@" + user.nickname}
+            />
+            <ListItemSecondaryAction>
+              <IconButton edge="end" aria-label="delete">
+                <PersonAddIcon />
+              </IconButton>
+            </ListItemSecondaryAction>
+          </ListItem>
+          <Divider />
+        </React.Fragment>
+      );
+    });
+
+    let searchUsers = this.props.usersReducer.searchUsers.map((user) => {
+      return (
+        <React.Fragment key={user.userId}>
+          <ListItem>
+            <ListAvatar>
+              <Avatar
+                src={
+                  user.avatar != null && user.avatar.path != null
+                    ? getServerURL() + user.avatar.path
+                    : null
+                }
+              ></Avatar>
             </ListAvatar>
             <ListText
               primary={user.name + " " + user.surname}
@@ -151,15 +186,12 @@ class UsersPage extends React.Component {
                 fullWidth
                 variant="outlined"
                 placeholder="Search"
+                onChange={(event) => this.handleSearchChange(event)}
               ></TextField>
             </Grid>
             <Grid item xs={12} sm={12}>
               <List>
-                {users}
-                {users}
-                {users}
-                {users}
-                {users}
+                {this.state.search.canSearch === true ? searchUsers : users}
               </List>
             </Grid>
           </Grid>
@@ -178,6 +210,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onUsersFetch: () => dispatch(actions.fetchUsers()),
+    onFetchUsersWithRegex: (regex) =>
+      dispatch(actions.fetchUsersWithRegex(regex)),
+    onClearSearchUsers: () => dispatch(actions.clearSearchUsers()),
   };
 };
 
