@@ -207,4 +207,13 @@ public class UserServiceImpl implements UserService {
 		
 	}
 
+	@Override
+	public boolean checkIfUserExists(Integer userId) {
+		User foundUser = userDAO.findById(userId);
+		if(foundUser == null)
+			return false;
+		else 
+			return true;
+	}
+
 }

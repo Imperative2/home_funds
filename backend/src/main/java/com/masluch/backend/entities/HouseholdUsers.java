@@ -53,6 +53,11 @@ public class HouseholdUsers {
 	public void setUsers(List<User> users) {
 		this.users = users;
 	}
+
+	@Override
+	public String toString() {
+		return "HouseholdUsers [id=" + id + ", household=" + household + ", users=" + users + "]";
+	}
 	
 	
 }

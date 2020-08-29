@@ -46,7 +46,7 @@ public class UserController {
 	@PostMapping("/register")
 	public ResponseEntity<String> registerUser(@RequestBody User newUser){
 		
-		System.out.println(newUser);
+		//System.out.println(newUser);
 		
 		return userService.registerUser(newUser);
 		
@@ -54,7 +54,7 @@ public class UserController {
 	
 	@PostMapping("/login")
 	public ResponseEntity<User> loginUser(@RequestBody UserLoginData userLoginData){
-		System.out.println(userLoginData);
+		//System.out.println(userLoginData);
 		
 		return userService.loginUser(userLoginData);
 	}
@@ -80,7 +80,7 @@ public class UserController {
 			@RequestParam Integer userId)
 	{
 
-		System.out.println("[user controller] uploading user avatar");
+		//System.out.println("[user controller] uploading user avatar");
 		
 		Photo newPhoto = new Photo();
 

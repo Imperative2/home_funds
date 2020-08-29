@@ -25,5 +25,7 @@ public interface UserService
 	
 	public ResponseEntity<User> updateAvatar(Integer userId, Photo photo);
 	
+	public boolean checkIfUserExists(Integer userId);
+	
 
 }

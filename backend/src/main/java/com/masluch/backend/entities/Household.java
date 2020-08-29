@@ -70,6 +70,12 @@ public class Household {
 	public void setPhoto(String photo) {
 		this.photo = photo;
 	}
+
+	@Override
+	public String toString() {
+		return "Household [householdId=" + householdId + ", owner=" + owner + ", name=" + name + ", description="
+				+ description + ", photo=" + photo + "]";
+	}
 	
 	
 	

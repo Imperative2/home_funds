@@ -48,5 +48,12 @@ public class HouseholdProduct {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	@Override
+	public String toString() {
+		return "HouseholdProduct [productId=" + productId + ", household=" + household + ", name=" + name + "]";
+	}
+	
+	
 	
 }
