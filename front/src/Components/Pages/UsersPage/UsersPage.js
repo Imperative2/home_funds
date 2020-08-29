@@ -102,7 +102,8 @@ class UsersPage extends React.Component {
 
     console.log(this.props.usersReducer);
 
-    let users = this.props.usersReducer.users.map((user) => {
+    let users = Array.from(this.props.usersReducer.users).map((mapEntry) => {
+      let user = mapEntry[1];
       return (
         <React.Fragment key={user.userId}>
           <ListItem>
@@ -130,33 +131,38 @@ class UsersPage extends React.Component {
       );
     });
 
-    let searchUsers = this.props.usersReducer.searchUsers.map((user) => {
-      return (
-        <React.Fragment key={user.userId}>
-          <ListItem>
-            <ListAvatar>
-              <Avatar
-                src={
-                  user.avatar != null && user.avatar.path != null
-                    ? getServerURL() + user.avatar.path
-                    : null
-                }
-              ></Avatar>
-            </ListAvatar>
-            <ListText
-              primary={user.name + " " + user.surname}
-              secondary={"@" + user.nickname}
-            />
-            <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="delete">
-                <PersonAddIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-          <Divider />
-        </React.Fragment>
-      );
-    });
+    console.log(Array.from(this.props.usersReducer.searchUsers));
+
+    let searchUsers = Array.from(this.props.usersReducer.searchUsers).map(
+      (mapEntry) => {
+        const user = mapEntry[1];
+        return (
+          <React.Fragment key={user.userId}>
+            <ListItem>
+              <ListAvatar>
+                <Avatar
+                  src={
+                    user.avatar != null && user.avatar.path != null
+                      ? getServerURL() + user.avatar.path
+                      : null
+                  }
+                ></Avatar>
+              </ListAvatar>
+              <ListText
+                primary={user.name + " " + user.surname}
+                secondary={"@" + user.nickname}
+              />
+              <ListItemSecondaryAction>
+                <IconButton edge="end" aria-label="delete">
+                  <PersonAddIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+            <Divider />
+          </React.Fragment>
+        );
+      }
+    );
 
     return (
       <React.Fragment>

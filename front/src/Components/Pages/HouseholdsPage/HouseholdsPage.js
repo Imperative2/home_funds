@@ -17,7 +17,7 @@ const style = {
   },
 };
 
-class HouseholdPage extends React.Component {
+class HouseholdsPage extends React.Component {
   state = {
     households: [
       { name: "bling", description: "blingsHouse" },
@@ -27,6 +27,10 @@ class HouseholdPage extends React.Component {
   };
 
   handleAddHouseholdClick = () => {
+    this.setState({ ...this.state, clickedAddHousehold: true });
+  };
+
+  handleResetClickedAddHousehold = () => {
     this.setState({ ...this.state, clickedAddHousehold: true });
   };
 
@@ -74,6 +78,7 @@ class HouseholdPage extends React.Component {
               <Grid item>
                 <AddHouseholdDialog
                   open={this.state.clickedAddHousehold}
+                  resetClick={() => this.handleResetClickedAddHousehold()}
                 ></AddHouseholdDialog>
               </Grid>
             </Grid>
@@ -83,4 +88,4 @@ class HouseholdPage extends React.Component {
     );
   }
 }
-export default withStyles(style)(HouseholdPage);
+export default withStyles(style)(HouseholdsPage);

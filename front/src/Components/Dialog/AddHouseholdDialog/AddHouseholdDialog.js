@@ -22,6 +22,7 @@ import Divider from "@material-ui/core/Divider";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import IconButton from "@material-ui/core/IconButton";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import ClearIcon from "@material-ui/icons/Clear";
 
 // import { FixedSizeList } from "react-window";
 
@@ -121,7 +122,7 @@ class AddHouseholdDialog extends React.Component {
       formValid: false,
       enableSubmitButton: false,
       photo: noImage,
-      addedUsers: [],
+      addedUsers: new Map(),
       products: [
         { name: "chleb", id: 0, data: generateRandomNames(3) },
         { name: "mleko", id: 1, data: generateRandomNames(3) },
@@ -167,6 +168,8 @@ class AddHouseholdDialog extends React.Component {
   };
 
   handleCloseMainDialog = (value) => {
+    this.props.resetClick();
+
     this.setState({
       ...this.state,
       mainDialogOpen: false,
@@ -241,20 +244,35 @@ class AddHouseholdDialog extends React.Component {
   };
 
   handleAddUserButton = (user) => {
-    for (let i = 0; i < this.state.formHousehold.addedUsers.length; i++) {
-      if (user.userId === this.state.formHousehold.addedUsers[i].userId) {
-        return;
-      }
+    if (this.state.formHousehold.addedUsers.has(user.userId)) {
+      return;
     }
 
-    let addedUsers = this.state.formHousehold.addedUsers;
-    addedUsers.push(user);
+    let addedUsersMap = this.state.formHousehold.addedUsers;
+    addedUsersMap.set(user.userId, user);
 
     this.setState({
       ...this.state,
       formHousehold: {
         ...this.state.formHousehold,
-        addedUsers: addedUsers,
+        addedUsers: addedUsersMap,
+      },
+    });
+  };
+
+  handleRemoveUserButton = (user) => {
+    if (this.state.formHousehold.addedUsers.has(user.userId) === false) {
+      return;
+    }
+
+    let addedUsersMap = this.state.formHousehold.addedUsers;
+    addedUsersMap.delete(user.userId);
+
+    this.setState({
+      ...this.state,
+      formHousehold: {
+        ...this.state.formHousehold,
+        addedUsers: addedUsersMap,
       },
     });
   };
@@ -304,6 +322,7 @@ class AddHouseholdDialog extends React.Component {
     if (this.state.stepper.activeStep !== this.state.stepper.maxStep) {
       let nextStep = this.state.stepper.activeStep + 1;
       let showFinishButton = false;
+
       if (nextStep === this.state.stepper.maxStep) showFinishButton = true;
 
       this.setState({
@@ -320,15 +339,15 @@ class AddHouseholdDialog extends React.Component {
 
   handlePreviousButton = () => {
     if (this.activeStep !== 0) {
-      let nextStep = this.state.stepper.activeStep - 1;
+      let prevStep = this.state.stepper.activeStep - 1;
       let enablePreviousButton = true;
-      if (nextStep === 0) enablePreviousButton = false;
+      if (prevStep === 0) enablePreviousButton = false;
 
       this.setState({
         ...this.state,
         stepper: {
-          ...this.stepper,
-          activeStep: nextStep,
+          ...this.state.stepper,
+          activeStep: prevStep,
           buttonNextEnabled: true,
           buttonPreviousEnabled: enablePreviousButton,
           showFinishButton: false,
@@ -374,13 +393,15 @@ class AddHouseholdDialog extends React.Component {
     }
   };
 
+  handleFinishCreatingHouseholdButton = () => {
+    console.log("submiting create household");
+  };
+
   render() {
     const { classes } = this.props;
     const textSize = { style: { fontSize: "1.1rem" } };
     const labelSize = { style: { fontSize: "1.2rem" } };
     const textColor = { style: { color: "white" } };
-
-    console.log(this.state);
 
     let page_0 = (
       <Container maxWidth="md">
@@ -400,7 +421,7 @@ class AddHouseholdDialog extends React.Component {
             alignItems="center"
           >
             <Grid item xs={12} sm={6}>
-              <Typography variant="h6">Household name:</Typography>
+              <Typography variant="h6">Household name*:</Typography>
               <TextField
                 variant="outlined"
                 name="name"
@@ -577,7 +598,31 @@ class AddHouseholdDialog extends React.Component {
       </Container>
     );
 
-    let users = this.props.usersReducer.users.map((user) => {
+    let users = Array.from(this.props.usersReducer.users).map((mapEntry) => {
+      const user = mapEntry[1];
+
+      let iconButton = (
+        <IconButton
+          edge="end"
+          aria-label="delete"
+          onClick={() => this.handleAddUserButton(user)}
+        >
+          <PersonAddIcon />
+        </IconButton>
+      );
+
+      if (this.state.formHousehold.addedUsers.has(user.userId)) {
+        iconButton = (
+          <IconButton
+            edge="end"
+            aria-label="delete"
+            onClick={() => this.handleRemoveUserButton(user)}
+          >
+            <ClearIcon />
+          </IconButton>
+        );
+      }
+
       return (
         <React.Fragment key={user.userId}>
           <ListItem>
@@ -594,52 +639,47 @@ class AddHouseholdDialog extends React.Component {
               primary={user.name + " " + user.surname}
               secondary={"@" + user.nickname}
             />
-            <ListItemSecondaryAction>
-              <IconButton
-                edge="end"
-                aria-label="delete"
-                onClick={() => this.handleAddUserButton(user)}
-              >
-                <PersonAddIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
+            <ListItemSecondaryAction>{iconButton}</ListItemSecondaryAction>
           </ListItem>
           <Divider />
         </React.Fragment>
       );
     });
 
-    let searchUsers = this.props.usersReducer.searchUsers.map((user) => {
-      return (
-        <React.Fragment key={user.userId}>
-          <ListItem>
-            <ListAvatar>
-              <Avatar
-                src={
-                  user.avatar != null && user.avatar.path != null
-                    ? getServerURL() + user.avatar.path
-                    : null
-                }
-              ></Avatar>
-            </ListAvatar>
-            <ListText
-              primary={user.name + " " + user.surname}
-              secondary={"@" + user.nickname}
-            />
-            <ListItemSecondaryAction>
-              <IconButton
-                edge="end"
-                aria-label="delete"
-                onClick={() => this.handleAddUserButton(user)}
-              >
-                <PersonAddIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-          <Divider />
-        </React.Fragment>
-      );
-    });
+    let searchUsers = Array.from(this.props.usersReducer.searchUsers).map(
+      (mapEntry) => {
+        const user = mapEntry[1];
+        return (
+          <React.Fragment key={user.userId}>
+            <ListItem>
+              <ListAvatar>
+                <Avatar
+                  src={
+                    user.avatar != null && user.avatar.path != null
+                      ? getServerURL() + user.avatar.path
+                      : null
+                  }
+                ></Avatar>
+              </ListAvatar>
+              <ListText
+                primary={user.name + " " + user.surname}
+                secondary={"@" + user.nickname}
+              />
+              <ListItemSecondaryAction>
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
+                  onClick={() => this.handleAddUserButton(user)}
+                >
+                  <PersonAddIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+            <Divider />
+          </React.Fragment>
+        );
+      }
+    );
 
     let page_2 = (
       <Container maxWidth="sm">
@@ -664,6 +704,9 @@ class AddHouseholdDialog extends React.Component {
     let page_3 = (
       <Container maxWidth="md">
         <Grid container spacing={2} direction="column">
+          <Grid item xs={12}>
+            <Divider></Divider>
+          </Grid>
           <Grid item container direction="row">
             <Grid xs={12} sm={6} container item direction="column" spacing={3}>
               <Grid item>
@@ -701,16 +744,26 @@ class AddHouseholdDialog extends React.Component {
               ></GenericTable>
             </Grid>
           </Grid>
+          <Grid item xs={12}>
+            <Divider></Divider>
+          </Grid>
           <Grid item container>
             <Grid item xs={12}>
               <Typography variant="h6">Users:</Typography>
             </Grid>
-            {this.state.formHousehold.addedUsers.map((user) => {
+            {Array.from(this.state.formHousehold.addedUsers).map((mapEntry) => {
+              const user = mapEntry[1];
               return (
-                <Grid item key={user.id}>
+                <Grid item key={user.userId}>
                   <ListItem>
                     <ListAvatar>
-                      <Avatar src={user.avatar}></Avatar>
+                      <Avatar
+                        src={
+                          user.avatar != null && user.avatar.path != null
+                            ? getServerURL() + user.avatar.path
+                            : null
+                        }
+                      ></Avatar>
                     </ListAvatar>
                     <ListText
                       primary={user.name + " " + user.surname}
@@ -786,15 +839,27 @@ class AddHouseholdDialog extends React.Component {
               </Button>
             </Grid>
             <Grid item>
-              <Button
-                className={classes.NavigationButtons}
-                variant="contained"
-                color="primary"
-                onClick={this.handleNextButton}
-                disabled={!this.state.stepper.buttonNextEnabled}
-              >
-                Next{">>"}
-              </Button>
+              {this.state.stepper.showFinishButton ? (
+                <Button
+                  className={classes.NavigationButtons}
+                  variant="contained"
+                  color="primary"
+                  onClick={this.handleFinishCreatingHouseholdButton}
+                  disabled={!this.state.stepper.buttonNextEnabled}
+                >
+                  Finish
+                </Button>
+              ) : (
+                <Button
+                  className={classes.NavigationButtons}
+                  variant="contained"
+                  color="primary"
+                  onClick={this.handleNextButton}
+                  disabled={!this.state.stepper.buttonNextEnabled}
+                >
+                  Next{">>"}
+                </Button>
+              )}
             </Grid>
           </Grid>
         </Dialog>

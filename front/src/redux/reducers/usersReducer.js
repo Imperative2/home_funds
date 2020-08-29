@@ -3,50 +3,71 @@
 import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
-  users: [],
-  searchUsers: [],
+  users: new Map(),
+  searchUsers: new Map(),
 };
 
 const usersReducer = (state = initialState, action) => {
+  console.log(state);
   switch (action.type) {
     case actionTypes.SET_USERS: {
+      let newUsersMap = new Map();
+
+      action.users.forEach((user) => {
+        newUsersMap.set(user.userId, user);
+      });
+
       return {
         ...state,
-        users: action.users,
+        users: newUsersMap,
       };
     }
     case actionTypes.ADD_USER: {
+      let usersMap = state.users;
+      usersMap.set(action.user.userId, action.user);
+
       return {
         ...state,
-        users: [...state.users, action.user],
+        users: usersMap,
       };
     }
 
     case actionTypes.ADD_USERS: {
+      let usersMap = state.users;
+      action.users.forEach((user) => {
+        usersMap.set(user.userId, user);
+      });
+
       return {
         ...state,
-        users: [...state.usersusers, ...action.users],
+        users: usersMap,
       };
     }
 
     case actionTypes.CLEAR_USERS: {
+      state.users.clear();
+
       return {
         ...state,
-        users: [],
       };
     }
 
     case actionTypes.SET_SEARCH_USERS: {
+      console.log(action.users);
+      let newSearchUsersMap = new Map();
+      action.users.forEach((user) => {
+        newSearchUsersMap.set(user.userId, user);
+      });
       return {
         ...state,
-        searchUsers: action.users,
+        searchUsers: newSearchUsersMap,
       };
     }
 
     case actionTypes.CLEAR_SEARCH_USERS: {
+      state.searchUsers.clear();
       return {
         ...state,
-        searchUsers: [],
       };
     }
   }
