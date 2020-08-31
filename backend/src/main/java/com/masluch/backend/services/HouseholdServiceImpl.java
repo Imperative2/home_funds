@@ -61,13 +61,19 @@ public class HouseholdServiceImpl implements HouseholdService {
 			addHouseholdProduct(householdProduct, savedHousehold);
 		}
 		
-		List<User> foundUsersList = new ArrayList<>();
-		for(User user: newHouseholdData.getHouseholdUsers().getUsers())
+
+		for(User householdUser: newHouseholdData.getHouseholdUsersList())
 		{
-			User foundUser = userDAO.findById(user.getUserId());
+			User foundUser = userDAO.findById(householdUser.getUserId());
 			if(foundUser != null)
 			{
-				foundUsersList.add(foundUser);
+				
+				
+				HouseholdUsers newHouseholdUser = new HouseholdUsers();
+				newHouseholdUser.setHousehold(savedHousehold);
+				newHouseholdUser.setHouseholdUser(foundUser);
+				householdUsersDAO.save(newHouseholdUser);
+				
 			}
 			else
 			{
@@ -75,14 +81,11 @@ public class HouseholdServiceImpl implements HouseholdService {
 			}
 		}
 		
-		HouseholdUsers newHouseholdUsers = new HouseholdUsers();
-		newHouseholdUsers.setHousehold(savedHousehold);
-		newHouseholdUsers.setUsers(foundUsersList);
-		householdUsersDAO.save(newHouseholdUsers);
+
 		
 		
 		
-		return new ResponseEntity(HttpStatus.OK);
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 	
 	

@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -26,9 +27,9 @@ public class HouseholdUsers {
 	@JoinColumn(name="household_id")
 	private Household household;
 	
-	@ManyToMany
+	@ManyToOne
 	@JoinColumn(name="user_id")
-	private List<User> users;
+	private User householdUser;
 
 	public Integer getId() {
 		return id;
@@ -46,18 +47,18 @@ public class HouseholdUsers {
 		this.household = household;
 	}
 
-	public List<User> getUsers() {
-		return users;
+	public User getHouseholdUser() {
+		return householdUser;
 	}
 
-	public void setUsers(List<User> users) {
-		this.users = users;
+	public void setHouseholdUser(User householdUser) {
+		this.householdUser = householdUser;
 	}
 
 	@Override
 	public String toString() {
-		return "HouseholdUsers [id=" + id + ", household=" + household + ", users=" + users + "]";
+		return "HouseholdUsers [id=" + id + ", household=" + household + ", householdUser=" + householdUser + "]";
 	}
-	
+
 	
 }

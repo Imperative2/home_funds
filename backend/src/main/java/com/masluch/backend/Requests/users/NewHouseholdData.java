@@ -5,6 +5,7 @@ import java.util.List;
 import com.masluch.backend.entities.Household;
 import com.masluch.backend.entities.HouseholdProduct;
 import com.masluch.backend.entities.HouseholdUsers;
+import com.masluch.backend.entities.User;
 
 public class NewHouseholdData {
 
@@ -12,7 +13,7 @@ public class NewHouseholdData {
 	
 	private List<HouseholdProduct> householdProductsList;
 	
-	private HouseholdUsers householdUsers;
+	private List<User> householdUsersList;
 
 	public Household getHousehold() {
 		return household;
@@ -30,19 +31,21 @@ public class NewHouseholdData {
 		this.householdProductsList = householdProductsList;
 	}
 
-	public HouseholdUsers getHouseholdUsers() {
-		return householdUsers;
+	public List<User> getHouseholdUsersList() {
+		return householdUsersList;
 	}
 
-	public void setHouseholdUsers(HouseholdUsers householdUsers) {
-		this.householdUsers = householdUsers;
+	public void setHouseholdUsersList(List<User> householdUsersList) {
+		this.householdUsersList = householdUsersList;
 	}
 
 	@Override
 	public String toString() {
-		return "HouseholdCreateData [household=" + household + ", householdProductsList=" + householdProductsList
-				+ ", householdUsers=" + householdUsers + "]";
+		return "NewHouseholdData [household=" + household + ", householdProductsList=" + householdProductsList
+				+ ", householdUsersList=" + householdUsersList + "]";
 	}
+
+	
 	
 	
 }
