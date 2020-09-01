@@ -9,6 +9,7 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.masluch.backend.entities.Household;
 import com.masluch.backend.entities.HouseholdUsers;
 import com.masluch.backend.entities.User;
 
@@ -35,7 +36,7 @@ public class HouseholdUsersDAOImpl implements HouseholdUsersDAO {
 	}
 	
 	@Override
-	public List<HouseholdUsers> findByUserId(Integer householdId, Integer userId) {
+	public List<HouseholdUsers> findByUserAndHouseholdId(Integer householdId, Integer userId) {
 		Session session = entityManager.unwrap(Session.class);
 		Query<HouseholdUsers> query = session.createQuery("FROM HouseholdUsers as hu WHERE hu.household.householdId=:householdId AND hu.householdUser.userId=:userId", HouseholdUsers.class);
 		query.setParameter("householdId", householdId);
@@ -44,6 +45,16 @@ public class HouseholdUsersDAOImpl implements HouseholdUsersDAO {
 		List<HouseholdUsers> result = query.getResultList();
 		return result;
 	}
+	
+	@Override
+	public List<Household> findHouseholdsByUserId(Integer userId) {
+		Session session = entityManager.unwrap(Session.class);
+		Query<Household> query = session.createQuery("SELECT hu.household FROM HouseholdUsers as hu WHERE hu.householdUser.userId=:userId", Household.class);
+		query.setParameter("userId", userId);
+		List<Household> result = query.getResultList();
+		return result;
+	}
+
 
 	@Override
 	public HouseholdUsers save(HouseholdUsers householdUsers) {
@@ -65,6 +76,7 @@ public class HouseholdUsersDAOImpl implements HouseholdUsersDAO {
 
 
 	}
+
 
 
 

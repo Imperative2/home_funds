@@ -145,7 +145,7 @@ public class HouseholdServiceImpl implements HouseholdService {
 			return new ResponseEntity<Household>(HttpStatus.BAD_REQUEST);
 		}
 		
-		List<HouseholdUsers> existingUsersList = householdUsersDAO.findByUserId(householdId, userId);
+		List<HouseholdUsers> existingUsersList = householdUsersDAO.findByUserAndHouseholdId(householdId, userId);
 		if(existingUsersList.size() != 0)
 		{
 			return new ResponseEntity<Household>(HttpStatus.BAD_REQUEST);

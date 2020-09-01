@@ -33,6 +33,16 @@ public class HouseholdDAOImpl implements HouseholdDAO {
 		Household household = session.get(Household.class, householdId);
 		return household;
 	}
+	
+	@Override
+	public List<Household> findByOwnerId(Integer ownerId) {
+		Session session = entityManager.unwrap(Session.class);
+		Query<Household> query = session.createQuery("FROM Household as h WHERE h.owner.userId=:ownerId", Household.class);
+		query.setParameter("ownerId",ownerId);
+		List<Household> result = query.getResultList();
+		return result;
+	}
+
 
 	@Override
 	public Household save(Household household) {
@@ -53,5 +63,6 @@ public class HouseholdDAOImpl implements HouseholdDAO {
 		Session session = entityManager.unwrap(Session.class);
 
 	}
+
 
 }

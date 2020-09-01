@@ -10,6 +10,8 @@ public interface HouseholdDAO {
 	
 	public Household findById(Integer householdId);
 	
+	public List<Household> findByOwnerId(Integer ownerId);
+	
 	public Household save(Household household);
 	
 	public void update(Household household);
