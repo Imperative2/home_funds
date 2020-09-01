@@ -81,9 +81,6 @@ public class HouseholdServiceImpl implements HouseholdService {
 			}
 		}
 		
-
-		
-		
 		
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
@@ -102,8 +99,85 @@ public class HouseholdServiceImpl implements HouseholdService {
 	
 
 	@Transactional
-	public ResponseEntity<String> addHouseholdProduct(HouseholdProduct householdProduct, Integer householdId) {
+	public ResponseEntity<Household> addHouseholdProduct(HouseholdProduct householdProduct, Integer householdId) {
+		Household foundHousehold = householdDAO.findById(householdId);
+		if(foundHousehold == null)
+		{
+			return new ResponseEntity<Household>(HttpStatus.BAD_REQUEST);
+		}
 		
+		if(addHouseholdProduct(householdProduct, foundHousehold) == false){
+			return new ResponseEntity<Household>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return new ResponseEntity<Household>(foundHousehold, HttpStatus.OK);
+	}
+
+
+	@Transactional
+	public ResponseEntity<Household> updateHouseholdDescription(Household householdData) {
+		
+		if(HouseholdValidation.checkIfDescriptionCorrect(householdData.getDescription()) == false)
+		{
+			return new ResponseEntity<Household>(HttpStatus.BAD_REQUEST);
+		}
+		
+		Household foundHousehold = householdDAO.findById(householdData.getHouseholdId());
+		if(foundHousehold == null)
+		{
+			return new ResponseEntity<Household>(HttpStatus.BAD_REQUEST);
+		}
+		
+		foundHousehold.setDescription(householdData.getDescription());
+		Household savedHousehold = householdDAO.save(foundHousehold);
+		return new ResponseEntity<Household>(savedHousehold, HttpStatus.OK);
+				
+	}
+
+
+	@Transactional
+	public ResponseEntity<Household> addUserToHousehold(Integer householdId, Integer userId) {
+
+		Household foundHousehold = householdDAO.findById(householdId);
+		User foundUser = userDAO.findById(userId);
+		if(foundUser == null || foundHousehold == null)
+		{
+			return new ResponseEntity<Household>(HttpStatus.BAD_REQUEST);
+		}
+		
+		List<HouseholdUsers> existingUsersList = householdUsersDAO.findByUserId(householdId, userId);
+		if(existingUsersList.size() != 0)
+		{
+			return new ResponseEntity<Household>(HttpStatus.BAD_REQUEST);
+		}
+		
+		HouseholdUsers newHouseholdUser = new HouseholdUsers();
+		newHouseholdUser.setHousehold(foundHousehold);
+		newHouseholdUser.setHouseholdUser(foundUser);
+		householdUsersDAO.save(newHouseholdUser);
+		
+		return new ResponseEntity<Household>(foundHousehold, HttpStatus.OK);
+		
+	}
+
+
+	@Override
+	public ResponseEntity<Household> removeUserFromHousehold(Integer householdId, Integer userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public ResponseEntity<Household> removeHouseholdProduct(Integer householdId, Integer householdProductId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public ResponseEntity<String> removeHousehold(Integer householdId) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
