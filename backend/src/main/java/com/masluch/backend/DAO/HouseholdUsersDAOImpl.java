@@ -38,7 +38,7 @@ public class HouseholdUsersDAOImpl implements HouseholdUsersDAO {
 	@Override
 	public List<HouseholdUsers> findByUserAndHouseholdId(Integer householdId, Integer userId) {
 		Session session = entityManager.unwrap(Session.class);
-		Query<HouseholdUsers> query = session.createQuery("FROM HouseholdUsers as hu WHERE hu.household.householdId=:householdId AND hu.householdUser.userId=:userId", HouseholdUsers.class);
+		Query<HouseholdUsers> query = session.createQuery("FROM HouseholdUsers as hu WHERE hu.household.householdId=:householdId AND hu.user.userId=:userId", HouseholdUsers.class);
 		query.setParameter("householdId", householdId);
 		query.setParameter("userId", userId);
 
@@ -49,7 +49,7 @@ public class HouseholdUsersDAOImpl implements HouseholdUsersDAO {
 	@Override
 	public List<Household> findHouseholdsByUserId(Integer userId) {
 		Session session = entityManager.unwrap(Session.class);
-		Query<Household> query = session.createQuery("SELECT hu.household FROM HouseholdUsers as hu WHERE hu.householdUser.userId=:userId", Household.class);
+		Query<Household> query = session.createQuery("SELECT hu.household FROM HouseholdUsers as hu WHERE hu.user.userId=:userId", Household.class);
 		query.setParameter("userId", userId);
 		List<Household> result = query.getResultList();
 		return result;

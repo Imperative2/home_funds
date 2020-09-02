@@ -1,6 +1,9 @@
 package com.masluch.backend.entities;
 
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,6 +21,7 @@ public class HouseholdProduct {
 	@Column(name = "product_id")
 	private Integer productId;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name="household_id")
 	private Household household;

@@ -1,5 +1,7 @@
 package com.masluch.backend.entities;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -30,6 +33,15 @@ public class Household {
 	
 	@Column(name ="image")
 	private String photo;
+	
+	@OneToMany
+	@JoinColumn(name = "household_id")
+	private List<HouseholdUsers> householdUsers;
+	
+	@OneToMany
+	@JoinColumn(name ="household_id")
+	private List<HouseholdProduct> householdProducts;
+
 
 	public Integer getHouseholdId() {
 		return householdId;
@@ -71,11 +83,32 @@ public class Household {
 		this.photo = photo;
 	}
 
+	public List<HouseholdUsers> getHouseholdUsers() {
+		return householdUsers;
+	}
+
+	public void setHouseholdUsers(List<HouseholdUsers> householdUsers) {
+		this.householdUsers = householdUsers;
+	}
+
+	public List<HouseholdProduct> getHouseholdProducts() {
+		return householdProducts;
+	}
+
+	public void setHouseholdProducts(List<HouseholdProduct> householdProducts) {
+		this.householdProducts = householdProducts;
+	}
+
 	@Override
 	public String toString() {
 		return "Household [householdId=" + householdId + ", owner=" + owner + ", name=" + name + ", description="
-				+ description + ", photo=" + photo + "]";
+				+ description + ", photo=" + photo + ", householdUsers=" + householdUsers + ", householdProducts="
+				+ householdProducts + "]";
 	}
+
+
+
+
 	
 	
 	

@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="household_users")
 public class HouseholdUsers {
@@ -22,14 +24,14 @@ public class HouseholdUsers {
 	@Column(name = "id")
 	private Integer id;
 	
-	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name="household_id")
 	private Household household;
 	
 	@ManyToOne
 	@JoinColumn(name="user_id")
-	private User householdUser;
+	private User user;
 
 	public Integer getId() {
 		return id;
@@ -47,17 +49,17 @@ public class HouseholdUsers {
 		this.household = household;
 	}
 
-	public User getHouseholdUser() {
-		return householdUser;
+	public User getUser() {
+		return user;
 	}
 
-	public void setHouseholdUser(User householdUser) {
-		this.householdUser = householdUser;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	@Override
 	public String toString() {
-		return "HouseholdUsers [id=" + id + ", household=" + household + ", householdUser=" + householdUser + "]";
+		return "HouseholdUsers [id=" + id + ", household=" + household + ", householdUser=" + user + "]";
 	}
 
 	

@@ -71,7 +71,7 @@ public class HouseholdServiceImpl implements HouseholdService {
 				
 				HouseholdUsers newHouseholdUser = new HouseholdUsers();
 				newHouseholdUser.setHousehold(savedHousehold);
-				newHouseholdUser.setHouseholdUser(foundUser);
+				newHouseholdUser.setUser(foundUser);
 				householdUsersDAO.save(newHouseholdUser);
 				
 			}
@@ -153,7 +153,7 @@ public class HouseholdServiceImpl implements HouseholdService {
 		
 		HouseholdUsers newHouseholdUser = new HouseholdUsers();
 		newHouseholdUser.setHousehold(foundHousehold);
-		newHouseholdUser.setHouseholdUser(foundUser);
+		newHouseholdUser.setUser(foundUser);
 		householdUsersDAO.save(newHouseholdUser);
 		
 		return new ResponseEntity<Household>(foundHousehold, HttpStatus.OK);
