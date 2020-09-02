@@ -11,6 +11,9 @@ import { withStyles } from "@material-ui/core/styles";
 import HouseholdCard from "../../Cards/HouseholdCard/HouseholdCard";
 import AddHouseholdDialog from "../../Dialog/AddHouseholdDialog/AddHouseholdDialog";
 
+import * as actions from "../../../redux/actions/index";
+import { connect } from "react-redux";
+
 const style = {
   block: {
     padding: "10px",
@@ -26,6 +29,11 @@ class HouseholdsPage extends React.Component {
     clickedAddHousehold: false,
   };
 
+  componentWillMount() {
+    this.props.onUsersFetch();
+    this.props.onUserHouseholdsFetch(this.props.userReducer.user.userId);
+  }
+
   handleAddHouseholdClick = () => {
     this.setState({ ...this.state, clickedAddHousehold: true });
   };
@@ -37,7 +45,12 @@ class HouseholdsPage extends React.Component {
   render() {
     // const {classes} = this.props;
 
-    const households = this.state.households.map((household) => {
+    console.log(this.props.householdReducer);
+
+    const households = Array.from(
+      this.props.householdReducer.userHouseholds
+    ).map((mapEntry) => {
+      const household = mapEntry[1];
       return (
         <Grid item key={household.name}>
           <HouseholdCard
@@ -88,4 +101,24 @@ class HouseholdsPage extends React.Component {
     );
   }
 }
-export default withStyles(style)(HouseholdsPage);
+
+const mapStateToProps = (state) => {
+  return {
+    userReducer: state.user,
+    usersReducer: state.users,
+    householdReducer: state.household,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onUsersFetch: () => dispatch(actions.fetchUsers()),
+    onUserHouseholdsFetch: (form) =>
+      dispatch(actions.fetchUserHouseholds(form)),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(style)(HouseholdsPage));

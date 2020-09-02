@@ -89,7 +89,6 @@ const style = {
 
 class AddHouseholdDialog extends React.Component {
   state = {
-    users: [],
     mainDialogOpen: this.props.open,
     stepper: {
       activeStep: 0,
@@ -124,10 +123,10 @@ class AddHouseholdDialog extends React.Component {
       photo: noImage,
       addedUsers: new Map(),
       products: [
-        { name: "chleb", id: 0, data: generateRandomNames(3) },
-        { name: "mleko", id: 1, data: generateRandomNames(3) },
-        { name: "woda", id: 2, data: generateRandomNames(3) },
-        { name: "sól", id: 3, data: generateRandomNames(3) },
+        { name: "Bread", id: 0, data: generateRandomNames(3) },
+        { name: "Milk", id: 1, data: generateRandomNames(3) },
+        { name: "Water", id: 2, data: generateRandomNames(3) },
+        { name: "Salt", id: 3, data: generateRandomNames(3) },
       ],
     },
     formAddProduct: {
@@ -153,7 +152,6 @@ class AddHouseholdDialog extends React.Component {
   };
 
   componentWillMount() {
-    this.props.onUsersFetch();
     this.props.onClearSearchUsers();
   }
 
@@ -173,7 +171,65 @@ class AddHouseholdDialog extends React.Component {
     this.setState({
       ...this.state,
       mainDialogOpen: false,
-      stepper: { ...this.state.stepper, activeStep: 0 },
+      stepper: {
+        activeStep: 0,
+        maxStep: 3,
+        buttonPreviousEnabled: false,
+        buttonNextEnabled: false,
+        showFinishButton: false,
+      },
+      formHousehold: {
+        formFields: {
+          name: {
+            value: "",
+            touched: false,
+            valid: false,
+            minLength: 3,
+            maxLength: 50,
+            required: true,
+            errorMessage: null,
+          },
+          description: {
+            value: "",
+            touched: true,
+            valid: true,
+            minLength: 0,
+            maxLength: 500,
+            required: false,
+            errorMessage: null,
+          },
+        },
+        formValid: false,
+        enableSubmitButton: false,
+        photo: noImage,
+        addedUsers: new Map(),
+        products: [
+          { name: "Bread", id: 0, data: generateRandomNames(3) },
+          { name: "Milk", id: 1, data: generateRandomNames(3) },
+          { name: "Water", id: 2, data: generateRandomNames(3) },
+          { name: "Salt", id: 3, data: generateRandomNames(3) },
+        ],
+      },
+      formAddProduct: {
+        formFields: {
+          productName: {
+            value: "",
+            touched: false,
+            valid: false,
+            minLength: 3,
+            maxLength: 20,
+            required: true,
+            regex: null,
+          },
+        },
+        formValid: false,
+        enableSubmitButton: false,
+        addProductDialogOpen: false,
+      },
+      search: {
+        value: "",
+        canSearch: false,
+      },
     });
   };
 
@@ -395,6 +451,37 @@ class AddHouseholdDialog extends React.Component {
 
   handleFinishCreatingHouseholdButton = () => {
     console.log("submiting create household");
+
+    let productsList = this.state.formHousehold.products.map((product) => {
+      return { name: product.name };
+    });
+
+    let addedUsersMap = this.state.formHousehold.addedUsers;
+    addedUsersMap.set(
+      this.props.userReducer.user.userId,
+      this.props.userReducer.user
+    );
+
+    let usersList = Array.from(addedUsersMap).map((mapEntry) => {
+      const userId = mapEntry[1].userId;
+      return { userId: userId };
+    });
+
+    let form = {
+      household: {
+        owner: this.props.userReducer.user,
+        name: this.state.formHousehold.formFields.name.value,
+        description: this.state.formHousehold.formFields.description.value,
+      },
+      householdProductsList: productsList,
+      householdUsersList: usersList,
+    };
+
+    console.log(form);
+
+    this.props.onSubmitNewHousehold(form);
+
+    this.handleCloseMainDialog();
   };
 
   render() {
@@ -649,6 +736,29 @@ class AddHouseholdDialog extends React.Component {
     let searchUsers = Array.from(this.props.usersReducer.searchUsers).map(
       (mapEntry) => {
         const user = mapEntry[1];
+
+        let iconButton = (
+          <IconButton
+            edge="end"
+            aria-label="delete"
+            onClick={() => this.handleAddUserButton(user)}
+          >
+            <PersonAddIcon />
+          </IconButton>
+        );
+
+        if (this.state.formHousehold.addedUsers.has(user.userId)) {
+          iconButton = (
+            <IconButton
+              edge="end"
+              aria-label="delete"
+              onClick={() => this.handleRemoveUserButton(user)}
+            >
+              <ClearIcon />
+            </IconButton>
+          );
+        }
+
         return (
           <React.Fragment key={user.userId}>
             <ListItem>
@@ -665,15 +775,7 @@ class AddHouseholdDialog extends React.Component {
                 primary={user.name + " " + user.surname}
                 secondary={"@" + user.nickname}
               />
-              <ListItemSecondaryAction>
-                <IconButton
-                  edge="end"
-                  aria-label="delete"
-                  onClick={() => this.handleAddUserButton(user)}
-                >
-                  <PersonAddIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
+              <ListItemSecondaryAction>{iconButton}</ListItemSecondaryAction>
             </ListItem>
             <Divider />
           </React.Fragment>
@@ -870,16 +972,18 @@ class AddHouseholdDialog extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
+    userReducer: state.user,
     usersReducer: state.users,
+    householdReducer: state.household,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onUsersFetch: () => dispatch(actions.fetchUsers()),
     onFetchUsersWithRegex: (regex) =>
       dispatch(actions.fetchUsersWithRegex(regex)),
     onClearSearchUsers: () => dispatch(actions.clearSearchUsers()),
+    onSubmitNewHousehold: (form) => dispatch(actions.createNewHousehold(form)),
   };
 };
 

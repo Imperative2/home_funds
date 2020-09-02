@@ -11,10 +11,12 @@ import { Provider } from "react-redux";
 
 import userReducer from "./redux/reducers/userReducer";
 import usersReducer from "./redux/reducers/usersReducer";
+import householdReducer from "./redux/reducers/householdReducer";
 
 const rootReducer = combineReducers({
   user: userReducer,
   users: usersReducer,
+  household: householdReducer,
 });
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
