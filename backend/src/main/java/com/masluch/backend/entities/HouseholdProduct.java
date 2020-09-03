@@ -1,8 +1,6 @@
 package com.masluch.backend.entities;
 
-import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +9,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="household_product")
@@ -28,6 +30,10 @@ public class HouseholdProduct {
 	
 	@Column(name="name")
 	private String name;
+	
+	@OneToMany
+	@JoinColumn(name="product_id")
+	private List<UserHouseholdProduct> userHouseholdProductList;
 
 	public Integer getProductId() {
 		return productId;
@@ -53,11 +59,21 @@ public class HouseholdProduct {
 		this.name = name;
 	}
 
+	public List<UserHouseholdProduct> getUserHouseholdProductList() {
+		return userHouseholdProductList;
+	}
+
+	public void setUserHouseholdProductList(List<UserHouseholdProduct> userHouseholdProductList) {
+		this.userHouseholdProductList = userHouseholdProductList;
+	}
+
 	@Override
 	public String toString() {
-		return "HouseholdProduct [productId=" + productId + ", household=" + household + ", name=" + name + "]";
+		return "HouseholdProduct [productId=" + productId + ", name=" + name
+				+ ", userHouseholdProductList=" + userHouseholdProductList + "]";
 	}
-	
+
+
 	
 	
 }

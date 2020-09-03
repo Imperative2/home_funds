@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.masluch.backend.Requests.users.NewHouseholdData;
+import com.masluch.backend.Requests.users.NewUserHouseholdProductData;
 import com.masluch.backend.entities.Household;
 import com.masluch.backend.entities.HouseholdProduct;
 import com.masluch.backend.services.HouseholdService;
@@ -66,4 +67,10 @@ public class HouseholdController {
 	{
 		return null;
 	}
+	
+	@PostMapping(path="/addUserHouseholdProduct")
+ 	public ResponseEntity<Household> addUserHouseholdProduct(@RequestBody NewUserHouseholdProductData newUserHouseholdProductData)
+ 	{
+		return householdService.addUserHouseholdProduct(newUserHouseholdProductData);
+ 	}
 }

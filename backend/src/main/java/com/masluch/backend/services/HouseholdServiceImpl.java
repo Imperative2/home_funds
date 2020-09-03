@@ -1,6 +1,6 @@
 package com.masluch.backend.services;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -9,17 +9,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import utils.validation.HouseholdValidation;
 
 import com.masluch.backend.DAO.HouseholdDAO;
 import com.masluch.backend.DAO.HouseholdProductDAO;
 import com.masluch.backend.DAO.HouseholdUsersDAO;
 import com.masluch.backend.DAO.UserDAO;
+import com.masluch.backend.DAO.UserHouseholdProductDAO;
 import com.masluch.backend.Requests.users.NewHouseholdData;
+import com.masluch.backend.Requests.users.NewUserHouseholdProductData;
 import com.masluch.backend.entities.Household;
 import com.masluch.backend.entities.HouseholdProduct;
 import com.masluch.backend.entities.HouseholdUsers;
 import com.masluch.backend.entities.User;
+import com.masluch.backend.entities.UserHouseholdProduct;
+
+import utils.validation.HouseholdValidation;
 
 @Service
 public class HouseholdServiceImpl implements HouseholdService {
@@ -35,6 +39,9 @@ public class HouseholdServiceImpl implements HouseholdService {
 	
 	@Autowired
 	private HouseholdUsersDAO householdUsersDAO;
+	
+	@Autowired
+	private UserHouseholdProductDAO userHouseholdProductDAO;
 
 	@Transactional
 	public ResponseEntity<String> createNewHousehold(NewHouseholdData newHouseholdData) 
@@ -178,6 +185,45 @@ public class HouseholdServiceImpl implements HouseholdService {
 	@Override
 	public ResponseEntity<String> removeHousehold(Integer householdId) {
 		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Transactional
+	public ResponseEntity<Household> addUserHouseholdProduct(NewUserHouseholdProductData newUserHouseholdProductData) {
+		
+		HouseholdProduct foundProduct = householdProductDAO.findById(newUserHouseholdProductData.getProductId());
+		if( foundProduct == null)
+		{
+			return new ResponseEntity<Household>(HttpStatus.BAD_REQUEST);
+		}
+		Household foundHousehold  = foundProduct.getHousehold();
+		User foundUser = getUserFromHousehold(newUserHouseholdProductData.getUserId(), foundHousehold);
+		if(foundUser == null)
+		{
+			return new ResponseEntity<Household>(HttpStatus.BAD_REQUEST);
+		}
+		
+		UserHouseholdProduct newUserHouseholdProduct = new UserHouseholdProduct();
+		newUserHouseholdProduct.setUser(foundUser);
+		newUserHouseholdProduct.setProduct(foundProduct);
+		newUserHouseholdProduct.setDescription(newUserHouseholdProductData.getDescription());
+		newUserHouseholdProduct.setDate(new Date());
+		
+		userHouseholdProductDAO.save(newUserHouseholdProduct);
+		
+		return new ResponseEntity<Household>(HttpStatus.OK);
+	}
+	
+	public User getUserFromHousehold(Integer userId, Household household)
+	{
+		for(HouseholdUsers householdUser: household.getHouseholdUsers())
+		{
+			if(householdUser.getUser().getUserId() == userId)
+			{
+				return householdUser.getUser();
+			}
+		}
 		return null;
 	}
 

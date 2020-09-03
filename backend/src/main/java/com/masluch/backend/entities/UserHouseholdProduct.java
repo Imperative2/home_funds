@@ -1,7 +1,6 @@
 package com.masluch.backend.entities;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,9 +8,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name="user_household_products")
@@ -22,13 +23,15 @@ public class UserHouseholdProduct {
 	@Column(name = "id")
 	private Integer id;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name="product_id")
 	private HouseholdProduct product;
 	
-	@ManyToMany
+	@JsonIgnoreProperties(value = {"name","surname","nickname","email","description","color","avatar"})
+	@ManyToOne
 	@JoinColumn(name="user_id")
-	private List<User> user;
+	private User user;
 	
 	@Column(name="date")
 	private Date date;
@@ -55,11 +58,11 @@ public class UserHouseholdProduct {
 		this.product = product;
 	}
 
-	public List<User> getUser() {
+	public User getUser() {
 		return user;
 	}
 
-	public void setUser(List<User> user) {
+	public void setUser(User user) {
 		this.user = user;
 	}
 
@@ -85,6 +88,12 @@ public class UserHouseholdProduct {
 
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+	@Override
+	public String toString() {
+		return "UserHouseholdProduct [id=" + id + ", product=" + product + ", user=" + user + ", date=" + date
+				+ ", description=" + description + ", image=" + image + "]";
 	}
 
 	
