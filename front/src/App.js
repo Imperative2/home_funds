@@ -10,6 +10,7 @@ import HouseholdsPage from "./Components/Pages/HouseholdsPage/HouseholdsPage";
 import UserSettingsPage from "./Components/Pages/UserSettingsPage/UserSettingsPage";
 import NewsPage from "./Components/Pages/NewsPage/NewsPage";
 import UsersPage from "./Components/Pages/UsersPage/UsersPage";
+import HouseholdPage from "./Components/Pages/HouseholdPage/HouseholdPage";
 
 class App extends Component {
   render() {
@@ -20,6 +21,11 @@ class App extends Component {
             <Route exact path="/login" component={LoginPage} />
             <Route exact path="/register" component={RegistrationPage} />
             <Route exact path="/households" component={HouseholdsPage} />
+            <Route
+              exact
+              path="/household/:householdId"
+              component={HouseholdPage}
+            />
             <Route exact path="/user/settings" component={UserSettingsPage} />
             <Route exact path="/news" component={NewsPage} />
             <Route exact path="/users" component={UsersPage} />

@@ -2,12 +2,11 @@ import React from "react";
 
 import { Typography, Card, ButtonBase, Button } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
+import { NavLink } from "react-router-dom";
+import { withStyles } from "@material-ui/core/styles";
 
 import noimage from "../../../static/NoImage.png";
-
 import house1 from "../../../static/house_1.jpg";
-
-import { withStyles } from "@material-ui/core/styles";
 
 import SettingsRoundedIcon from "@material-ui/icons/SettingsRounded";
 
@@ -44,7 +43,13 @@ class HouseholdCard extends React.Component {
           <Grid container spacing={2} direction="row">
             <Grid item>
               <ButtonBase>
-                <img className={classes.img} src={house1} alt="household"></img>
+                <NavLink to={"/household/" + this.props.householdId}>
+                  <img
+                    className={classes.img}
+                    src={house1}
+                    alt="household"
+                  ></img>
+                </NavLink>
               </ButtonBase>
             </Grid>
             <Grid item xs={12} sm container>

@@ -63,14 +63,6 @@ class TitlePage extends Component {
         >
           <img className={classes.img} src={home2} alt=""></img>
         </ScrollAnimation>
-
-        <AddProductDialog></AddProductDialog>
-
-        <Grid container justify="center">
-          <Grid item xs={12} md={11}>
-            <ProduceTabel></ProduceTabel>
-          </Grid>
-        </Grid>
       </div>
     );
   }

@@ -59,8 +59,6 @@ class TopBar extends Component {
   render() {
     const { classes } = this.props;
 
-    console.log(this.props.userReducer.user.avatar);
-
     return (
       <AppBar position="static" classes={{ root: classes.root }}>
         <Toolbar>

@@ -99,6 +99,7 @@ export const fetchHousehold = (householdId) => {
       })
       .then((res) => {
         console.log(res);
+        dispatch(addHouseholdToUser(res.data));
       })
       .catch((err) => {
         console.log(err);

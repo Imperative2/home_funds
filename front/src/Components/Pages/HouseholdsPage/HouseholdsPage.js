@@ -54,6 +54,7 @@ class HouseholdsPage extends React.Component {
       return (
         <Grid item key={household.name}>
           <HouseholdCard
+            householdId={household.householdId}
             name={household.name}
             description={household.description}
           ></HouseholdCard>

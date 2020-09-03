@@ -8,7 +8,6 @@ const initialState = {
 };
 
 const usersReducer = (state = initialState, action) => {
-  console.log(state);
   switch (action.type) {
     case actionTypes.SET_USERS: {
       let newUsersMap = new Map();
