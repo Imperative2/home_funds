@@ -1,6 +1,7 @@
 import React from "react";
 
 import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 
 import * as actions from "../../../redux/actions/index";
@@ -41,22 +42,31 @@ class HouseholdPage extends React.Component {
   render() {
     console.log(this.props);
     console.log(this.state);
+    const { classes } = this.props;
 
-    return (
-      <div>
-        <button onClick={this.handleButtonClick}> click</button>
-        {this.state.household == null
-          ? "household not loaded"
-          : "householdLoaded"}
-        <AddProductDialog></AddProductDialog>
+    if (this.state.household == null) {
+      this.props.history.push("/");
+      return null;
+    } else
+      return (
+        <div>
+          <AddProductDialog household={this.state.household}></AddProductDialog>
 
-        <Grid container justify="center">
-          <Grid item xs={12} md={11}>
-            <ProduceTabel></ProduceTabel>
+          <Grid container justify="center" spacing={2}>
+            <Grid item xs={12} container alignItems="center" justify="center">
+              <Typography variant="body1">
+                {this.state.household.name}
+              </Typography>
+            </Grid>
+            <Grid item xs={11}>
+              <ProduceTabel
+                householdProducts={this.state.household.householdProducts}
+                householdUsers={this.state.household.householdUsers}
+              ></ProduceTabel>
+            </Grid>
           </Grid>
-        </Grid>
-      </div>
-    );
+        </div>
+      );
   }
 }
 

@@ -25,7 +25,7 @@ const styles = {
   menuButton: {},
   title: {},
   img: {
-    width: "60%",
+    width: "100%",
     height: "3rem",
     maxWidth: "19.8rem",
     minWidth: "11rem",
@@ -69,17 +69,17 @@ class TopBar extends Component {
             alignItems="center"
             spacing={2}
           >
-            <Grid item xs={3} sm={1}>
+            <Grid item xs={2} sm={1}>
               <SideDrawer></SideDrawer>
             </Grid>
-            <Grid item xs={6} sm={10}>
+            <Grid item xs={8} sm={10}>
               <Typography align="center" variant="h6" className={classes.title}>
                 <NavLink to="/">
                   <img className={classes.img} src={logo} alt="logo"></img>
                 </NavLink>
               </Typography>
             </Grid>
-            <Grid item xs={3} sm={1}>
+            <Grid item xs={2} sm={1} container justify="center">
               <UserIconMenu
                 logged={this.props.userReducer.isLogged}
                 userName={this.props.userReducer.user.name}

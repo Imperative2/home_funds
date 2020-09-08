@@ -20,82 +20,64 @@ const style = {
     backgroundColor: "OrangeRed",
     color: "white",
   },
+  cellColor: {
+    backgroundColor: "red",
+  },
 };
 
 class ProduceTable extends React.Component {
-  state = {
-    products: [
-      {
-        id: "srajtasma",
-        name: "srajtasma",
-        data: ["janusz", "karol", "pazur", "miki", "zuku", "prezes"],
-      },
-      {
-        id: "reczniki",
-        name: "ręczniki papierow",
-        data: ["karol", "pazur", "miki", "zuku", "prezes"],
-      },
-      {
-        id: "plyn",
-        name: "płyn do naczyn",
-        data: ["karol", "pazur", "miki", "zuku", "prezes"],
-      },
-      {
-        id: "worasy",
-        name: "worasy",
-        data: ["karol", "pazur", "miki", "zuku", "prezes"],
-      },
-      {
-        id: "olejek",
-        name: "olejek",
-        data: ["karol", "pazur", "miki", "zuku", "prezes"],
-      },
-      {
-        id: "mydelko",
-        name: "mydełko",
-        data: ["karol", "pazur", "miki", "zuku", "prezes"],
-      },
-      {
-        id: "zmywaki",
-        name: "zmywaki",
-        data: ["karol", "pazur", "miki", "zuku", "prezes"],
-      },
-      {
-        id: "kibel",
-        name: "kibel",
-        data: ["karol", "pazur", "miki", "zuku", "prezes"],
-      },
-      {
-        id: "smieci",
-        name: "śmieci",
-        data: ["karol", "pazur", "miki", "zuku", "prezes"],
-      },
-    ],
-  };
+  state = {};
 
   render() {
     const { classes } = this.props;
 
     let longestColumn = 0;
-    this.state.products.forEach((product) => {
-      if (product.data.length > longestColumn) {
-        longestColumn = product.data.length;
+
+    this.props.householdProducts.forEach((householdProduct) => {
+      if (householdProduct.userHouseholdProductList.length > longestColumn) {
+        longestColumn = householdProduct.userHouseholdProductList.length;
       }
     });
 
     const tableRows = [...Array(longestColumn).keys()].map((index) => {
-      let rowCells = this.state.products.map((product) => {
-        let value = null;
-
-        if (product.data.length > index) {
-          value = product.data[index];
+      let rowCells = this.props.householdProducts.map((householdProduct) => {
+        let user = null;
+        if (householdProduct.userHouseholdProductList.length > index) {
+          let userId =
+            householdProduct.userHouseholdProductList[index].user.userId;
+          this.props.householdUsers.forEach((householdUser) => {
+            if (householdUser.user.userId === userId) {
+              user = householdUser.user;
+            }
+          });
         }
 
-        return (
-          <TableCell className="color: black" align="center" key={product.id}>
-            {value}
-          </TableCell>
-        );
+        if (user != null) {
+          return (
+            <TableCell
+              style={{
+                backgroundColor: user.color,
+                color: "white",
+                border: "3px solid white",
+                borderRadius: "9px",
+              }}
+              align="center"
+              key={householdProduct.productId}
+            >
+              {user.nickname}
+            </TableCell>
+          );
+        } else {
+          return (
+            <TableCell
+              style={{ backgroundColor: "white", color: "white" }}
+              align="center"
+              key={householdProduct.productId}
+            >
+              {null}
+            </TableCell>
+          );
+        }
       });
 
       return (
@@ -105,19 +87,41 @@ class ProduceTable extends React.Component {
       );
     });
 
+    // const tableRows = [...Array(longestColumn).keys()].map((index) => {
+    //   let rowCells = this.state.products.map((product) => {
+    //     let value = null;
+
+    //     if (product.data.length > index) {
+    //       value = product.data[index];
+    //     }
+
+    //     return (
+    //       <TableCell className="color: black" align="center" key={product.id}>
+    //         {value}
+    //       </TableCell>
+    //     );
+    //   });
+
+    //   return (
+    //     <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+    //       {rowCells}
+    //     </TableRow>
+    //   );
+    //});
+
     return (
       <Paper className={classes.root}>
         <TableContainer className={classes.container}>
           <Table size="small" stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
-                {this.state.products.map((product) => (
+                {this.props.householdProducts.map((householdProduct) => (
                   <TableCell
                     className={classes.headCell}
-                    key={product.id}
+                    key={householdProduct.productId}
                     align="center"
                   >
-                    {product.name}
+                    {householdProduct.name}
                   </TableCell>
                 ))}
               </TableRow>

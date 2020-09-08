@@ -9,23 +9,22 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Container from "@material-ui/core/Container";
 
-import generateRandomNames from "../../../utils/GenerateRandomNames/GenerateRandomNames";
 import TextFieldWithLabel from "../../Input/TextFieldWithLabel/TextFieldWithLabel";
 
-const styles = {};
+const styles = {
+  addProductButton: {
+    position: "fixed",
+    bottom: "30px",
+    right: "30px",
+  },
+};
 
 class AddProductDialog extends React.Component {
   state = {
     mainDialogOpen: false,
-    household: {
-      products: [
-        { name: "chleb", id: 0, data: generateRandomNames(3) },
-        { name: "mleko", id: 1, data: generateRandomNames(3) },
-        { name: "woda", id: 2, data: generateRandomNames(3) },
-        { name: "sól", id: 3, data: generateRandomNames(3) },
-      ],
-    },
   };
 
   handleCloseMainDialog = () => {
@@ -37,9 +36,14 @@ class AddProductDialog extends React.Component {
   };
 
   render() {
+    const { classes } = this.props;
     return (
       <div>
-        <Fab color="primary" onClick={this.handleFabClick}>
+        <Fab
+          className={classes.addProductButton}
+          color="primary"
+          onClick={this.handleFabClick}
+        >
           <AddIcon></AddIcon>
         </Fab>
         <Dialog
@@ -48,29 +52,52 @@ class AddProductDialog extends React.Component {
           fullWidth
           maxWidth="md"
         >
-          <DialogTitle>We are adding product bois!</DialogTitle>
-          <Grid container justify="center" spacing={2} direction="column">
-            <Grid item xs={12}>
-              <Typography variant="h6">Select product:</Typography>
+          <DialogTitle>Add product</DialogTitle>
+          <Container maxWidth="md">
+            <Grid container justify="center" spacing={2} direction="column">
+              <Grid
+                item
+                xs={11}
+                container
+                alignItems="center"
+                justify="center"
+                direction="row"
+              >
+                <Grid item xs={3}>
+                  <Typography variant="h6">Select product:</Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Select variant="filled" fullWidth>
+                    {this.props.household.householdProducts.map(
+                      (householdProduct) => {
+                        return (
+                          <MenuItem
+                            key={householdProduct.productId}
+                            value={householdProduct}
+                          >
+                            {householdProduct.name}
+                          </MenuItem>
+                        );
+                      }
+                    )}
+                  </Select>
+                </Grid>
+              </Grid>
+              <Grid item xs={11}>
+                <TextFieldWithLabel
+                  text="Description:"
+                  multiline
+                  rows={4}
+                  fullWidth
+                ></TextFieldWithLabel>
+              </Grid>
+              <Grid item container justify="center">
+                <Button variant="contained" color="primary">
+                  Add product
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={9}>
-              <Select variant="filled" fullWidth>
-                {this.state.household.products.map((product) => {
-                  return (
-                    <MenuItem key={product.id} value={product.id}>
-                      {product.name}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </Grid>
-            <TextFieldWithLabel
-              text="Description:"
-              multiline
-              rows={4}
-              fullWidth
-            ></TextFieldWithLabel>
-          </Grid>
+          </Container>
         </Dialog>
       </div>
     );
