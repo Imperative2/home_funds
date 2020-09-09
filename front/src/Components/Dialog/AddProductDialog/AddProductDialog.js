@@ -137,6 +137,7 @@ class AddProductDialog extends React.Component {
       userId: this.props.userReducer.user.userId,
       productId: this.state.formAddProduct.formFields.product.value.productId,
       description: this.state.formAddProduct.formFields.description.value,
+      householdId: this.props.household.householdId,
     };
 
     console.log(form);

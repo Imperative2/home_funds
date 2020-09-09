@@ -19,9 +19,8 @@ class HouseholdPage extends React.Component {
   };
 
   componentWillMount() {
-    console.log(this.props.match.params.householdId);
     this.props.onFetchHousehold(this.props.match.params.householdId);
-    console.log(this.props.householdReducer);
+
     let map = this.props.householdReducer.userHouseholds;
 
     if (map.has(Number(this.props.match.params.householdId)) === true) {
@@ -34,20 +33,7 @@ class HouseholdPage extends React.Component {
     }
   }
 
-  handleButtonClick = () => {
-    console.log(this.props.householdReducer);
-    console.log(this.state);
-  };
-
   render() {
-    console.log(this.props);
-    console.log(this.state);
-    console.log("products");
-    console.log(
-      this.props.householdReducer.userHouseholds.get(
-        Number(this.props.match.params.householdId)
-      ).householdProducts
-    );
     const { classes } = this.props;
 
     if (this.state.household == null) {
@@ -75,7 +61,6 @@ class HouseholdPage extends React.Component {
                 householdUsers={this.state.household.householdUsers}
               ></ProduceTabel>
             </Grid>
-            <button onClick={this.handleButtonClick}>click</button>
           </Grid>
         </div>
       );

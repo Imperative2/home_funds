@@ -77,7 +77,7 @@ export const addUserHouseholdProduct = (form) => {
       .post(path, form)
       .then((res) => {
         console.log(res);
-        dispatch(addHouseholdToUser(res.data));
+        dispatch(fetchHousehold(form.householdId));
       })
       .catch((err) => {
         console.log(err);
