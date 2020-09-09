@@ -23,6 +23,7 @@ export {
   updateHouseholdDescription,
   addUserToHousehold,
   addHouseholdProduct,
+  addUserHouseholdProduct,
   fetchHouseholds,
   fetchHousehold,
   fetchOwnerHouseholds,

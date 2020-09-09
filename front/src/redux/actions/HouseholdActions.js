@@ -70,6 +70,21 @@ export const addHouseholdProduct = (form) => {
   };
 };
 
+export const addUserHouseholdProduct = (form) => {
+  return (dispatch) => {
+    const path = "household/addUserHouseholdProduct";
+    axios
+      .post(path, form)
+      .then((res) => {
+        console.log(res);
+        dispatch(addHouseholdToUser(res.data));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+};
+
 export const removeHouseholdProduct = (form) => {};
 
 export const removeHousehold = (form) => {};

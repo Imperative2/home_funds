@@ -42,6 +42,12 @@ class HouseholdPage extends React.Component {
   render() {
     console.log(this.props);
     console.log(this.state);
+    console.log("products");
+    console.log(
+      this.props.householdReducer.userHouseholds.get(
+        Number(this.props.match.params.householdId)
+      ).householdProducts
+    );
     const { classes } = this.props;
 
     if (this.state.household == null) {
@@ -53,17 +59,23 @@ class HouseholdPage extends React.Component {
           <AddProductDialog household={this.state.household}></AddProductDialog>
 
           <Grid container justify="center" spacing={2}>
-            <Grid item xs={12} container alignItems="center" justify="center">
+            <Grid item xs={11} container alignItems="center" justify="center">
               <Typography variant="body1">
                 {this.state.household.name}
               </Typography>
             </Grid>
-            <Grid item xs={11}>
+            <Grid item xs={12}>
               <ProduceTabel
-                householdProducts={this.state.household.householdProducts}
+                // householdProducts={this.state.household.householdProducts}
+                householdProducts={
+                  this.props.householdReducer.userHouseholds.get(
+                    Number(this.props.match.params.householdId)
+                  ).householdProducts
+                }
                 householdUsers={this.state.household.householdUsers}
               ></ProduceTabel>
             </Grid>
+            <button onClick={this.handleButtonClick}>click</button>
           </Grid>
         </div>
       );

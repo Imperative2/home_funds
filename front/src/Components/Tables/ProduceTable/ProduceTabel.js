@@ -19,6 +19,7 @@ const style = {
   headCell: {
     backgroundColor: "OrangeRed",
     color: "white",
+    border: "1px solid black",
   },
   cellColor: {
     backgroundColor: "red",
@@ -30,6 +31,8 @@ class ProduceTable extends React.Component {
 
   render() {
     const { classes } = this.props;
+
+    console.log(this.props);
 
     let longestColumn = 0;
 

@@ -24,6 +24,7 @@ class TextFieldWithLabel extends React.Component {
         </Grid>
         <Grid item xs={12}>
           <TextField
+            name={this.props.name}
             variant="outlined"
             multiline={this.props.multiline}
             rows={this.props.rows}
