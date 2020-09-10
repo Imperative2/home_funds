@@ -43,16 +43,16 @@ public class UserServiceImpl implements UserService {
 	public ResponseEntity<String> registerUser(User newUser) {
 		
 		if(UserValidation.checkIfRegisterDataValid(newUser) == false) {
-			////System.out.println("register 1");
+			//System.out.println("register 1");
 			return new ResponseEntity<String>("Bad data", HttpStatus.BAD_REQUEST);
 			
 		}
 		if(checkIfUserExistsByEmail(newUser.getEmail()) == true) {
-			////System.out.println("register 2");
+			//System.out.println("register 2");
 			return new ResponseEntity<String>("Email already registered", HttpStatus.BAD_REQUEST);
 		}
 		if(checkIfUserExistsByNickname(newUser.getNickname()) == true) {
-			////System.out.println("register 3");
+			//System.out.println("register 3");
 			return new ResponseEntity<String>("Nickname already registered", HttpStatus.BAD_REQUEST);
 		}
 		

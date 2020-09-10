@@ -1,6 +1,8 @@
 import * as actionTypes from "./actionTypes";
 import axios from "../../axios";
 
+import { notifyOK, notifyError } from "../../Layout/Snackbar/Snackbar";
+
 export const loginUser = (loginForm, history) => {
   const loginData = {
     login: loginForm.login,
@@ -8,20 +10,22 @@ export const loginUser = (loginForm, history) => {
     token: loginForm.token,
   };
 
-  console.log(loginData);
-  console.log(history);
+  // console.log(loginData);
+  // console.log(history);
 
   return (dispatch) => {
     let path = "/user/login";
     axios
       .post(path, loginData)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         history.push("/");
         dispatch(login(res.data));
+        notifyOK("User", "Logged successfully");
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
+        notifyError("User", "Error logging");
       });
   };
 };
@@ -33,11 +37,13 @@ export const registerUser = (registerForm, history) => {
     axios
       .post(path, registerForm)
       .then((res) => {
-        console.log(res);
+        //        console.log(res);
         history.push("/login");
+        notifyOK("User", "Registered successfully");
       })
       .catch((err) => {
-        console.log(err);
+        //        console.log(err.response);
+        notifyError("Registraion", err.response.data);
       });
   };
 };
@@ -52,10 +58,12 @@ export const updateUserPassword = (form) => {
     axios
       .post(path, form)
       .then((res) => {
-        console.log(res);
+        //       console.log(res);
+        notifyOK("User", "Password updated successfully");
       })
       .catch((err) => {
-        console.log(err);
+        notifyError("User", "Error updating password");
+        //        console.log(err);
       });
   };
 };
@@ -67,9 +75,11 @@ export const updateUserEmail = (form) => {
       .post(path, form)
       .then((res) => {
         dispatch(setUser(res.data));
+        notifyOK("User", "Email updated successfully");
       })
       .catch((err) => {
-        console.log(err);
+        notifyError("User", "Error updating email");
+        //        console.log(err);
       });
   };
 };
@@ -81,9 +91,11 @@ export const updateUserDescription = (form) => {
       .post(path, form)
       .then((res) => {
         dispatch(setUser(res.data));
+        notifyOK("User", "Description updated successfully");
       })
       .catch((err) => {
-        console.log(err);
+        //        console.log(err);
+        notifyError("User", "Error updating description");
       });
   };
 };
@@ -99,11 +111,13 @@ export const updateUserAvatar = (avatarForm) => {
         },
       })
       .then((res) => {
-        console.log(res);
+        //        console.log(res);
         dispatch(setUser(res.data));
+        notifyOK("User", "Avatar uploaded successfully");
       })
       .catch((err) => {
-        console.log(err);
+        //        console.log(err);
+        notifyError("User", "Error uploading avatar");
       });
   };
 };

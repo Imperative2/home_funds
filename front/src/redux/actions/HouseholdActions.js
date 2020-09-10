@@ -1,5 +1,6 @@
 import * as actionTypes from "./actionTypes";
 import axios from "../../axios";
+import { notifyOK, notifyError } from "../../Layout/Snackbar/Snackbar";
 
 export const createNewHousehold = (form) => {
   console.log(form);
@@ -9,7 +10,8 @@ export const createNewHousehold = (form) => {
     axios
       .post(path, form)
       .then((res) => {
-        console.log(res);
+        //        console.log(res);
+        notifyOK("Household", "Created successfully");
       })
       .catch((err) => {
         console.log(err);
@@ -23,7 +25,8 @@ export const updateHouseholdDescription = (form) => {
     axios
       .post(path, form)
       .then((res) => {
-        console.log(res);
+        //        console.log(res);
+        notifyOK("Household", "Description updated successfully");
       })
       .catch((err) => {
         console.log(err);
@@ -76,8 +79,9 @@ export const addUserHouseholdProduct = (form) => {
     axios
       .post(path, form)
       .then((res) => {
-        console.log(res);
+        //        console.log(res);
         dispatch(fetchHousehold(form.householdId));
+        notifyOK("Household", "Product added successfully");
       })
       .catch((err) => {
         console.log(err);
