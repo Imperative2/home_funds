@@ -45,8 +45,6 @@ class HouseholdsPage extends React.Component {
   render() {
     // const {classes} = this.props;
 
-    console.log(this.props.householdReducer);
-
     const households = Array.from(
       this.props.householdReducer.userHouseholds
     ).map((mapEntry) => {

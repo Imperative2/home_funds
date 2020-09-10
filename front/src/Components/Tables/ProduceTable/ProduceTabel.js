@@ -9,6 +9,8 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import { withStyles } from "@material-ui/core/styles";
 
+import ViewProductDialog from "../../Dialog/ViewProductDialog/ViewProductDialog";
+
 const style = {
   root: {
     width: "100%",
@@ -24,15 +26,29 @@ const style = {
   cellColor: {
     backgroundColor: "red",
   },
+  ho: {
+    "&:hover": {
+      background: "red !important",
+    },
+  },
 };
 
 class ProduceTable extends React.Component {
-  state = {};
+  state = {
+    open: false,
+  };
+
+  handleOnClick = () => {
+    this.setState({ ...this.state, open: true });
+  };
+
+  handleClose = () => {
+    console.log("closing");
+    this.setState({ ...this.state, open: false });
+  };
 
   render() {
     const { classes } = this.props;
-
-    console.log(this.props);
 
     let longestColumn = 0;
 
@@ -41,6 +57,8 @@ class ProduceTable extends React.Component {
         longestColumn = householdProduct.userHouseholdProductList.length;
       }
     });
+
+    let key = 0;
 
     const tableRows = [...Array(longestColumn).keys()].map((index) => {
       let rowCells = this.props.householdProducts.map((householdProduct) => {
@@ -57,25 +75,21 @@ class ProduceTable extends React.Component {
 
         if (user != null) {
           return (
-            <TableCell
-              style={{
-                backgroundColor: user.color,
-                color: "white",
-                border: "3px solid white",
-                borderRadius: "9px",
-              }}
-              align="center"
-              key={householdProduct.productId}
-            >
-              {user.nickname}
-            </TableCell>
+            <ViewProductDialog
+              key={key++}
+              householdProduct={householdProduct}
+              user={user}
+              userHouseholdProduct={
+                householdProduct.userHouseholdProductList[index]
+              }
+            ></ViewProductDialog>
           );
         } else {
           return (
             <TableCell
               style={{ backgroundColor: "white", color: "white" }}
               align="center"
-              key={householdProduct.productId}
+              key={key++}
             >
               {null}
             </TableCell>

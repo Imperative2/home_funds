@@ -116,7 +116,6 @@ class AddProductDialog extends React.Component {
   };
 
   handleFormChange = (event) => {
-    console.log(event);
     const name = event.target.name;
     const value = event.target.value;
 
@@ -131,16 +130,12 @@ class AddProductDialog extends React.Component {
   };
 
   handleFormSubmit = () => {
-    console.log("adding userHousehold product");
-
     let form = {
       userId: this.props.userReducer.user.userId,
       productId: this.state.formAddProduct.formFields.product.value.productId,
       description: this.state.formAddProduct.formFields.description.value,
       householdId: this.props.household.householdId,
     };
-
-    console.log(form);
 
     this.props.onAddUserHouseholdProduct(form);
 
@@ -149,7 +144,6 @@ class AddProductDialog extends React.Component {
 
   render() {
     const { classes } = this.props;
-    console.log(this.state);
     return (
       <div>
         <Fab
