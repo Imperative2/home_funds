@@ -10,6 +10,16 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Chip from "@material-ui/core/Chip";
 import AddIcon from "@material-ui/icons/Add";
+import IconButton from "@material-ui/core/IconButton";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import ClearIcon from "@material-ui/icons/Clear";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListAvatar from "@material-ui/core/ListItemAvatar";
+import ListText from "@material-ui/core/ListItemText";
+import Avatar from "@material-ui/core/Avatar";
+import Divider from "@material-ui/core/Divider";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 
 import userAvatar from "../../../static/user_avatar.jpg";
 import noImg from "../../../static/NoImage.png";
@@ -121,9 +131,36 @@ class HouseholdSettingsPage extends React.Component {
     let map = this.props.householdReducer.userHouseholds;
 
     if (map.has(Number(this.props.match.params.householdId)) === true) {
+      let household = map.get(Number(this.props.match.params.householdId));
+      let products = household.householdProducts.map((product) => {
+        return {
+          name: product.name,
+          id: product.productId,
+          data: generateRandomNames(3),
+        };
+      });
+
+      console.log(household);
       this.setState({
         ...this.state,
-        household: map.get(Number(this.props.match.params.householdId)),
+        household: household,
+        formHousehold: {
+          ...this.state.formHousehold,
+          formFields: {
+            ...this.state.formHousehold.formFields,
+            name: {
+              ...this.state.formHousehold.formFields.name,
+              value: household.name,
+            },
+            description: {
+              ...this.state.formHousehold.formFields.description,
+              value: household.description,
+            },
+          },
+          photo: noImg,
+          addedUsers: new Map(),
+          products: products,
+        },
       });
     } else {
       this.setState({ ...this.state, household: null });
@@ -138,6 +175,55 @@ class HouseholdSettingsPage extends React.Component {
     const textSize = { style: { fontSize: "1.1rem" } };
     const labelSize = { style: { fontSize: "1.2rem" } };
     const textColor = { style: { color: "white" } };
+
+    let searchUsers = null;
+    let users = Array.from(this.props.usersReducer.users).map((mapEntry) => {
+      const user = mapEntry[1];
+
+      let iconButton = (
+        <IconButton
+          edge="end"
+          aria-label="delete"
+          onClick={() => this.handleAddUserButton(user)}
+        >
+          <PersonAddIcon />
+        </IconButton>
+      );
+
+      if (this.state.formHousehold.addedUsers.has(user.userId)) {
+        iconButton = (
+          <IconButton
+            edge="end"
+            aria-label="delete"
+            onClick={() => this.handleRemoveUserButton(user)}
+          >
+            <ClearIcon />
+          </IconButton>
+        );
+      }
+
+      return (
+        <React.Fragment key={user.userId}>
+          <ListItem>
+            <ListAvatar>
+              <Avatar
+                src={
+                  user.avatar != null && user.avatar.path != null
+                    ? getServerURL() + user.avatar.path
+                    : null
+                }
+              ></Avatar>
+            </ListAvatar>
+            <ListText
+              primary={user.name + " " + user.surname}
+              secondary={"@" + user.nickname}
+            />
+            <ListItemSecondaryAction>{iconButton}</ListItemSecondaryAction>
+          </ListItem>
+          <Divider />
+        </React.Fragment>
+      );
+    });
 
     return (
       <div>
@@ -206,9 +292,10 @@ class HouseholdSettingsPage extends React.Component {
                       <TextFieldWithLabel
                         fullWidth
                         text="Household Name:"
+                        defaultValue={"asdfasdf"}
                       ></TextFieldWithLabel>
                     </Grid>
-                    <Grid item={3}>
+                    <Grid item>
                       <Button variant="contained" color="primary">
                         Save
                       </Button>
@@ -219,9 +306,10 @@ class HouseholdSettingsPage extends React.Component {
                         text="Household Description:"
                         multiline
                         rows={3}
+                        defaultValue={"default value asdfasdf"}
                       ></TextFieldWithLabel>
                     </Grid>
-                    <Grid item={3}>
+                    <Grid item>
                       <Button variant="contained" color="primary">
                         Save
                       </Button>
@@ -335,6 +423,58 @@ class HouseholdSettingsPage extends React.Component {
                         data={this.state.formHousehold.products}
                       ></GenericTable>
                     </Grid>
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Grid>
+            <Grid item container>
+              <Paper elevation={5}>
+                <Grid item container>
+                  <Grid item xs={12}>
+                    <Typography variant="h6">Users:</Typography>
+                  </Grid>
+                  {Array.from(this.state.formHousehold.addedUsers).map(
+                    (mapEntry) => {
+                      const user = mapEntry[1];
+                      return (
+                        <Grid item key={user.userId}>
+                          <ListItem>
+                            <ListAvatar>
+                              <Avatar
+                                src={
+                                  user.avatar != null &&
+                                  user.avatar.path != null
+                                    ? getServerURL() + user.avatar.path
+                                    : null
+                                }
+                              ></Avatar>
+                            </ListAvatar>
+                            <ListText
+                              primary={user.name + " " + user.surname}
+                              secondary={"@" + user.nickname}
+                            />
+                          </ListItem>
+                        </Grid>
+                      );
+                    }
+                  )}
+                </Grid>
+                <Grid container spacing={2} direction="column">
+                  <Grid className={classes.searchBar} item xs={12}>
+                    <TextField
+                      InputProps={textColor}
+                      fullWidth
+                      variant="outlined"
+                      placeholder="Search"
+                      onChange={(event) => this.handleSearchChange(event)}
+                    ></TextField>
+                  </Grid>
+                  <Grid item xs={12} sm={12}>
+                    <List className={classes.usersList}>
+                      {this.state.search.canSearch === true
+                        ? searchUsers
+                        : users}
+                    </List>
                   </Grid>
                 </Grid>
               </Paper>

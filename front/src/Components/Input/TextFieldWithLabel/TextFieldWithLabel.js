@@ -18,7 +18,12 @@ class TextFieldWithLabel extends React.Component {
     const { classes } = this.props;
 
     return (
-      <Grid className={classes.block} item container alignItems="center">
+      <Grid
+        className={this.props.block != null ? classes.block : null}
+        item
+        container
+        alignItems="center"
+      >
         <Grid item>
           <Typography variant="h6">{this.props.text}</Typography>
         </Grid>
@@ -30,6 +35,7 @@ class TextFieldWithLabel extends React.Component {
             rows={this.props.rows}
             fullWidth={this.props.fullWidth}
             onChange={this.props.onChange}
+            defaultValue={this.props.defaultValue}
           ></TextField>
         </Grid>
       </Grid>
