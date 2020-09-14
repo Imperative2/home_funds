@@ -2,13 +2,14 @@ import React from "react";
 
 import { Typography, Card, ButtonBase, Button } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
+import SettingsRoundedIcon from "@material-ui/icons/SettingsRounded";
 import { NavLink } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 
 import noimage from "../../../static/NoImage.png";
 import house1 from "../../../static/house_1.jpg";
 
-import SettingsRoundedIcon from "@material-ui/icons/SettingsRounded";
+import AvatarLabel from "../../Labels/AvatarLabel/AvatarLabel";
 
 const style = {
   img: {
@@ -70,7 +71,10 @@ class HouseholdCard extends React.Component {
                   </Typography>
                 </Grid>
                 <Grid item>
-                  <Typography> sdfgsdfg</Typography>
+                  <AvatarLabel
+                    user={this.props.owner}
+                    photo={this.props.owner.avatar}
+                  ></AvatarLabel>
                 </Grid>
               </Grid>
               <Grid
@@ -81,11 +85,15 @@ class HouseholdCard extends React.Component {
                 alignItems="flex-end"
               >
                 <Grid item>
-                  <Button
-                    className={classes.buttonOffset}
-                    variant="outlined"
-                    endIcon={<SettingsRoundedIcon className={classes.icon} />}
-                  ></Button>
+                  <NavLink
+                    to={"/household/" + this.props.householdId + "/settings"}
+                  >
+                    <Button
+                      className={classes.buttonOffset}
+                      variant="outlined"
+                      endIcon={<SettingsRoundedIcon className={classes.icon} />}
+                    ></Button>
+                  </NavLink>
                 </Grid>
               </Grid>
             </Grid>

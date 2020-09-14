@@ -13,7 +13,7 @@ import ViewProductDialog from "../../Dialog/ViewProductDialog/ViewProductDialog"
 
 const style = {
   root: {
-    width: "100%",
+    margin: "10px",
   },
   container: {
     maxHeight: "85vh",

@@ -55,6 +55,7 @@ class HouseholdsPage extends React.Component {
             householdId={household.householdId}
             name={household.name}
             description={household.description}
+            owner={household.owner}
           ></HouseholdCard>
         </Grid>
       );

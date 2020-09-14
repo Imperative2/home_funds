@@ -11,6 +11,8 @@ import UserSettingsPage from "./Components/Pages/UserSettingsPage/UserSettingsPa
 import NewsPage from "./Components/Pages/NewsPage/NewsPage";
 import UsersPage from "./Components/Pages/UsersPage/UsersPage";
 import HouseholdPage from "./Components/Pages/HouseholdPage/HouseholdPage";
+import UserPage from "./Components/Pages/UserPage/UserPage";
+import HouseholdSettingsPage from "./Components/Pages/HouseholdSettingsPage/HouseholdSettingsPage";
 
 class App extends Component {
   render() {
@@ -23,10 +25,17 @@ class App extends Component {
             <Route exact path="/households" component={HouseholdsPage} />
             <Route
               exact
+              path="/household/:householdId/settings"
+              component={HouseholdSettingsPage}
+            />
+            <Route
+              exact
               path="/household/:householdId"
               component={HouseholdPage}
             />
             <Route exact path="/user/settings" component={UserSettingsPage} />
+            <Route exact path="/user/:userId" component={UserPage}></Route>
+
             <Route exact path="/news" component={NewsPage} />
             <Route exact path="/users" component={UsersPage} />
             <Route path="/" component={TitlePage} />

@@ -362,7 +362,7 @@ class UserSettingsPage extends React.Component {
                   alignItems="center"
                   sm={6}
                 >
-                  <Grid>
+                  <Grid item>
                     <Typography variant="subtitle1" color="textSecondary">
                       Avatar:
                     </Typography>
