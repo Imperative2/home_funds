@@ -140,6 +140,26 @@ public class HouseholdServiceImpl implements HouseholdService {
 		return new ResponseEntity<Household>(savedHousehold, HttpStatus.OK);
 				
 	}
+	
+	@Transactional
+	public ResponseEntity<Household> updateHouseholdName(Household householdData) {
+
+		if(HouseholdValidation.checkIfNameCorrect(householdData.getName()) == false)
+		{
+			return new ResponseEntity<Household>(HttpStatus.BAD_REQUEST);
+		}
+		
+		Household foundHousehold = householdDAO.findById(householdData.getHouseholdId());
+		if(foundHousehold == null)
+		{
+			return new ResponseEntity<Household>(HttpStatus.BAD_REQUEST);
+		}
+		
+		foundHousehold.setName(householdData.getName());
+		Household savedHousehold = householdDAO.save(foundHousehold);
+		return new ResponseEntity<Household>(savedHousehold, HttpStatus.OK);
+				
+	}
 
 
 	@Transactional
@@ -226,5 +246,8 @@ public class HouseholdServiceImpl implements HouseholdService {
 		}
 		return null;
 	}
+
+
+
 
 }

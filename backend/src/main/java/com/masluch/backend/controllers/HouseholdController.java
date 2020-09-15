@@ -38,6 +38,12 @@ public class HouseholdController {
 		return householdService.updateHouseholdDescription(householdData);
 	}
 	
+	@PostMapping(path="/updateHouseholdName")
+	public ResponseEntity<Household> updateHouseholdName(@RequestBody Household householdData)
+	{
+		return householdService.updateHouseholdName(householdData);
+	}
+	
 	@PostMapping(path="/addUserToHousehold")
 	public ResponseEntity<Household> addUserToHousehold(@RequestParam(name = "userId") Integer userId, @RequestParam(name="householdId") Integer householdId )
 	{
@@ -53,6 +59,7 @@ public class HouseholdController {
 	@PostMapping(path="/addHouseholdProduct")
 	public ResponseEntity<Household> addHouseholdProduct(@RequestParam(name="householdId") Integer householdId, @RequestBody HouseholdProduct newHouseholdProduct)
 	{
+		System.out.println(newHouseholdProduct);
 		return householdService.addHouseholdProduct(newHouseholdProduct, householdId);
 	}
 	

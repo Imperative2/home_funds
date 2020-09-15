@@ -13,6 +13,8 @@ public interface HouseholdService {
 	public ResponseEntity<String> createNewHousehold(NewHouseholdData newHouseholdData);
 	
 	public ResponseEntity<Household> updateHouseholdDescription(Household householdData);
+	
+	public ResponseEntity<Household> updateHouseholdName(Household householdData);
 
 	public ResponseEntity<Household> addUserToHousehold(Integer householdId, Integer userId);
 	

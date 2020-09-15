@@ -21,6 +21,7 @@ export {
 export {
   createNewHousehold,
   updateHouseholdDescription,
+  updateHouseholdName,
   addUserToHousehold,
   addHouseholdProduct,
   addUserHouseholdProduct,

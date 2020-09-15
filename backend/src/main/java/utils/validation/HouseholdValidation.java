@@ -14,4 +14,9 @@ public class HouseholdValidation {
 	{
 		return true;
 	}
+	
+	public static boolean checkIfNameCorrect(String name)
+	{
+		return true;
+	}
 }

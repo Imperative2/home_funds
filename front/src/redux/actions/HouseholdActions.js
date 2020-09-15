@@ -26,6 +26,23 @@ export const updateHouseholdDescription = (form) => {
       .post(path, form)
       .then((res) => {
         //        console.log(res);
+        dispatch(addHouseholdToUserHouseholds(res.data));
+        notifyOK("Household", "Description updated successfully");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+};
+
+export const updateHouseholdName = (form) => {
+  return (dispatch) => {
+    const path = "/household/updateHouseholdName";
+    axios
+      .post(path, form)
+      .then((res) => {
+        //        console.log(res);
+        dispatch(addHouseholdToUserHouseholds(res.data));
         notifyOK("Household", "Description updated successfully");
       })
       .catch((err) => {
@@ -59,13 +76,15 @@ export const addHouseholdProduct = (form) => {
   return (dispatch) => {
     const path = "/household/addHouseholdProduct";
     axios
-      .post(path, form.newHouseholdProduct, null, {
+      .post(path, form, {
         params: {
           householdId: form.householdId,
         },
       })
       .then((res) => {
         console.log(res);
+        dispatch(addHouseholdToUserHouseholds(res.data));
+        notifyOK("Household", "Product added successfully");
       })
       .catch((err) => {
         console.log(err);
@@ -118,7 +137,7 @@ export const fetchHousehold = (householdId) => {
       })
       .then((res) => {
         console.log(res);
-        dispatch(addHouseholdToUser(res.data));
+        dispatch(addHouseholdToUserHouseholds(res.data));
       })
       .catch((err) => {
         console.log(err);
@@ -159,7 +178,7 @@ export const fetchUserHouseholds = (userId) => {
   };
 };
 
-const addHouseholdToUser = (household) => {
+const addHouseholdToUserHouseholds = (household) => {
   return {
     type: actionTypes.ADD_HOUSEHOLD_TO_USER_HOUSEHOLDS,
     household: household,

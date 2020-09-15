@@ -48,8 +48,8 @@ const style = {
     margin: 10,
     width: 270,
   },
-  buttonMargin: {
-    margin: 20,
+  buttonMarginTop: {
+    marginTop: 10,
   },
   textFieldFont: {
     fontSize: "50px",
@@ -64,6 +64,22 @@ const style = {
   },
   input: {
     display: "none",
+  },
+  border: {
+    border: "3px solid Navy",
+    borderRadius: 5,
+  },
+  chipDialog: {
+    margin: 10,
+    width: 200,
+  },
+  usersList: {
+    maxHeight: "50vh",
+    overflow: "auto",
+  },
+  searchBar: {
+    background: "DodgerBlue",
+    borderRadius: 5,
   },
 };
 
@@ -92,8 +108,8 @@ class HouseholdSettingsPage extends React.Component {
           errorMessage: null,
         },
       },
-      formValid: false,
-      enableSubmitButton: false,
+      enableButtonNameSave: false,
+      enableButtonDescriptionSave: false,
       photo: noImg,
       addedUsers: new Map(),
       products: [
@@ -141,6 +157,12 @@ class HouseholdSettingsPage extends React.Component {
       });
 
       console.log(household);
+      let userMap = new Map();
+
+      household.householdUsers.forEach((user) => {
+        userMap.set(user.user.userId, user.user);
+      });
+
       this.setState({
         ...this.state,
         household: household,
@@ -158,7 +180,7 @@ class HouseholdSettingsPage extends React.Component {
             },
           },
           photo: noImg,
-          addedUsers: new Map(),
+          addedUsers: userMap,
           products: products,
         },
       });
@@ -167,10 +189,153 @@ class HouseholdSettingsPage extends React.Component {
     }
   }
 
-  render() {
-    console.log(this.props.match.params.householdId);
-    console.log(this.state.household);
+  handleNameChange = (event) => {
+    let household = this.props.householdReducer.userHouseholds.get(
+      Number(this.state.householdId)
+    );
 
+    let validatedFields = FormValidator.getValidatedFormFields(
+      "name",
+      event.target.value,
+      this.state.formHousehold
+    );
+
+    let nameChanged = false;
+    if (household.name !== validatedFields.formFields.name.value) {
+      nameChanged = true;
+    }
+    nameChanged = nameChanged & validatedFields.formFields.name.valid;
+
+    this.setState({
+      ...this.state,
+      formHousehold: {
+        ...validatedFields,
+        enableButtonNameSave: nameChanged,
+      },
+    });
+  };
+
+  handleDescriptionChange = (event) => {
+    let household = this.props.householdReducer.userHouseholds.get(
+      Number(this.state.householdId)
+    );
+
+    let validatedFields = FormValidator.getValidatedFormFields(
+      "description",
+      event.target.value,
+      this.state.formHousehold
+    );
+    let descriptionChanged = false;
+    if (
+      household.description !== validatedFields.formFields.description.value
+    ) {
+      descriptionChanged = true;
+    }
+
+    descriptionChanged =
+      descriptionChanged & validatedFields.formFields.description.valid;
+
+    this.setState({
+      ...this.state,
+      formHousehold: {
+        ...validatedFields,
+        enableButtonDescriptionSave: descriptionChanged,
+      },
+    });
+  };
+
+  handleNameSaveButton = () => {
+    let form = {
+      householdId: this.state.household.householdId,
+      name: this.state.formHousehold.formFields.name.value,
+    };
+
+    this.props.onNameUpdate(form);
+
+    this.setState({
+      ...this.state,
+      formHousehold: {
+        ...this.state.formHousehold,
+        enableButtonNameSave: false,
+      },
+    });
+  };
+
+  handleDescriptionSaveButton = () => {
+    let form = {
+      householdId: this.state.household.householdId,
+      description: this.state.formHousehold.formFields.description.value,
+    };
+
+    this.props.onDescriptionUpdate(form);
+    this.setState({
+      ...this.state,
+      formHousehold: {
+        ...this.state.formHousehold,
+        enableButtonDescriptionSave: false,
+      },
+    });
+  };
+
+  handleButtonOpenAddProductDialog = () => {
+    this.setState({
+      ...this.state,
+      formAddProduct: {
+        ...this.state.formAddProduct,
+        addProductDialogOpen: true,
+      },
+    });
+  };
+
+  handleCloseAddProductDialog = () => {
+    this.setState({
+      ...this.state,
+      formAddProduct: {
+        formFields: {
+          productName: {
+            value: "",
+            touched: false,
+            valid: false,
+            minLength: 3,
+            maxLength: 20,
+            required: true,
+            regex: null,
+          },
+        },
+        formValid: false,
+        enableSubmitButton: false,
+        addProductDialogOpen: false,
+      },
+    });
+  };
+
+  handleAddProductInputChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+
+    const validatedFields = FormValidator.getValidatedFormFields(
+      name,
+      value,
+      this.state.formAddProduct
+    );
+    const validatedForm = FormValidator.getValidatedForm(validatedFields);
+
+    this.setState({ ...this.state, formAddProduct: validatedForm });
+  };
+
+  handleProductAddButton = () => {
+    let form = {
+      name: this.state.formAddProduct.formFields.productName.value,
+      householdId: this.state.household.householdId,
+    };
+
+    console.log(form);
+    this.props.onAddHouseholdProduct(form);
+    this.handleCloseAddProductDialog();
+  };
+
+  render() {
+    console.log(this.state);
     const { classes } = this.props;
     const textSize = { style: { fontSize: "1.1rem" } };
     const labelSize = { style: { fontSize: "1.2rem" } };
@@ -228,15 +393,15 @@ class HouseholdSettingsPage extends React.Component {
     return (
       <div>
         <Container maxWidth="md">
-          <Grid container direction="column" spacing={10}>
+          <Grid container direction="column" spacing={3}>
             <Grid item>
               <Typography variant="h6">
                 <b>Settings</b>
               </Typography>
             </Grid>
             <Grid item container>
-              <Paper elevation={5}>
-                <Grid item container direction="row">
+              <Paper elevation={5} className={classes.block}>
+                <Grid xs={12} item container direction="row">
                   <Grid
                     item
                     container
@@ -292,11 +457,22 @@ class HouseholdSettingsPage extends React.Component {
                       <TextFieldWithLabel
                         fullWidth
                         text="Household Name:"
-                        defaultValue={"asdfasdf"}
+                        defaultValue={
+                          this.state.formHousehold.formFields.name.value
+                        }
+                        onChange={(event) => this.handleNameChange(event)}
                       ></TextFieldWithLabel>
                     </Grid>
                     <Grid item>
-                      <Button variant="contained" color="primary">
+                      <Button
+                        className={classes.buttonMarginTop}
+                        disabled={
+                          !this.state.formHousehold.enableButtonNameSave
+                        }
+                        variant="contained"
+                        color="primary"
+                        onClick={this.handleNameSaveButton}
+                      >
                         Save
                       </Button>
                     </Grid>
@@ -306,11 +482,24 @@ class HouseholdSettingsPage extends React.Component {
                         text="Household Description:"
                         multiline
                         rows={3}
-                        defaultValue={"default value asdfasdf"}
+                        defaultValue={
+                          this.state.formHousehold.formFields.description.value
+                        }
+                        onChange={(event) =>
+                          this.handleDescriptionChange(event)
+                        }
                       ></TextFieldWithLabel>
                     </Grid>
                     <Grid item>
-                      <Button variant="contained" color="primary">
+                      <Button
+                        className={classes.buttonMarginTop}
+                        variant="contained"
+                        color="primary"
+                        disabled={
+                          !this.state.formHousehold.enableButtonDescriptionSave
+                        }
+                        onClick={this.handleDescriptionSaveButton}
+                      >
                         Save
                       </Button>
                     </Grid>
@@ -318,8 +507,8 @@ class HouseholdSettingsPage extends React.Component {
                 </Grid>
               </Paper>
             </Grid>
-            <Grid item container>
-              <Paper elevation={5}>
+            <Grid item xs={12} container>
+              <Paper elevation={5} className={classes.block}>
                 <Grid item container spacing={1}>
                   <Grid
                     item
@@ -427,8 +616,8 @@ class HouseholdSettingsPage extends React.Component {
                 </Grid>
               </Paper>
             </Grid>
-            <Grid item container>
-              <Paper elevation={5}>
+            <Grid item xs={12} container>
+              <Paper elevation={5} className={classes.block}>
                 <Grid item container>
                   <Grid item xs={12}>
                     <Typography variant="h6">Users:</Typography>
@@ -498,6 +687,11 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onFetchHousehold: (householdId) =>
       dispatch(actions.fetchHousehold(householdId)),
+    onNameUpdate: (form) => dispatch(actions.updateHouseholdName(form)),
+    onDescriptionUpdate: (form) =>
+      dispatch(actions.updateHouseholdDescription(form)),
+    onAddHouseholdProduct: (form) =>
+      dispatch(actions.addHouseholdProduct(form)),
   };
 };
 
