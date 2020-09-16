@@ -53,7 +53,7 @@ public class HouseholdController {
 	@DeleteMapping(path="/removeUserFromHousehold")
 	public ResponseEntity<Household> removeUserFromHousehold(@RequestParam(name = "userId") Integer userId, @RequestParam(name="householdId") Integer householdId )
 	{
-		return null;
+		return householdService.removeUserFromHousehold(householdId, userId);
 	}
 	
 	@PostMapping(path="/addHouseholdProduct")
@@ -66,13 +66,13 @@ public class HouseholdController {
 	@DeleteMapping(path="/removeHouseholdProduct")
 	public ResponseEntity<Household> removeHouseholdProduct(@RequestParam(name="householdId") Integer householdId,@RequestParam(name="householdProductId") Integer householdProductId)
 	{
-		return null;
+		return householdService.removeHouseholdProduct(householdId, householdProductId);
 	}
 	
 	@DeleteMapping(path="/removeHousehold")
 	public ResponseEntity<String> removeHousehold(@RequestParam(name="householdId") Integer householdId)
 	{
-		return null;
+		return householdService.removeHousehold(householdId);
 	}
 	
 	@PostMapping(path="/addUserHouseholdProduct")

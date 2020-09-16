@@ -61,7 +61,8 @@ public class HouseholdDAOImpl implements HouseholdDAO {
 	@Override
 	public void deleteById(Integer householdId) {
 		Session session = entityManager.unwrap(Session.class);
-
+		Household household = session.get(Household.class, householdId);
+		session.delete(household);
 	}
 
 

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.masluch.backend.entities.NewsType;
 import com.masluch.backend.entities.User;
 
+
 @Repository
 public class UserDAOImpl implements UserDAO {
 
@@ -75,7 +76,8 @@ public class UserDAOImpl implements UserDAO {
 	public void deleteById(Integer userId)
 	{
 		Session session = entityManager.unwrap(Session.class);
-
+		User user= session.get(User.class, userId);
+		session.delete(user);
 	}
 
 
