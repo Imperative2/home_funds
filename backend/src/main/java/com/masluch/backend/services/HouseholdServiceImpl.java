@@ -188,17 +188,43 @@ public class HouseholdServiceImpl implements HouseholdService {
 	}
 
 
-	@Override
+	@Transactional
 	public ResponseEntity<Household> removeUserFromHousehold(Integer householdId, Integer userId) {
-		// TODO Auto-generated method stub
-		return null;
+		Household foundHousehold = householdDAO.findById(householdId);
+		if(foundHousehold == null)
+		{
+			return new ResponseEntity<Household>(HttpStatus.BAD_REQUEST);
+		}
+		List<HouseholdUsers> foundHouseholdUserList = householdUsersDAO.findByUserAndHouseholdId(householdId, userId);
+		if(foundHouseholdUserList.size() == 0 || foundHouseholdUserList.size() > 1)
+		{
+			return new ResponseEntity<Household>(HttpStatus.BAD_REQUEST);
+		}
+		
+		householdUsersDAO.deleteById(foundHouseholdUserList.get(0).getId());
+		
+		return new ResponseEntity<Household>(foundHousehold, HttpStatus.OK);
+		
 	}
 
 
-	@Override
+	@Transactional
 	public ResponseEntity<Household> removeHouseholdProduct(Integer householdId, Integer householdProductId) {
-		// TODO Auto-generated method stub
-		return null;
+		Household foundHousehold = householdDAO.findById(householdId);
+		if(foundHousehold == null)
+		{
+			return new ResponseEntity<Household>(HttpStatus.BAD_REQUEST);
+		}
+		HouseholdProduct foundHouseholdProduct = householdProductDAO.findById(householdProductId);
+		if(foundHouseholdProduct == null)
+		{
+			return new ResponseEntity<Household>(HttpStatus.BAD_REQUEST);
+		}
+		
+		householdProductDAO.deleteById(householdProductId);
+		
+		return new ResponseEntity<Household>(foundHousehold, HttpStatus.OK);
+				
 	}
 
 

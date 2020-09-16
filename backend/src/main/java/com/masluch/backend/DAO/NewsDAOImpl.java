@@ -50,7 +50,8 @@ public class NewsDAOImpl implements NewsDAO {
 	@Override
 	public void deleteById(Integer newsId) {
 		Session session = entityManager.unwrap(Session.class);
-		
+		News news= session.get(News.class, newsId);
+		session.delete(news);
 	}
 	
 
