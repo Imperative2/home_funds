@@ -11,10 +11,11 @@ import { withStyles } from "@material-ui/core/styles";
 
 const style = {
   root: {
-    width: "100%",
+    margin: "10px",
   },
   container: {
     maxHeight: "85vh",
+    maxWidth: 900,
   },
   headCell: {
     backgroundColor: "Orange",
@@ -56,8 +57,8 @@ class GenericTable extends React.Component {
     });
 
     return (
-      <Paper className={classes.root}>
-        <TableContainer className={classes.container}>
+      <Paper className={classes.container}>
+        <TableContainer component={Paper}>
           <Table size="small" stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>

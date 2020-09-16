@@ -82,7 +82,7 @@ export const addHouseholdProduct = (form) => {
         },
       })
       .then((res) => {
-        console.log(res);
+        //       console.log(res);
         dispatch(addHouseholdToUserHouseholds(res.data));
         notifyOK("Household", "Product added successfully");
       })
