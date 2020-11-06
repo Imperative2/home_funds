@@ -32,10 +32,11 @@ class TextFieldWithLabel extends React.Component {
             name={this.props.name}
             variant="outlined"
             multiline={this.props.multiline}
-            rows={this.props.rows}
+            rows={this.props.multiline === true? this.props.rows: 1}
             fullWidth={this.props.fullWidth}
             onChange={this.props.onChange}
             defaultValue={this.props.defaultValue}
+            value={this.props.value}
           ></TextField>
         </Grid>
       </Grid>

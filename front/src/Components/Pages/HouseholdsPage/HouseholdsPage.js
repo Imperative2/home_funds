@@ -49,13 +49,16 @@ class HouseholdsPage extends React.Component {
       this.props.householdReducer.userHouseholds
     ).map((mapEntry) => {
       const household = mapEntry[1];
+
       return (
-        <Grid item key={household.name}>
+        <Grid item key={household.householdId}>
           <HouseholdCard
+          household={household}
             householdId={household.householdId}
             name={household.name}
             description={household.description}
             owner={household.owner}
+            currentUser={this.props.userReducer.user}
           ></HouseholdCard>
         </Grid>
       );

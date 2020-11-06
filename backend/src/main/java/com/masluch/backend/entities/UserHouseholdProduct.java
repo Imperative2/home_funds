@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -39,8 +40,9 @@ public class UserHouseholdProduct {
 	@Column(name="description")
 	private String description;
 	
-	@Column(name="image")
-	private String image;
+	@OneToOne(optional = true)
+	@JoinColumn(name = "photo" )
+	private Photo photo;
 
 	public Integer getId() {
 		return id;
@@ -82,18 +84,18 @@ public class UserHouseholdProduct {
 		this.description = description;
 	}
 
-	public String getImage() {
-		return image;
+	public Photo getPhoto() {
+		return photo;
 	}
 
-	public void setImage(String image) {
-		this.image = image;
+	public void setPhoto(Photo photo) {
+		this.photo = photo;
 	}
 
 	@Override
 	public String toString() {
 		return "UserHouseholdProduct [id=" + id + ", product=" + product + ", user=" + user + ", date=" + date
-				+ ", description=" + description + ", image=" + image + "]";
+				+ ", description=" + description + ", photo=" + photo + "]";
 	}
 
 	

@@ -6,10 +6,12 @@ import SettingsRoundedIcon from "@material-ui/icons/SettingsRounded";
 import { NavLink } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 
-import noimage from "../../../static/NoImage.png";
+import noImg from "../../../static/NoImage.png";
 import house1 from "../../../static/house_1.jpg";
 
 import AvatarLabel from "../../Labels/AvatarLabel/AvatarLabel";
+
+import getServerURL from "../../../utils/GetEnvVar/getServerURL"
 
 const style = {
   img: {
@@ -38,6 +40,26 @@ class HouseholdCard extends React.Component {
   render() {
     const { classes } = this.props;
 
+
+
+    let settingsButton= null;
+
+    if(this.props.currentUser.userId === this.props.owner.userId)
+    {
+      settingsButton = (<Grid item>
+        <NavLink
+          to={"/household/" + this.props.householdId + "/settings"}
+        >
+          <Button
+            className={classes.buttonOffset}
+            variant="outlined"
+            endIcon={<SettingsRoundedIcon className={classes.icon} />}
+          ></Button>
+        </NavLink>
+      </Grid>)
+    }
+
+
     return (
       <div>
         <Card elevation={5} className={classes.card}>
@@ -47,7 +69,11 @@ class HouseholdCard extends React.Component {
                 <NavLink to={"/household/" + this.props.householdId}>
                   <img
                     className={classes.img}
-                    src={house1}
+                    src={
+                      this.props.household.photo != null 
+                        ? getServerURL() + this.props.household.photo.path
+                        : noImg
+                    }
                     alt="household"
                   ></img>
                 </NavLink>
@@ -84,17 +110,7 @@ class HouseholdCard extends React.Component {
                 direction="column"
                 alignItems="flex-end"
               >
-                <Grid item>
-                  <NavLink
-                    to={"/household/" + this.props.householdId + "/settings"}
-                  >
-                    <Button
-                      className={classes.buttonOffset}
-                      variant="outlined"
-                      endIcon={<SettingsRoundedIcon className={classes.icon} />}
-                    ></Button>
-                  </NavLink>
-                </Grid>
+                {settingsButton}
               </Grid>
             </Grid>
           </Grid>

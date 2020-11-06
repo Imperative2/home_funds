@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -31,8 +32,9 @@ public class Household {
 	@Column(name = "description")
 	private String description;
 	
-	@Column(name ="image")
-	private String photo;
+	@OneToOne(optional = true)
+	@JoinColumn(name = "photo" )
+	private Photo photo;
 	
 	@OneToMany
 	@JoinColumn(name = "household_id")
@@ -75,11 +77,11 @@ public class Household {
 		this.description = description;
 	}
 
-	public String getPhoto() {
+	public Photo getPhoto() {
 		return photo;
 	}
 
-	public void setPhoto(String photo) {
+	public void setPhoto(Photo photo) {
 		this.photo = photo;
 	}
 

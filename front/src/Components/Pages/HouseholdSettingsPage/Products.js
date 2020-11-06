@@ -94,16 +94,18 @@ class Products extends React.Component {
     const labelSize = { style: { fontSize: "1.2rem" } };
     const textColor = { style: { color: "white" } };
 
+
     let products = this.props.products.map((product) => {
+
       return {
         name: product.name,
         id: product.productId,
-        data: generateRandomNames(3),
+        data: this.props.productMockupMap.has(product.productId) === true? this.props.productMockupMap.get(product.productId): generateRandomNames(3),
       };
     });
 
     return (
-      <Grid item xs={10} container>
+      <Grid item xs={12} container>
         <Paper elevation={5} className={classes.block}>
           <Grid item container spacing={1} className={classes.maxW}>
             <Grid item container xs={12} className={classes.border} spacing={1}>
@@ -181,17 +183,17 @@ class Products extends React.Component {
               </Grid>
             </Grid>
             <Grid
-              xs={5}
+              xs={12}
               item
               container
               justify="center"
               alignItems="center"
-              direction="column"
+              direction="row"
             >
-              <Grid item>
+              <Grid item xs={1}>
                 <Typography variant="h6">Preview</Typography>
               </Grid>
-              <Grid item>
+              <Grid item xs={12}>
                 <GenericTable data={products}></GenericTable>
               </Grid>
             </Grid>

@@ -20,6 +20,7 @@ import com.masluch.backend.Requests.users.NewUserHouseholdProductData;
 import com.masluch.backend.entities.Household;
 import com.masluch.backend.entities.HouseholdProduct;
 import com.masluch.backend.entities.HouseholdUsers;
+import com.masluch.backend.entities.Photo;
 import com.masluch.backend.entities.User;
 import com.masluch.backend.entities.UserHouseholdProduct;
 
@@ -44,16 +45,16 @@ public class HouseholdServiceImpl implements HouseholdService {
 	private UserHouseholdProductDAO userHouseholdProductDAO;
 
 	@Transactional
-	public ResponseEntity<String> createNewHousehold(NewHouseholdData newHouseholdData) 
+	public ResponseEntity<Household> createNewHousehold(NewHouseholdData newHouseholdData) 
 	{
 		if(HouseholdValidation.checkIfCreateHouseholdDataValid(newHouseholdData) == false)
 		{
-			return new ResponseEntity<String>("Bad data", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Household>( HttpStatus.BAD_REQUEST);
 		}
 		
 		User foundOwner = userDAO.findById(newHouseholdData.getHousehold().getOwner().getUserId());
 		if(foundOwner == null) {
-			return new ResponseEntity<String>("Owner doesn't exist", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Household>( HttpStatus.BAD_REQUEST);
 		}
 		
 		Household newHousehold = new Household();
@@ -89,20 +90,11 @@ public class HouseholdServiceImpl implements HouseholdService {
 		}
 		
 		
-		return new ResponseEntity<String>(HttpStatus.OK);
+		return new ResponseEntity<Household>(savedHousehold, HttpStatus.OK);
 	}
 	
 	
-	public boolean addHouseholdProduct(HouseholdProduct householdProduct, Household household) {
-		
-		HouseholdProduct newHouseholdProduct = new HouseholdProduct();
-		newHouseholdProduct.setName(householdProduct.getName());
-		newHouseholdProduct.setHousehold(household);
-		HouseholdProduct savedHouseholdProduct = householdProductDAO.save(newHouseholdProduct);
-		
-		return true;
-	}
-	
+
 	
 
 	@Transactional
@@ -221,6 +213,12 @@ public class HouseholdServiceImpl implements HouseholdService {
 			return new ResponseEntity<Household>(HttpStatus.BAD_REQUEST);
 		}
 		
+		List<UserHouseholdProduct> userHouseholdProductsList = userHouseholdProductDAO.findByHouseholdProductId(householdProductId);
+		for(UserHouseholdProduct userHouseholdProduct : userHouseholdProductsList)
+		{
+			userHouseholdProductDAO.deleteById(userHouseholdProduct.getId());
+		}
+		
 		householdProductDAO.deleteById(householdProductId);
 		
 		return new ResponseEntity<Household>(foundHousehold, HttpStatus.OK);
@@ -261,6 +259,17 @@ public class HouseholdServiceImpl implements HouseholdService {
 		return new ResponseEntity<Household>(HttpStatus.OK);
 	}
 	
+	public boolean addHouseholdProduct(HouseholdProduct householdProduct, Household household) {
+		
+		HouseholdProduct newHouseholdProduct = new HouseholdProduct();
+		newHouseholdProduct.setName(householdProduct.getName());
+		newHouseholdProduct.setHousehold(household);
+		HouseholdProduct savedHouseholdProduct = householdProductDAO.save(newHouseholdProduct);
+		
+		return true;
+	}
+	
+	
 	public User getUserFromHousehold(Integer userId, Household household)
 	{
 		for(HouseholdUsers householdUser: household.getHouseholdUsers())
@@ -271,6 +280,24 @@ public class HouseholdServiceImpl implements HouseholdService {
 			}
 		}
 		return null;
+	}
+
+
+	@Override
+	@Transactional
+	public ResponseEntity<Household> uploadHouseholdPhoto(Integer householdId, Photo photo) {
+		Household foundHousehold = householdDAO.findById(householdId);
+		if(foundHousehold == null)
+		{
+			return new ResponseEntity<Household>(HttpStatus.BAD_REQUEST);
+		}
+		
+		foundHousehold.setPhoto(photo);
+		
+		householdDAO.update(foundHousehold);
+		
+		return new ResponseEntity<Household>(foundHousehold, HttpStatus.OK);
+		
 	}
 
 

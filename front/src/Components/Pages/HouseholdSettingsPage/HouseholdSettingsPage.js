@@ -37,6 +37,8 @@ import GenericTable from "../../Tables/GenericTable/GenericTable";
 import Products from "./Products";
 import Users from "./Users";
 
+
+
 const style = {
   img: {
     borderRadius: "10px",
@@ -138,6 +140,7 @@ class HouseholdSettingsPage extends React.Component {
       value: "",
       canSearch: false,
     },
+    productMockupMap: new Map(),
   };
 
   componentDidMount() {
@@ -150,8 +153,15 @@ class HouseholdSettingsPage extends React.Component {
 
       let userMap = new Map();
 
+
       household.householdUsers.forEach((user) => {
         userMap.set(user.user.userId, user.user);
+      });
+
+      let mockupMap = this.state.productMockupMap;
+      household.householdProducts.forEach((product) =>{
+        console.log(product)
+        mockupMap.set(product.productId, generateRandomNames(3))
       });
 
       this.setState({
@@ -173,6 +183,7 @@ class HouseholdSettingsPage extends React.Component {
           photo: noImg,
           addedUsers: userMap,
         },
+        productMockupMap: mockupMap,
       });
     } else {
       this.setState({ ...this.state, household: null });
@@ -327,13 +338,41 @@ class HouseholdSettingsPage extends React.Component {
     this.props.onFetchHousehold(this.state.householdId);
   };
 
+  handleProductRemove = (productId) => {
+    let form = {
+      householdId: this.state.household.householdId,
+      householdProductId: productId,
+    };
+
+    this.props.onRemoveHouseholdProduct(form);
+  };
+
+  handleAddUserButton = (userId) => {
+    let form = {
+      userId: userId,
+      householdId: this.state.household.householdId,
+    };
+
+    this.props.onAddUserToHousehold(form);
+  };
+
+  handleRemoveUserButton = (userId) => {
+    let form = {
+      userId: userId,
+      householdId: this.state.household.householdId,
+    };
+
+    this.props.onRemoveUserFromHousehold(form);
+  };
+
   buttonClick = () => {
     console.log(this.state);
     console.log(this.props.householdReducer);
   };
 
   render() {
-    console.log(this.props);
+    console.log(this.state);
+    console.log(this.state.productMockupMap)
     const { classes } = this.props;
     const textSize = { style: { fontSize: "1.1rem" } };
     const labelSize = { style: { fontSize: "1.2rem" } };
@@ -376,7 +415,7 @@ class HouseholdSettingsPage extends React.Component {
                     <Grid item>
                       <img
                         className={classes.img}
-                        src={noImg}
+                        src={this.state.household.photo != null? getServerURL()+this.state.household.photo.path : noImg}
                         alt="householdPhoto"
                       ></img>
                     </Grid>
@@ -413,7 +452,7 @@ class HouseholdSettingsPage extends React.Component {
                       <TextFieldWithLabel
                         fullWidth
                         text="Household Name:"
-                        defaultValue={
+                        value={
                           this.state.formHousehold.formFields.name.value
                         }
                         onChange={(event) => this.handleNameChange(event)}
@@ -470,6 +509,7 @@ class HouseholdSettingsPage extends React.Component {
                     Number(this.props.match.params.householdId)
                   ).householdProducts
                 }
+                productMockupMap={this.state.productMockupMap}
                 handleProductRemove={this.handleProductRemove}
                 handleButtonOpenAddProductDialog={
                   this.handleButtonOpenAddProductDialog
@@ -525,6 +565,12 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(actions.updateHouseholdDescription(form)),
     onAddHouseholdProduct: (form) =>
       dispatch(actions.addHouseholdProduct(form)),
+    onAddUserToHousehold: (form) => dispatch(actions.addUserToHousehold(form)),
+    onRemoveHouseholdProduct: (form) =>
+      dispatch(actions.removeHouseholdProduct(form)),
+    onRemoveUserFromHousehold: (form) =>
+      dispatch(actions.removeUserFromHousehold(form)),
+    onRemoveHousehold: (form) => dispatch(actions.removeHousehold(form)),
   };
 };
 

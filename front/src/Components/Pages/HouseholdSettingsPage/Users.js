@@ -99,7 +99,7 @@ class Users extends React.Component {
         <IconButton
           edge="end"
           aria-label="delete"
-          onClick={() => this.props.handleAddUserButton(user)}
+          onClick={() => this.props.handleAddUserButton(user.userId)}
         >
           <PersonAddIcon />
         </IconButton>
@@ -141,8 +141,9 @@ class Users extends React.Component {
     });
 
     return (
+      <Grid item  xs={12}>
       <Paper elevation={5} className={classes.block}>
-        <Grid item container>
+        <Grid item xs={12} container>
           <Grid item xs={12}>
             <Typography variant="h6">Users:</Typography>
           </Grid>
@@ -186,6 +187,7 @@ class Users extends React.Component {
           </Grid>
         </Grid>
       </Paper>
+      </Grid>
     );
   }
 }

@@ -7,10 +7,11 @@ import com.masluch.backend.Requests.users.NewHouseholdData;
 import com.masluch.backend.Requests.users.NewUserHouseholdProductData;
 import com.masluch.backend.entities.Household;
 import com.masluch.backend.entities.HouseholdProduct;
+import com.masluch.backend.entities.Photo;
 
 public interface HouseholdService {
 	
-	public ResponseEntity<String> createNewHousehold(NewHouseholdData newHouseholdData);
+	public ResponseEntity<Household> createNewHousehold(NewHouseholdData newHouseholdData);
 	
 	public ResponseEntity<Household> updateHouseholdDescription(Household householdData);
 	
@@ -26,16 +27,9 @@ public interface HouseholdService {
 	
 	public ResponseEntity<String> removeHousehold(Integer householdId);
 	
-	ResponseEntity<Household> addUserHouseholdProduct(NewUserHouseholdProductData newUserHouseholdProductData);
+	public ResponseEntity<Household> addUserHouseholdProduct(NewUserHouseholdProductData newUserHouseholdProductData);
 
-
-
-
-
-
-
-
-
+	public ResponseEntity<Household> uploadHouseholdPhoto(Integer householdId, Photo photo);
 
 
 

@@ -121,6 +121,7 @@ class AddHouseholdDialog extends React.Component {
       formValid: false,
       enableSubmitButton: false,
       photo: noImage,
+      photoData: null,
       addedUsers: new Map(),
       products: [
         { name: "Bread", id: 0, data: generateRandomNames(3) },
@@ -202,6 +203,7 @@ class AddHouseholdDialog extends React.Component {
         formValid: false,
         enableSubmitButton: false,
         photo: noImage,
+        photoData: null,
         addedUsers: new Map(),
         products: [
           { name: "Bread", id: 0, data: generateRandomNames(3) },
@@ -255,11 +257,14 @@ class AddHouseholdDialog extends React.Component {
 
   handlePhotoUpload = (event) => {
     let image = event.target.files[0];
+    const formData = new FormData();
+    formData.append("file", event.target.files[0]);
     this.setState({
       ...this.state,
       formHousehold: {
         ...this.state.formHousehold,
         photo: URL.createObjectURL(image),
+        photoData: formData,
       },
     });
   };
@@ -413,10 +418,14 @@ class AddHouseholdDialog extends React.Component {
   };
 
   handleProductRemove = (chipId) => {
-    let products = this.state.formHousehold.products;
+    let products = [];
 
-    if (products.length === 1) products.pop();
-    else products.splice(chipId, 1);
+    this.state.formHousehold.products.forEach((product) => {
+      if (product.id !== chipId) products.push(product);
+    });
+
+    // if (products.length === 1) products.pop();
+    // else products.splice(chipId, 1);
 
     this.setState({
       ...this.state,
@@ -475,6 +484,10 @@ class AddHouseholdDialog extends React.Component {
       },
       householdProductsList: productsList,
       householdUsersList: usersList,
+      photo:
+        this.state.formHousehold.photo === noImage
+          ? null
+          : this.state.formHousehold.photoData,
     };
 
     console.log(form);

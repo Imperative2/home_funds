@@ -33,6 +33,16 @@ public class UserHouseholdProductDAOImpl implements UserHouseholdProductDAO {
 		UserHouseholdProduct userHouseholdProduct = session.get(UserHouseholdProduct.class, userHouseholdProductId);
 		return userHouseholdProduct;
 	}
+	
+	@Override
+	public List<UserHouseholdProduct> findByHouseholdProductId(Integer householdProductId) {
+		Session session = entityManager.unwrap(Session.class);
+		
+		Query<UserHouseholdProduct> query = session.createQuery("FROM UserHouseholdProduct AS uhp WHERE uhp.product.productId=:householdProductId", UserHouseholdProduct.class);
+		query.setParameter("householdProductId", householdProductId);
+		List<UserHouseholdProduct> result = query.getResultList();
+		return result;
+	}
 
 	@Override
 	public UserHouseholdProduct save(UserHouseholdProduct userHouseholdProduct) {
@@ -54,5 +64,7 @@ public class UserHouseholdProductDAOImpl implements UserHouseholdProductDAO {
 		UserHouseholdProduct userHouseholdProduct = session.get(UserHouseholdProduct.class, userHouseholdProductId);
 		session.delete(userHouseholdProduct);
 	}
+
+
 
 }

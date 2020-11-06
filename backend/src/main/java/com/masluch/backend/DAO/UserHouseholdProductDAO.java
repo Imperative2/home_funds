@@ -10,6 +10,8 @@ public interface UserHouseholdProductDAO {
 	
 	public UserHouseholdProduct findById(Integer userHouseholdProductId);
 	
+	public List<UserHouseholdProduct> findByHouseholdProductId(Integer householdProductId); 
+	
 	public UserHouseholdProduct save(UserHouseholdProduct userHouseholdProduct);
 	
 	public void update(UserHouseholdProduct userHouseholdProduct);

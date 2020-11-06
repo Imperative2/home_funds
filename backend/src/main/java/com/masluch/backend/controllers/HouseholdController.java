@@ -1,8 +1,17 @@
 package com.masluch.backend.controllers;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,12 +19,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.masluch.backend.Requests.users.NewHouseholdData;
 import com.masluch.backend.Requests.users.NewUserHouseholdProductData;
 import com.masluch.backend.entities.Household;
 import com.masluch.backend.entities.HouseholdProduct;
+import com.masluch.backend.entities.Photo;
+import com.masluch.backend.entities.User;
 import com.masluch.backend.services.HouseholdService;
+import com.masluch.backend.services.PhotoService;
 
 @RestController
 @RequestMapping("/household")
@@ -25,8 +38,11 @@ public class HouseholdController {
 	@Autowired
 	private HouseholdService householdService;
 	
+	@Autowired
+	private PhotoService photoService;
+	
 	@PostMapping(path ="/createNewHousehold")
-	public ResponseEntity<String> createNewHousehold(@RequestBody NewHouseholdData newHouseholdData)
+	public ResponseEntity<Household> createNewHousehold(@RequestBody NewHouseholdData newHouseholdData)
 	{
 		System.out.println(newHouseholdData);
 		return householdService.createNewHousehold(newHouseholdData);
@@ -80,4 +96,38 @@ public class HouseholdController {
  	{
 		return householdService.addUserHouseholdProduct(newUserHouseholdProductData);
  	}
+	
+	@PostMapping(path = "/uploadHouseholdPhoto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<Household> updateUserAvatar(@RequestParam("file") MultipartFile file,
+			@RequestParam Integer householdId)
+	{
+		
+		System.out.println("creating new household photo");
+
+		
+		Photo newPhoto = new Photo();
+
+		newPhoto.setPath("");
+		newPhoto.setDate(new Date());
+
+		Photo savedPhoto = photoService.save(newPhoto);
+
+		String fileName = StringUtils.cleanPath(savedPhoto.getPhotoId() + ".png");
+		Path path = Paths.get("..//Photos//" + fileName);
+		try
+			{
+				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+			}
+		catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+
+		String fileDownloadUri = "/photo/download/" + fileName;
+
+		savedPhoto.setPath(fileDownloadUri);
+		photoService.update(savedPhoto);
+		
+		return householdService.uploadHouseholdPhoto(householdId, savedPhoto);
+	}
 }

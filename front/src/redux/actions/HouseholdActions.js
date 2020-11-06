@@ -12,6 +12,12 @@ export const createNewHousehold = (form) => {
       .then((res) => {
         //        console.log(res);
         notifyOK("Household", "Created successfully");
+        console.log(res);
+        let photoForm = {
+          photo: form.photo,
+          householdId: res.data.householdId,
+        };
+        dispatch(uploadHouseholdPhoto(photoForm));
       })
       .catch((err) => {
         console.log(err);
@@ -53,7 +59,7 @@ export const updateHouseholdName = (form) => {
 
 export const addUserToHousehold = (form) => {
   return (dispatch) => {
-    const path = "/household/updateHouseholdDescription";
+    const path = "/household/addUserToHousehold";
     axios
       .post(path, null, {
         params: {
@@ -70,7 +76,25 @@ export const addUserToHousehold = (form) => {
   };
 };
 
-export const removeUserFromHousehold = (form) => {};
+export const removeUserFromHousehold = (form) => {
+  return (dispatch) => {
+    const path = "/household/removeUserFromHousehold";
+    axios
+      .delete(path, {
+        params: {
+          userId: form.userId,
+          householdId: form.householdId,
+        },
+      })
+      .then((res) => {
+        dispatch(addHouseholdToUserHouseholds(res.data));
+        notifyOK("Household", "User removed successfully");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+};
 
 export const addHouseholdProduct = (form) => {
   return (dispatch) => {
@@ -108,9 +132,67 @@ export const addUserHouseholdProduct = (form) => {
   };
 };
 
-export const removeHouseholdProduct = (form) => {};
+export const removeHouseholdProduct = (form) => {
+  return (dispatch) => {
+    const path = "/household/removeHouseholdProduct";
+    axios
+      .delete(path, {
+        params: {
+          householdProductId: form.householdProductId,
+          householdId: form.householdId,
+        },
+      })
+      .then((res) => {
+        dispatch(addHouseholdToUserHouseholds(res.data));
+        notifyOK("Household", "Product removed successfully");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+};
 
-export const removeHousehold = (form) => {};
+export const removeHousehold = (form) => {
+  return (dispatch) => {
+    const path = "/household/removeHousehold";
+    axios
+      .delete(path, {
+        params: {
+          householdId: form.householdId,
+        },
+      })
+      .then((res) => {
+        dispatch(addHouseholdToUserHouseholds(res.data));
+        notifyOK("Household", "Description updated successfully");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+};
+
+export const uploadHouseholdPhoto = (form) => {
+  console.log(form);
+
+  if (form.photo == null) return (dispatch) => {};
+  return (dispatch) => {
+    const path = "/household/uploadHouseholdPhoto";
+    axios
+      .post(path, form.photo, {
+        params: {
+          householdId: form.householdId,
+        },
+      })
+      .then((res) => {
+        //        console.log(res);
+        dispatch(addHouseholdToUserHouseholds(res.data));
+        notifyOK("Household", "Photo uploaded successfully");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+};
 
 export const fetchHouseholds = () => {
   return (dispatch) => {
