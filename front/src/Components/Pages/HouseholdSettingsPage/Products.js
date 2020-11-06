@@ -105,7 +105,7 @@ class Products extends React.Component {
     });
 
     return (
-      <Grid item xs={12} container>
+      <Grid item xs={12} >
         <Paper elevation={5} className={classes.block}>
           <Grid item container spacing={1} className={classes.maxW}>
             <Grid item container xs={12} className={classes.border} spacing={1}>

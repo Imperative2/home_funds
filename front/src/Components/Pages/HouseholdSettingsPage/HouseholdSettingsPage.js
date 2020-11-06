@@ -37,8 +37,6 @@ import GenericTable from "../../Tables/GenericTable/GenericTable";
 import Products from "./Products";
 import Users from "./Users";
 
-
-
 const style = {
   img: {
     borderRadius: "10px",
@@ -86,6 +84,9 @@ const style = {
     background: "DodgerBlue",
     borderRadius: 5,
   },
+  buttonDelete: {
+    backgroundColor: "red",
+  },
 };
 
 class HouseholdSettingsPage extends React.Component {
@@ -117,7 +118,6 @@ class HouseholdSettingsPage extends React.Component {
       },
       enableButtonNameSave: false,
       enableButtonDescriptionSave: false,
-      photo: noImg,
       addedUsers: new Map(),
     },
     formAddProduct: {
@@ -153,15 +153,13 @@ class HouseholdSettingsPage extends React.Component {
 
       let userMap = new Map();
 
-
       household.householdUsers.forEach((user) => {
         userMap.set(user.user.userId, user.user);
       });
 
       let mockupMap = this.state.productMockupMap;
-      household.householdProducts.forEach((product) =>{
-        console.log(product)
-        mockupMap.set(product.productId, generateRandomNames(3))
+      household.householdProducts.forEach((product) => {
+        mockupMap.set(product.productId, generateRandomNames(3));
       });
 
       this.setState({
@@ -333,8 +331,6 @@ class HouseholdSettingsPage extends React.Component {
     this.props.onAddHouseholdProduct(form);
     this.handleCloseAddProductDialog();
 
-    console.log("Product added");
-
     this.props.onFetchHousehold(this.state.householdId);
   };
 
@@ -365,14 +361,48 @@ class HouseholdSettingsPage extends React.Component {
     this.props.onRemoveUserFromHousehold(form);
   };
 
+  handlePhotoUpload = (event) => {
+    let image = event.target.files[0];
+    const formData = new FormData();
+    formData.append("file", event.target.files[0]);
+
+    let form = {
+      householdId: this.state.householdId,
+      photo: formData,
+    };
+
+    this.props.onPhotoUpdate(form);
+    this.props.onFetchHousehold(this.state.householdId);
+  };
+
+  handleSearchChange = (event) => {
+    if (event.target.value.length >= 3) {
+      const regex = ".*" + event.target.value + ".*";
+      this.props.onFetchUsersWithRegex(regex);
+      this.setState({
+        ...this.state,
+        search: { ...this.search, value: event.target.value, canSearch: true },
+      });
+    } else {
+      this.props.onClearSearchUsers();
+
+      this.setState({
+        ...this.state,
+        search: {
+          ...this.state.search,
+          value: event.target.value,
+          canSearch: false,
+        },
+      });
+    }
+  };
+
   buttonClick = () => {
     console.log(this.state);
     console.log(this.props.householdReducer);
   };
 
   render() {
-    console.log(this.state);
-    console.log(this.state.productMockupMap)
     const { classes } = this.props;
     const textSize = { style: { fontSize: "1.1rem" } };
     const labelSize = { style: { fontSize: "1.2rem" } };
@@ -415,7 +445,11 @@ class HouseholdSettingsPage extends React.Component {
                     <Grid item>
                       <img
                         className={classes.img}
-                        src={this.state.household.photo != null? getServerURL()+this.state.household.photo.path : noImg}
+                        src={
+                          this.state.household.photo != null
+                            ? getServerURL() + this.state.household.photo.path
+                            : noImg
+                        }
                         alt="householdPhoto"
                       ></img>
                     </Grid>
@@ -425,7 +459,7 @@ class HouseholdSettingsPage extends React.Component {
                         className={classes.input}
                         id="upload-avatar-button-userSettings"
                         type="file"
-                        //  onChange={(event) => this.handleAvatarUpload(event)}
+                        onChange={(event) => this.handlePhotoUpload(event)}
                       ></input>
                       <label htmlFor="upload-avatar-button-userSettings">
                         <Button
@@ -452,9 +486,7 @@ class HouseholdSettingsPage extends React.Component {
                       <TextFieldWithLabel
                         fullWidth
                         text="Household Name:"
-                        value={
-                          this.state.formHousehold.formFields.name.value
-                        }
+                        value={this.state.formHousehold.formFields.name.value}
                         onChange={(event) => this.handleNameChange(event)}
                       ></TextFieldWithLabel>
                     </Grid>
@@ -538,8 +570,20 @@ class HouseholdSettingsPage extends React.Component {
                 householdUsers={this.props.householdReducer}
                 handleRemoveUserButton={this.handleRemoveUserButton}
                 canSearch={this.state.search.canSearch}
+                searchUsers={this.props.usersReducer.searchUsers}
                 handleSearchChange={this.handleSearchChange}
               ></Users>
+            </Grid>
+            <Grid item xs={12} container alignItems="center" justify="center">
+              <Grid item>
+                <Button
+                  className={classes.buttonDelete}
+                  variant="contained"
+                  color="secondary"
+                >
+                  Delete this household
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
         </Container>
@@ -571,6 +615,10 @@ const mapDispatchToProps = (dispatch) => {
     onRemoveUserFromHousehold: (form) =>
       dispatch(actions.removeUserFromHousehold(form)),
     onRemoveHousehold: (form) => dispatch(actions.removeHousehold(form)),
+    onPhotoUpdate: (form) => dispatch(actions.uploadHouseholdPhoto(form)),
+    onFetchUsersWithRegex: (regex) =>
+      dispatch(actions.fetchUsersWithRegex(regex)),
+    onClearSearchUsers: () => dispatch(actions.clearSearchUsers()),
   };
 };
 

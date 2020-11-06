@@ -28,6 +28,7 @@ export {
   removeUserFromHousehold,
   removeHouseholdProduct,
   removeHousehold,
+  uploadHouseholdPhoto,
   fetchHouseholds,
   fetchHousehold,
   fetchOwnerHouseholds,

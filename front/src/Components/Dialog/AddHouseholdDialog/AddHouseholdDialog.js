@@ -30,7 +30,7 @@ import GenericStepper from "../../Stepper/GenericStepper/GenericStepper";
 import GenericTable from "../../Tables/GenericTable/GenericTable";
 import generateRandomNames from "../../../utils/GenerateRandomNames/GenerateRandomNames";
 
-import noImage from "../../../static/NoImage.png";
+import noImg from "../../../static/NoImage.png";
 
 import FormValidation from "../../../utils/Validation/FormValidator";
 import FormValidator from "../../../utils/Validation/FormValidator";
@@ -85,6 +85,9 @@ const style = {
   input: {
     display: "none",
   },
+  iconPadding: {
+    paddingLeft: "5px",
+  },
 };
 
 class AddHouseholdDialog extends React.Component {
@@ -120,7 +123,7 @@ class AddHouseholdDialog extends React.Component {
       },
       formValid: false,
       enableSubmitButton: false,
-      photo: noImage,
+      photo: noImg,
       photoData: null,
       addedUsers: new Map(),
       products: [
@@ -202,7 +205,7 @@ class AddHouseholdDialog extends React.Component {
         },
         formValid: false,
         enableSubmitButton: false,
-        photo: noImage,
+        photo: noImg,
         photoData: null,
         addedUsers: new Map(),
         products: [
@@ -485,7 +488,7 @@ class AddHouseholdDialog extends React.Component {
       householdProductsList: productsList,
       householdUsersList: usersList,
       photo:
-        this.state.formHousehold.photo === noImage
+        this.state.formHousehold.photo === noImg
           ? null
           : this.state.formHousehold.photoData,
     };
@@ -698,7 +701,13 @@ class AddHouseholdDialog extends React.Component {
       </Container>
     );
 
-    let users = Array.from(this.props.usersReducer.users).map((mapEntry) => {
+    let addUsersArray = Array.from(this.props.usersReducer.users);
+
+    if (this.state.search.canSearch === true) {
+      addUsersArray = Array.from(this.props.usersReducer.searchUsers);
+    }
+
+    let users = addUsersArray.map((mapEntry) => {
       const user = mapEntry[1];
 
       let iconButton = (
@@ -746,56 +755,6 @@ class AddHouseholdDialog extends React.Component {
       );
     });
 
-    let searchUsers = Array.from(this.props.usersReducer.searchUsers).map(
-      (mapEntry) => {
-        const user = mapEntry[1];
-
-        let iconButton = (
-          <IconButton
-            edge="end"
-            aria-label="delete"
-            onClick={() => this.handleAddUserButton(user)}
-          >
-            <PersonAddIcon />
-          </IconButton>
-        );
-
-        if (this.state.formHousehold.addedUsers.has(user.userId)) {
-          iconButton = (
-            <IconButton
-              edge="end"
-              aria-label="delete"
-              onClick={() => this.handleRemoveUserButton(user)}
-            >
-              <ClearIcon />
-            </IconButton>
-          );
-        }
-
-        return (
-          <React.Fragment key={user.userId}>
-            <ListItem>
-              <ListAvatar>
-                <Avatar
-                  src={
-                    user.avatar != null && user.avatar.path != null
-                      ? getServerURL() + user.avatar.path
-                      : null
-                  }
-                ></Avatar>
-              </ListAvatar>
-              <ListText
-                primary={user.name + " " + user.surname}
-                secondary={"@" + user.nickname}
-              />
-              <ListItemSecondaryAction>{iconButton}</ListItemSecondaryAction>
-            </ListItem>
-            <Divider />
-          </React.Fragment>
-        );
-      }
-    );
-
     let page_2 = (
       <Container maxWidth="sm">
         <Grid container spacing={2} direction="column">
@@ -809,9 +768,7 @@ class AddHouseholdDialog extends React.Component {
             ></TextField>
           </Grid>
           <Grid item xs={12} sm={12}>
-            <List className={classes.usersList}>
-              {this.state.search.canSearch === true ? searchUsers : users}
-            </List>
+            <List className={classes.usersList}>{users}</List>
           </Grid>
         </Grid>
       </Container>
@@ -866,28 +823,49 @@ class AddHouseholdDialog extends React.Component {
             <Grid item xs={12}>
               <Typography variant="h6">Users:</Typography>
             </Grid>
-            {Array.from(this.state.formHousehold.addedUsers).map((mapEntry) => {
-              const user = mapEntry[1];
-              return (
-                <Grid item key={user.userId}>
-                  <ListItem>
-                    <ListAvatar>
-                      <Avatar
-                        src={
-                          user.avatar != null && user.avatar.path != null
-                            ? getServerURL() + user.avatar.path
-                            : null
-                        }
-                      ></Avatar>
-                    </ListAvatar>
-                    <ListText
-                      primary={user.name + " " + user.surname}
-                      secondary={"@" + user.nickname}
-                    />
-                  </ListItem>
-                </Grid>
-              );
-            })}
+            <Grid item container direction="row">
+              {Array.from(this.state.formHousehold.addedUsers).map(
+                (mapEntry) => {
+                  const user = mapEntry[1];
+                  return (
+                    <Grid item key={user.userId}>
+                      <ListItem>
+                        <ListAvatar>
+                          <Avatar
+                            src={
+                              user.avatar != null && user.avatar.path != null
+                                ? getServerURL() + user.avatar.path
+                                : null
+                            }
+                          ></Avatar>
+                        </ListAvatar>
+                        <ListText
+                          primary={user.name + " " + user.surname}
+                          secondary={"@" + user.nickname}
+                        />
+                        {/* <ListItemSecondaryAction>
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        // onClick={() => this.handleAddUserButton(user)}
+                      >
+                        <PersonAddIcon />
+                      </IconButton></ListItemSecondaryAction> */}
+
+                        <IconButton
+                          className={classes.iconPadding}
+                          edge="end"
+                          aria-label="delete"
+                          onClick={() => this.handleRemoveUserButton(user)}
+                        >
+                          <ClearIcon />
+                        </IconButton>
+                      </ListItem>
+                    </Grid>
+                  );
+                }
+              )}
+            </Grid>
           </Grid>
         </Grid>
       </Container>

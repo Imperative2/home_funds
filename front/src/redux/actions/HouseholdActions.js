@@ -68,10 +68,11 @@ export const addUserToHousehold = (form) => {
         },
       })
       .then((res) => {
-        console.log(res);
+        dispatch(addHouseholdToUserHouseholds(res.data));
+        notifyOK("Household", "User added successfully");
       })
       .catch((err) => {
-        console.log(err);
+        notifyError("Household", "Couldn't add user to household");
       });
   };
 };
@@ -91,7 +92,7 @@ export const removeUserFromHousehold = (form) => {
         notifyOK("Household", "User removed successfully");
       })
       .catch((err) => {
-        console.log(err);
+        notifyError("Household", "Couldn't remove user from household");
       });
   };
 };
