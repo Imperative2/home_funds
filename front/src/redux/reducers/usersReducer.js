@@ -52,7 +52,6 @@ const usersReducer = (state = initialState, action) => {
     }
 
     case actionTypes.SET_SEARCH_USERS: {
-      console.log(action.users);
       let newSearchUsersMap = new Map();
       action.users.forEach((user) => {
         newSearchUsersMap.set(user.userId, user);
